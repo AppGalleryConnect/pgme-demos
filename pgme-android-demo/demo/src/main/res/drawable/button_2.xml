@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--按下效果-->
+    <item android:state_pressed="false" android:drawable="@drawable/bt_yxdmtyq_normal_002"/>
+    <item android:state_pressed="true" android:drawable="@drawable/bt_yxdmtyq_down_002"/>
+    <!--默认效果-->
+    <item android:drawable="@drawable/bt_yxdmtyq_normal_002" />
+</selector>

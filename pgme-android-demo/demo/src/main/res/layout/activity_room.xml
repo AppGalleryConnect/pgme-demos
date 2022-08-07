@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_yxdmtyq_001"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    tools:context="com.huawei.gmmesdk.demo.activity.GmmeRoomActivity"
+    tools:ignore="MissingClass">
+
+    <LinearLayout
+        android:id="@+id/change_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:minWidth="60dp"
+            android:textColor="#c9c3f0"
+            android:text="@string/text_change_room" />
+
+        <LinearLayout
+            android:id="@+id/room_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_yxdmtyq_003"
+            android:paddingLeft="20dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/current_room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:minWidth="60dp"
+                android:textColor="#C9C3F0"
+                android:textSize="42px" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_yxdmtyq_001" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:minWidth="60dp"
+            android:textColor="#c9c3f0"
+            android:text="@string/text_roomid" />
+
+        <EditText
+            android:id="@+id/roomId_input"
+            style="@style/EditStyle"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:alpha="0.5"
+            android:background="@drawable/bg_yxdmtyq_003"
+            android:hint="@string/hint_roomid"
+            android:textColorHint="#524d90" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <Button
+            android:id="@+id/btnEnter"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_2"
+            android:text="@string/text_create_or_join_squad"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnNational"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_2"
+            android:text="@string/text_create_or_join_war" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/voiceLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <CheckBox
+            android:id="@+id/checkEnableMic"
+            style="@style/CheckBoxStyle"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:checked="true"
+            android:enabled="false"
+            android:paddingLeft="15dp"
+            android:textColor="#c9c3f0"
+            android:text="@string/text_enablemic"
+            android:layout_weight="0.2"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/voiceToText"
+            android:layout_width="35dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/img_voice_to_text" />
+
+        <Button
+            android:id="@+id/btnQuit"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_4"
+            android:enabled="false"
+            android:text="@string/text_quit"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_yxdmtyq_002"
+        android:layout_weight="1"
+        android:alpha="0.5">
+
+        <com.huawei.gmmesdk.demo.adapter.NoSlideViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_vertical"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <Button
+            android:id="@+id/btnSwitchView"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_3"
+            android:onClick="onSwitchView"
+            android:text="@string/text_log"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/hw_gmme_destroy"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_4"
+            android:text="@string/text_gmme_destroy"
+            android:textAllCaps="false" />
+    </LinearLayout>
+</LinearLayout>

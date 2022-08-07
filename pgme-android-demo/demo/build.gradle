@@ -1,0 +1,105 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.huawei.gmmesdk.demo"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName rootProject.ext.version
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "mmsdkDemoApp.apk"
+        }
+    }
+
+
+    buildTypes {
+        release {
+            buildConfigField "String", "agcAppId", "\"\""
+            buildConfigField "String", "agcClientId", "\"\""
+            buildConfigField "String", "agcClientSecret", "\"\""
+	    buildConfigField "String", "agcApiKey", "\"\""
+            buildConfigField "String", "gameSecret", "\"\""
+        }
+        dev_st {
+            testCoverageEnabled = true
+            buildConfigField "String", "agcAppId", "\"\""
+            buildConfigField "String", "agcClientId", "\"\""
+            buildConfigField "String", "agcClientSecret", "\"\""
+	    buildConfigField "String", "agcApiKey", "\"\""
+            buildConfigField "String", "gameSecret", "\"\""
+        }
+        debug {
+            testCoverageEnabled = true
+            buildConfigField "String", "agcAppId", "\"\""
+            buildConfigField "String", "agcClientId", "\"\""
+            buildConfigField "String", "agcClientSecret", "\"\""
+	    buildConfigField "String", "agcApiKey", "\"\""
+            buildConfigField "String", "gameSecret", "\"\""
+        }
+        mirror {
+            testCoverageEnabled = true
+            buildConfigField "String", "agcAppId", "\"\""
+            buildConfigField "String", "agcClientId", "\"\""
+            buildConfigField "String", "agcClientSecret", "\"\""
+	    buildConfigField "String", "agcApiKey", "\"\""
+            buildConfigField "String", "gameSecret", "\"\""
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                def outputFile = output.outputFile
+                def fileName
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    if (variant.buildType.name.equals('release')) {
+                        fileName = "mmsdkDemoApp_v${defaultConfig.versionName}.apk"
+                    } else if (variant.buildType.name.equals('dev_st')) {
+                        fileName = "mmsdkDemoApp_v${defaultConfig.versionName}_dev_st.apk"
+                    } else if (variant.buildType.name.equals('mirror')) {
+                        fileName = "mmsdkDemoApp_v${defaultConfig.versionName}_mirror.apk"
+                    } else if (variant.buildType.name.equals('debug')) {
+                        fileName = "mmsdkDemoApp_v${defaultConfig.versionName}_debug.apk"
+                    }
+                    outputFileName = fileName
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    // android原生依赖
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat_version"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerview_version"
+    implementation "com.google.android.material:material:$rootProject.ext.material_version"
+    implementation "pl.droidsonroids.gif:android-gif-drawable:1.2.24"
+
+    // 引擎依赖
+    implementation project(':mmsdk-common')
+    implementation project(':mmsdk-gmme')
+    // 外网测试验证
+    implementation "com.huawei.game.midplatform:mmsdk-common:$rootProject.ext.version"
+    implementation "com.huawei.game.midplatform:mmsdk-gmme:$rootProject.ext.version"
+}
+
+repositories { flatDir { dirs '../aars' } }
+
+apply from: localMavenDir + 'maven.gradle'

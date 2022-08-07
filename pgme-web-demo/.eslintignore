@@ -1,0 +1,5 @@
+jest.config.js
+**/dist
+**/public
+**/test
+**/shims-vue.d.ts

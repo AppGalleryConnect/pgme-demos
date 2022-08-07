@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--置灰效果-->
+    <item android:state_enabled="false" android:drawable="@drawable/bt_yxdmtyq_disable" />
+    <!--按下效果-->
+    <item android:state_pressed="false" android:drawable="@drawable/bt_yxdmtyq_normal_003" />
+    <item android:state_pressed="true" android:drawable="@drawable/bt_yxdmtyq_down_003" />
+    <!--默认效果-->
+    <item android:drawable="@drawable/bt_yxdmtyq_normal_003" />
+</selector>

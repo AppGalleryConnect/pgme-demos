@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/room_ids"
+        android:layout_width="wrap_content"
+        android:layout_height="200px"
+        android:divider="#00000000"
+        android:background="@drawable/bg_yxdmtyq_010"
+        android:scrollbars="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarThumbVertical="@drawable/bg_recycler_bar"
+        android:scrollbarTrackVertical="@drawable/bg_recycler_track">
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

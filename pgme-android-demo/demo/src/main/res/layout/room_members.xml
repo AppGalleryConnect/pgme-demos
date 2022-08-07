@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/mRoomMember"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:visibility="gone"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
+
+        <RelativeLayout
+            android:id="@+id/room_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_yxdmtyq_004">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="6dp"
+                android:gravity="center_vertical"
+                android:textColor="#c9c3f0"
+                android:textSize="48px" />
+
+            <TextView
+                android:id="@+id/room_members"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/tv_title"
+                android:layout_marginStart="6dp"
+                android:layout_toEndOf="@+id/tv_title"
+                android:gravity="center_vertical"
+                android:textColor="#c9c3f0"
+                android:textSize="48px" />
+
+            <ImageView
+                android:id="@+id/forbid_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="70dp"
+                android:layout_marginBottom="6dp"
+                android:scaleX="1"
+                android:scaleY="1"
+                android:src="@drawable/btn_speaker_on"
+                android:tag="select" />
+
+            <ImageView
+                android:id="@+id/mute_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="6dp"
+                android:scaleX="1"
+                android:scaleY="1"
+                android:src="@drawable/btn_mic_on"
+                android:tag="select" />
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/room_title_layout">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_member"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </androidx.core.widget.NestedScrollView>
+
+    </RelativeLayout>
+
+</LinearLayout>

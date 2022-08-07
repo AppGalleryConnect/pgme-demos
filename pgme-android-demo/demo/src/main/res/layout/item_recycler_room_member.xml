@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center|start">
+
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_member" />
+
+
+    <TextView
+        android:id="@+id/item_user_id"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="6dp"
+        android:layout_toRightOf="@id/iv_icon"
+        android:gravity="center_vertical"
+        android:textColor="#aa9ce6"
+        android:textSize="42px" />
+
+    <TextView
+        android:id="@+id/owner"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="6dp"
+        android:layout_toRightOf="@id/item_user_id"
+        android:gravity="center_vertical"
+        android:text="@string/text_owner"
+        android:visibility="gone"
+        android:textColor="#66bbfd"
+        android:textSize="42px" />
+
+    <ImageView
+        android:id="@+id/img_speaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="70dp"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:src="@drawable/btn_speaker_on"
+        android:tag="select" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/img_audio"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:src="@drawable/btn_mic_on"
+        android:tag="select" />
+
+</RelativeLayout>
