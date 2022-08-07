@@ -1,14 +1,5 @@
 # Game Multimedia Service<a name="EN-US_TOPIC_0000001263279341"></a>
 
--   [Contents](#section106mcpsimp)
--   [Introduction](#section119mcpsimp)
--   [Environment Requirements](#section123mcpsimp)
--   [Preparations](#section126mcpsimp)
--   [Result](#section137mcpsimp)
--   [License](#section147mcpsimp)
-
-English
-
 ## Contents<a name="section106mcpsimp"></a>
 
 -   [Introduction](#section119mcpsimp)
