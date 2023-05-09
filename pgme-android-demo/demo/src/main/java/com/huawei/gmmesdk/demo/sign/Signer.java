@@ -16,9 +16,9 @@
 
 package com.huawei.gmmesdk.demo.sign;
 
+import android.text.TextUtils;
 import android.util.Base64;
 
-import com.huawei.game.common.https.Utils;
 import com.huawei.game.common.utils.LogUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -38,8 +38,6 @@ import java.security.spec.PSSParameterSpec;
  * 生成接入签名，使用SHA256withRSA/PSS
  */
 public class Signer {
-    private static final String TAG = Signer.class.getSimpleName();
-
     public static final String ALGORITHM_NAME = "SHA256withRSA/PSS";
 
     public static final String MD_NAME = "SHA-256";
@@ -50,8 +48,10 @@ public class Signer {
 
     public static final int TRAILER_FIELD = 1;
 
+    private static final String TAG = Signer.class.getSimpleName();
+
     public static String generate(String appId, String openId, String nonce, String timestamp, String privateKey) {
-        if (Utils.isEmpty(privateKey)) {
+        if (TextUtils.isEmpty(privateKey)) {
             LogUtil.e(TAG, "privateKey is empty.");
             return null;
         }

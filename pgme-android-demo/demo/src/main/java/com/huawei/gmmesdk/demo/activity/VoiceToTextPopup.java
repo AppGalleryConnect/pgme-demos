@@ -27,8 +27,8 @@ import android.widget.CheckBox;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.GameMediaEngine;
+import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.model.VoiceParam;
 import com.huawei.gmmesdk.demo.R;
 
@@ -92,6 +92,7 @@ public class VoiceToTextPopup extends PopupWindow {
         super.dismiss();
         if (isChecked && mHwRtcEngine != null) {
             mHwRtcEngine.enableMic(true);
+            mHwRtcEngine.stopRecordAudioToText();
         }
     }
 
@@ -115,7 +116,7 @@ public class VoiceToTextPopup extends PopupWindow {
     }
 
     // 销毁timer并打开扬声器
-    protected void clearTimerAndOnSpeaker() {
+    public void clearTimerAndOnSpeaker() {
         if (timer != null) {
             timer.cancel();
         }

@@ -13,7 +13,6 @@
     tools:ignore="MissingClass">
 
     <LinearLayout
-        android:id="@+id/change_room"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -27,18 +26,18 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:minWidth="60dp"
-            android:textColor="#c9c3f0"
-            android:text="@string/text_change_room" />
+            android:text="@string/text_change_room"
+            android:textColor="#c9c3f0" />
 
         <LinearLayout
             android:id="@+id/room_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/bg_yxdmtyq_003"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@drawable/bg_yxdmtyq_003"
             android:paddingLeft="20dp"
-            android:layout_marginLeft="10dp"
             android:visibility="gone">
 
             <TextView
@@ -62,8 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:minHeight="45dp"
+        android:orientation="horizontal"
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
@@ -73,8 +72,8 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:minWidth="60dp"
-            android:textColor="#c9c3f0"
-            android:text="@string/text_roomid" />
+            android:text="@string/text_roomid"
+            android:textColor="#c9c3f0" />
 
         <EditText
             android:id="@+id/roomId_input"
@@ -87,36 +86,177 @@
             android:textColorHint="#524d90" />
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <CheckBox
+            android:id="@+id/checkbox_voice"
+            style="@style/CheckBoxStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:checked="true"
+            android:paddingLeft="15dp"
+            android:text="语音通道"
+            android:textAllCaps="false"
+            android:textColor="#c9c3f0" />
+
+        <RadioGroup
+            android:id="@+id/rg_voice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/checkbox_voice"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_voice_team"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/radio_button"
+                android:checked="true"
+                android:paddingLeft="10dp"
+                android:text="小队"
+                android:textColor="@color/radio_color"
+                android:textSize="38px" />
+
+            <RadioButton
+                android:id="@+id/rb_voice_war"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:button="@drawable/radio_button"
+                android:paddingLeft="10dp"
+                android:text="国战"
+                android:textColor="@color/radio_color"
+                android:textSize="38px" />
+        </RadioGroup>
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:minHeight="45dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/btnEnter"
+            android:id="@+id/btnJoin"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_weight="1"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/button_2"
-            android:text="@string/text_create_or_join_squad"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/btnNational"
-            style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="40dp"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:background="@drawable/button_2"
-            android:text="@string/text_create_or_join_war" />
+            android:enabled="false"
+            android:text="加入语音"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnQuit"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_4"
+            android:enabled="false"
+            android:text="@string/text_quit"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <CheckBox
+            android:id="@+id/checkbox_msg"
+            style="@style/CheckBoxStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="0.2"
+            android:checked="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="15dp"
+            android:text="消息通道"
+            android:textAllCaps="false"
+            android:textColor="#c9c3f0" />
+
+        <RadioGroup
+            android:id="@+id/rg_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/checkbox_msg"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_single_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/radio_button"
+                android:checked="true"
+                android:paddingLeft="10dp"
+                android:text="1V1"
+                android:textColor="@color/radio_color"
+                android:textSize="38px" />
+
+            <RadioButton
+                android:id="@+id/rb_group_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:button="@drawable/radio_button"
+                android:paddingLeft="10dp"
+                android:text="群聊"
+                android:textColor="@color/radio_color"
+                android:textSize="38px" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <Button
+            android:id="@+id/btnSendTextMsg"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_2"
+            android:enabled="true"
+            android:text="发送消息" />
+
+        <Button
+            android:id="@+id/btnLeaveChannel"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_4"
+            android:enabled="false"
+            android:text="离开频道" />
     </LinearLayout>
 
     <LinearLayout
@@ -136,13 +276,12 @@
             android:layout_height="30dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:checked="true"
-            android:enabled="false"
+            android:checked="false"
+            android:enabled="true"
             android:paddingLeft="15dp"
-            android:textColor="#c9c3f0"
             android:text="@string/text_enablemic"
-            android:layout_weight="0.2"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#c9c3f0" />
 
         <Button
             android:id="@+id/voiceToText"
@@ -151,27 +290,26 @@
             android:layout_centerVertical="true"
             android:background="@drawable/img_voice_to_text" />
 
-        <Button
-            android:id="@+id/btnQuit"
-            style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_4"
-            android:enabled="false"
-            android:text="@string/text_quit"
-            android:textAllCaps="false" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/pop_top_view"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_yxdmtyq_002"
         android:layout_weight="1"
-        android:alpha="0.5">
+        android:alpha="0.5"
+        android:background="@drawable/bg_yxdmtyq_002">
 
         <com.huawei.gmmesdk.demo.adapter.NoSlideViewPager
             android:id="@+id/viewPager"

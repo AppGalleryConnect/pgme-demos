@@ -1,5 +1,12 @@
 # 华为游戏多媒体服务Java示例代码<a name="ZH-CN_TOPIC_0000001263279341"></a>
 
+-   [目录](#section106mcpsimp)
+-   [简介](#section119mcpsimp)
+-   [环境要求](#section123mcpsimp)
+-   [开发准备](#section126mcpsimp)
+-   [运行结果](#section137mcpsimp)
+-   [授权许可](#section147mcpsimp)
+
 中文 |  [English](huawei-mmsdk-demo/blob/master/Mmsdk-Java-Demo/README.md)
 
 ## 目录<a name="section106mcpsimp"></a>

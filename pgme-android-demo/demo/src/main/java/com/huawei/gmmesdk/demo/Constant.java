@@ -35,10 +35,7 @@ public interface Constant {
      */
     String EMPTY_STRING = "";
 
-    /**
-     * 房间ID
-     */
-    String KEY_ROOM_ID = "room_id";
+
 
     /**
      * 默认用户ID
@@ -50,20 +47,11 @@ public interface Constant {
      */
     String KEY_USER_NAME = "user_name";
 
-    /**
-     * 登录华为账号
-     */
-    int REQUEST_SIGN_IN_LOGIN = 1001;
 
     /**
      * 初始化引擎
      */
     int GMME_INIT_ENGINE = 1002;
-
-    /**
-     * 引擎销毁
-     */
-    int GMME_DESTROY_ENGINE = 1003;
 
     /**
      * 日志大小
@@ -99,8 +87,6 @@ public interface Constant {
      */
     int LEAVEROOM = 1;
 
-    int JOINROOM = 2;
-
     int SWITCHROOM = 3;
 
     /**
@@ -113,11 +99,11 @@ public interface Constant {
      */
     long REFRESH_MEMBER_LIST_PERIOD = 2000L;
 
-    /**
-     * 房主一键禁言按钮刷新周期
-     */
-    long REFRESH_FORBID_IMAGE = 500L;
 
+    /**
+     * 音频格式
+     */
+    String AUDIO_TYPE = ".m4a";
 
     String[] roomTitle = {"房间成员", "小队成员", "国战成员"};
 
@@ -156,10 +142,6 @@ public interface Constant {
          */
         String TYPE = "type";
 
-        /**
-         * 调用结果
-         */
-        String RESULT = "result";
 
         /**
          * 是否屏蔽
@@ -170,5 +152,30 @@ public interface Constant {
          * 是否禁言
          */
         String IS_FORBIDDEN = "isForbidden";
+    }
+
+    /**
+     * 消息类型（1文本，2音频）
+     */
+    interface MsgType {
+        /**
+         * 文本
+         */
+        int MSG_TYPE_TEXT = 1;
+
+        /**
+         * 音频
+         */
+        int MSG_TYPE_AUDIO = 2;
+    }
+
+    /**
+     * 麦克风相关的操作
+     */
+    enum MicOperateTypeEnum {
+        MicOperate,
+        VoiceToText,
+
+        VoiceMsg;
     }
 }
