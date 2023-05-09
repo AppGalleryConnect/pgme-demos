@@ -14,7 +14,7 @@ The sample code demonstrates how to integrate Game Multimedia Service into your 
 
 ## Environment Requirements<a name="section123mcpsimp"></a>
 
-Android SDK \(API level 21 or higher\), JDK 1.8 or later, and HMS Core \(APK\) 4.0 or later
+Android SDK \(API level 21 or higher\), JDK 1.8 or later, and HMS Core \(APK\) 4.0 or later.
 
 ## Preparations<a name="section126mcpsimp"></a>
 
