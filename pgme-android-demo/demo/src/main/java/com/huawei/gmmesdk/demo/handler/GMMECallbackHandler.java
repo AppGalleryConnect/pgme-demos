@@ -16,8 +16,11 @@
 
 package com.huawei.gmmesdk.demo.handler;
 
+import com.huawei.game.common.utils.CollectionUtil;
 import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.handler.IGameMMEEventHandler;
+import com.huawei.game.gmme.model.Message;
+import com.huawei.game.gmme.model.VolumeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,7 @@ import java.util.List;
  * 用户实现的统一回调
  */
 public class GMMECallbackHandler implements IGameMMEEventHandler {
-    private static final String TAG = "RtcEventHandler";
+    private static final String TAG = GMMECallbackHandler.class.getSimpleName();
 
     private ArrayList<IGameMMEEventHandler> mHandler = new ArrayList<>();
 
@@ -135,9 +138,19 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
     @Override
     public void onSpeakersDetection(List<String> openIds) {
         LogUtil.d(TAG, "onSpeakersDetection : openIds=" + openIds);
-        if (openIds != null && !openIds.isEmpty()) {
+        if (CollectionUtil.isNotEmpty(openIds)) {
             for (IGameMMEEventHandler handler : mHandler) {
                 handler.onSpeakersDetection(openIds);
+            }
+        }
+    }
+
+    @Override
+    public void onSpeakersDetectionEx(List<VolumeInfo> userVolumeInfos) {
+        LogUtil.d(TAG, "onSpeakersDetectionEx : userVolumeInfos=" + userVolumeInfos);
+        if (CollectionUtil.isNotEmpty(userVolumeInfos)) {
+            for (IGameMMEEventHandler handler : mHandler) {
+                handler.onSpeakersDetectionEx(userVolumeInfos);
             }
         }
     }
@@ -194,7 +207,7 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
 
     @Override
     public void onVoiceToText(String text, int status, String message) {
-        LogUtil.i(TAG, "onVoiceToText" + "status" + status + "message" + message);
+        LogUtil.i(TAG, "onVoiceToText text " + text + "status " + status + "message " + message);
         for (IGameMMEEventHandler handler : mHandler) {
             handler.onVoiceToText(text, status, message);
         }
@@ -221,6 +234,34 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
         }
     }
 
+    @Override
+    public void onJoinChannel(String channelId, int code, String msg) {
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onJoinChannel(channelId, code, msg);
+        }
+    }
+
+    @Override
+    public void onLeaveChannel(String channelId, int code, String msg) {
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onLeaveChannel(channelId, code, msg);
+        }
+    }
+
+    @Override
+    public void onSendMsg(Message msg) {
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onSendMsg(msg);
+        }
+    }
+
+    @Override
+    public void onRecvMsg(Message msg) {
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onRecvMsg(msg);
+        }
+    }
+
     public void addHandler(IGameMMEEventHandler handler) {
         LogUtil.i(TAG, "addHandler! ");
         mHandler.add(handler);
@@ -229,5 +270,91 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
     public void removeHandler(IGameMMEEventHandler handler) {
         LogUtil.i(TAG, "removeHandler! ");
         mHandler.remove(handler);
+    }
+
+    @Override
+    public void onRemoteMicroStateChanged(String roomId, String openId, boolean isMute) {
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onRemoteMicroStateChanged(roomId, openId, isMute);
+        }
+    }
+
+    /**
+     * 录制语音消息回调。
+     *
+     * @param filePath 待上传的语音文件的地址
+     * @param code 响应码
+     * @param msg 响应消息
+     */
+    @Override
+    public void onRecordAudioMsg(String filePath, int code, String msg) {
+        if (code != 0) {
+            LogUtil.e(TAG, "onRecordAudioMsg! filePath:" + filePath + ", code: " + code + ", msg: " + msg);
+            return;
+        }
+
+        LogUtil.i(TAG, "onRecordAudioMsg success! filePath:" + filePath);
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onRecordAudioMsg(filePath, code, msg);
+        }
+    }
+
+    /**
+     * 上传录制语音消息文件回调。
+     *
+     * @param filePath 待上传的语音文件的地址
+     * @param fileId 待下载文件唯一标识
+     * @param code 响应码
+     * @param msg 响应消息
+     */
+    @Override
+    public void onUploadAudioMsgFile(String filePath, String fileId, int code, String msg) {
+        if (code != 0) {
+            LogUtil.e(TAG, "onUploadAudioMsgFile! filePath:" + filePath + ", fileId:" + fileId + ", code: " + code
+                + ", msg: " + msg);
+            return;
+        }
+
+        LogUtil.i(TAG, "onUploadAudioMsgFile success! filePath:" + filePath + ", fileId:" + fileId);
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onUploadAudioMsgFile(filePath, fileId, code, msg);
+        }
+    }
+
+    /**
+     * 下载录制语音消息文件回调。
+     *
+     * @param filePath 待上传的语音文件的地址
+     * @param fileId 待下载文件唯一标识
+     * @param code 响应码
+     * @param msg 响应消息
+     */
+    @Override
+    public void onDownloadAudioMsgFile(String filePath, String fileId, int code, String msg) {
+        if (code != 0) {
+            LogUtil.e(TAG, "onDownloadAudioMsgFile! filePath:" + filePath + ", fileId:" + fileId + ", code: " + code
+                + ", msg: " + msg);
+            return;
+        }
+
+        LogUtil.i(TAG, "onDownloadAudioMsgFile success! filePath:" + filePath + ", fileId:" + fileId);
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onDownloadAudioMsgFile(filePath, fileId, code, msg);
+        }
+    }
+
+    /**
+     * 播放语音消息文件回调。
+     *
+     * @param filePath 待上传的语音文件的地址
+     * @param code 响应码
+     * @param msg 响应消息
+     */
+    @Override
+    public void onPlayAudioMsg(String filePath, int code, String msg) {
+        LogUtil.i(TAG, "onPlayAudioMsg! filePath:" + filePath + ", code: " + code + ", msg: " + msg);
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onPlayAudioMsg(filePath, code, msg);
+        }
     }
 }

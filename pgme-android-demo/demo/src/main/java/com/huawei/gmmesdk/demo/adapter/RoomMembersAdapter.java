@@ -42,11 +42,6 @@ import java.util.Map;
  */
 public class RoomMembersAdapter extends RecyclerView.Adapter {
     /**
-     * 日志标记
-     */
-    private static final String TAG = "RoomMembersAdapter";
-
-    /**
      * 成员事件监听器（开启、关闭禁言）
      */
     private MemberEventClick mEventClick;
@@ -185,7 +180,7 @@ public class RoomMembersAdapter extends RecyclerView.Adapter {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-                if (viewHolder.userId.equals(localPlayerId) || roomType == Constant.TEAMROOM) {
+                if (viewHolder.userId.equals(localPlayerId)) {
                     return;
                 }
                 if (viewHolder.muteImg.getTag().equals(Constant.UN_SELECT)) {

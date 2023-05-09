@@ -20,21 +20,6 @@
         <item name="android:textSize">42px</item>
     </style>
 
-    <style name="MemberDialog" parent="@android:style/Theme.NoTitleBar">
-        <!-- 是否有边框 -->
-        <item name="android:windowFrame">@null</item>
-        <!--是否在悬浮Activity之上  -->
-        <item name="android:windowIsFloating">true</item>
-        <!--标题  -->
-        <item name="android:windowNoTitle">true</item>
-        <!--是否允许背景变暗-->
-        <item name="android:backgroundDimEnabled">true</item>
-        <!--阴影  -->
-        <item name="android:windowIsTranslucent">true</item>
-        <!-- 点外边可以消失  -->
-        <item name="android:windowCloseOnTouchOutside">false</item>
-    </style>
-
     <style name="CheckBoxStyle" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/check_box</item>
         <item name="android:textSize">42px</item>

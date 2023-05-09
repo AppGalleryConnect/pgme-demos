@@ -33,7 +33,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.GameMediaEngine;
 import com.huawei.gmmesdk.demo.Constant;
 import com.huawei.gmmesdk.demo.GmmeApplication;
@@ -48,25 +47,22 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
     /**
      * 日志标签
      */
-    public static final String TAG = "LoginActivity";
-
-    private long mLastClickTime = 0L;
-
-    private String userId;
-
-    private EditText userIdView;
-
-    /**
-     * 所需权限
-     */
-    private final String[] mPermissions =
-        {android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.READ_PHONE_STATE};
+    public static final String TAG = LoginActivity.class.getSimpleName();
 
     /**
      * 申请权限请求码
      */
-    private static final int REQUEST_PERMISSIONS_CODE = 0X1001;
+    private static final int REQUEST_PERMISSIONS_CODE = 0X001;
+
+    /**
+     * 所需权限
+     */
+    private static final String[] NEED_PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.READ_PHONE_STATE};
+
+    private long mLastClickTime = 0L;
+
+    private EditText userIdView;
 
     /**
      * 权限是否已获取标志
@@ -76,6 +72,7 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // 检查权限
         checkPermissions();
 
@@ -91,15 +88,13 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
     private void checkPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.RECORD_AUDIO)
-                || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,
                     android.Manifest.permission.READ_PHONE_STATE)) {
                 // 如果权限未获取，则申请权限
-                requestPermissions(mPermissions, REQUEST_PERMISSIONS_CODE);
+                requestPermissions(NEED_PERMISSIONS, REQUEST_PERMISSIONS_CODE);
                 return;
             }
         }
@@ -169,7 +164,7 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
         }
 
         // 检查是否输入用户ID
-        userId = userIdView.getText().toString().trim();
+        String userId = userIdView.getText().toString().trim();
         if (TextUtils.isEmpty(userId)) {
             Log.i(TAG, "please input userid");
             return;
@@ -180,6 +175,7 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
             Log.i(TAG, "engine is null");
             return;
         }
+        rtcEngine.enableMic(false);
         Intent intent = new Intent(this, GmmeRoomActivity.class);
         intent.putExtra(Constant.KEY_USER_ID, userId);
         startActivityForResult(intent, Constant.GMME_INIT_ENGINE);

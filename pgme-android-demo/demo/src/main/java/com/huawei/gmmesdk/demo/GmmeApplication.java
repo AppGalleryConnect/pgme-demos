@@ -24,9 +24,9 @@ import com.huawei.game.gmme.handler.IGameMMEEventHandler;
 import com.huawei.game.gmme.model.EngineCreateParams;
 import com.huawei.gmmesdk.demo.handler.GMMECallbackHandler;
 import com.huawei.gmmesdk.demo.sign.Signer;
+import com.huawei.gmmesdk.demo.util.RandomUtil;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 
 /**
  * 应用Application,初始化HRTCEngine
@@ -77,12 +77,12 @@ public class GmmeApplication extends Application {
             params.setClientId(BuildConfig.agcClientId);
             params.setClientSecret(BuildConfig.agcClientSecret);
             params.setApiKey(BuildConfig.agcApiKey);
-            params.setOpenId(this.openId);
+            params.setOpenId(openId);
             params.setCountryCode("CN");
             params.setContext(this);
             params.setLogEnable(true);
             try {
-                params.setLogPath(this.getFilesDir().getCanonicalPath());
+                params.setLogPath(getFilesDir().getCanonicalPath());
             } catch (IOException ioException) {
                 LogUtil.e("log dir not exist, err=" + ioException.getMessage());
             }
@@ -98,13 +98,9 @@ public class GmmeApplication extends Application {
         // 当前游戏密钥的获取方式仅做demo示例，开发者需要放到远端服务器下发给apk
         String gameSecret = BuildConfig.gameSecret;
         // 当前随机数方式仅做demo示例，开发者需要使用更安全的算法来生成随机数
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[20];
-        random.nextBytes(bytes);
-        int randomCode = Math.abs(random.nextInt());
-        String nonce = String.valueOf(randomCode);
+        String nonce = String.valueOf(RandomUtil.getRandomNum());
         String timestamp = String.valueOf(System.currentTimeMillis());
-        params.setSign(Signer.generate(appId, this.openId, nonce, timestamp, gameSecret));
+        params.setSign(Signer.generate(appId, openId, nonce, timestamp, gameSecret));
         params.setNonce(nonce);
         params.setTimeStamp(timestamp);
     }

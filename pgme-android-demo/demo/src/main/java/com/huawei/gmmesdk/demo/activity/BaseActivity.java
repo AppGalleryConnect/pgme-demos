@@ -21,15 +21,21 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -38,8 +44,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.GameMediaEngine;
+import com.huawei.game.common.utils.LogUtil;
 import com.huawei.gmmesdk.demo.Constant;
 import com.huawei.gmmesdk.demo.GmmeApplication;
 import com.huawei.gmmesdk.demo.R;
@@ -57,7 +63,8 @@ import java.util.Map;
 /**
  * 界面初始化
  */
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public class BaseActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener,
+        CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, TextWatcher {
 
     /**
      * 日志标签
@@ -129,6 +136,30 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected RecyclerView recyclerView;
 
+    protected CheckBox voiceChannelCb;
+
+    protected RadioGroup voiceRg;
+
+    protected RadioButton voiceTeamRb;
+
+    protected RadioButton voiceWarRb;
+
+    protected CheckBox msgChannelCb;
+
+    protected RadioGroup msgRg;
+
+    protected RadioButton msgSingleRb;
+
+    protected RadioButton msgGroupRb;
+
+    protected Button joinTeamOrWarBtn;
+
+    protected Button sendTextMsgBtn;
+
+    protected View popTopView;
+
+    protected Button leaveChannelBtn;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -188,16 +219,15 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Real Time Voice");
         findViewById(R.id.ll_root).setOnClickListener(this);
-        findViewById(R.id.btnEnter).setOnClickListener(this);
         findViewById(R.id.btnQuit).setOnClickListener(this);
         findViewById(R.id.hw_gmme_destroy).setOnClickListener(this);
         findViewById(R.id.voiceToText).setOnClickListener(this);
-        findViewById(R.id.btnNational).setOnClickListener(this);
         findViewById(R.id.room_id).setOnClickListener(this);
         roomMemberView = memberPager.findViewById(R.id.recycler_member);
         mEnableMicView = findViewById(R.id.checkEnableMic);
         mEnableMicView.setOnClickListener(this);
         mRoomIdView = findViewById(R.id.roomId_input);
+        mRoomIdView.addTextChangedListener(this);
         mLogMonitorView = printLogsPager.findViewById(R.id.log_Monitor);
         mLogHostView = printLogsPager.findViewById(R.id.log_host);
         mLeaveRoom = findViewById(R.id.btnQuit);
@@ -206,6 +236,31 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         mSwitchView = findViewById(R.id.btnSwitchView);
         currentRoom = findViewById(R.id.current_room);
         roomIdView = findViewById(R.id.room_id);
+
+        voiceChannelCb = findViewById(R.id.checkbox_voice);
+        voiceRg = findViewById(R.id.rg_voice);
+        voiceTeamRb = findViewById(R.id.rb_voice_team);
+        voiceWarRb = findViewById(R.id.rb_voice_war);
+
+        msgChannelCb = findViewById(R.id.checkbox_msg);
+        msgRg = findViewById(R.id.rg_msg);
+        msgSingleRb = findViewById(R.id.rb_single_msg);
+        msgGroupRb = findViewById(R.id.rb_group_msg);
+
+        joinTeamOrWarBtn = findViewById(R.id.btnJoin);
+        sendTextMsgBtn = findViewById(R.id.btnSendTextMsg);
+        leaveChannelBtn = findViewById(R.id.btnLeaveChannel);
+
+        popTopView = findViewById(R.id.pop_top_view);
+
+        voiceChannelCb.setOnCheckedChangeListener(this);
+        voiceRg.setOnCheckedChangeListener(this);
+        voiceWarRb.setOnClickListener(this);
+        msgChannelCb.setOnCheckedChangeListener(this);
+        msgRg.setOnCheckedChangeListener(this);
+        joinTeamOrWarBtn.setOnClickListener(this);
+        sendTextMsgBtn.setOnClickListener(this);
+        leaveChannelBtn.setOnClickListener(this);
     }
 
     private void initData() {
@@ -254,5 +309,34 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

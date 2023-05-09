@@ -40,6 +40,16 @@
                 android:textColor="#c9c3f0"
                 android:textSize="48px" />
 
+            <Button
+                android:id="@+id/transfer_owner"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="120dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/img_transfer_owner" />
+
             <ImageView
                 android:id="@+id/forbid_all"
                 android:layout_width="wrap_content"
