@@ -23,7 +23,7 @@
       </div>
       <div class="input-line">
         <div class="input-name">房间ID：</div>
-        <GInput class="input-item" v-model:value="inputRoomId" placeholder="不填为创建，填入ID为加入"></GInput>
+        <GInput class="input-item" v-model:value="inputRoomId" placeholder="ID必填"></GInput>
       </div>
       <div class="btn-line">
         <GButton small type="primary" @click="joinTeamRoom" :disabled="!canBeClicked">创建/加入小队</GButton>
@@ -85,7 +85,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const curRoomId = ref('');
-    const curPlayerId = ref(route.params.openId);
+    const curPlayerId = ref(route.query.openId);
     const data = reactive({
       visible: false,
       inputRoomId: '',

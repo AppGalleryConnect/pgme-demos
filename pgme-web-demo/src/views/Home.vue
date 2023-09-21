@@ -45,8 +45,8 @@ export default defineComponent({
       initEngine(userId.value, { security: gameSecretEnabled })
         .then(() => {
           router.push({
-            name: 'Room',
-            params: { openId: userId.value },
+            path: '/room',
+            query: { openId: userId.value },
           });
           pushLog('The multimedia engine is created successfully');
         })

@@ -3,3 +3,6 @@ jest.config.js
 **/public
 **/test
 **/shims-vue.d.ts
+**/engine.ts
+**/GMME.d.ts
+**/GMME.js

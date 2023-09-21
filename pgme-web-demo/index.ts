@@ -16,9 +16,9 @@
 
 import { EngineParamsConfig } from './src/api/engine';
 
-EngineParamsConfig.setAppId('your appId');
-EngineParamsConfig.setClientId('your clientId');
-EngineParamsConfig.setClientSecret('your clientSecret');
+EngineParamsConfig.setAppId('');
+EngineParamsConfig.setClientId('');
+EngineParamsConfig.setClientSecret('');
 EngineParamsConfig.setGameSecret(''); // 未开通安全加固时无需配置
 
 import './src/main';

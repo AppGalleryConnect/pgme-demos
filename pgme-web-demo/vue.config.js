@@ -14,12 +14,33 @@
  *  limitations under the License.
  */
 
+let outputDir = 'dist/' + (process.env.DEMO_BUILD_TARGET || 'cn');
+const buildPages = {
+  index: {
+    entry: './index.ts',
+    title: 'GMME Demo',
+  },
+};
+
+if (process.env.DEMO_BUILD_TARGET === 'dev') {
+  buildPages.index = {
+    entry: './index.dev.ts',
+    title: 'GMME Demo (dev)',
+  };
+} else if (process.env.DEMO_BUILD_TARGET === 'mirror') {
+  buildPages.index = {
+    entry: './index.mirror.ts',
+    title: 'GMME Demo (mirror)',
+  };
+}
+
 module.exports = {
   productionSourceMap: false,
   lintOnSave: false,
   publicPath: './',
   devServer: {},
-  outputDir: 'dist',
+  outputDir,
+  pages: buildPages,
   chainWebpack: (config) => {
     config.module
       .rule('images')
