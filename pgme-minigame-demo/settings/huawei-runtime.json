@@ -1,0 +1,22 @@
+{
+  "package": "com.huawei.mmequickgame",
+  "name": "MMEQuickGame-master",
+  "icon": "C:\\DeskFile\\img\\20221207-103235(WeLinkPC).png",
+  "versionName": "1.0.1",
+  "versionCode": "2",
+  "minPlatformVersion": "1079",
+  "manifestPath": "",
+  "deviceOrientation": "portrait",
+  "fullScreen": true,
+  "logLevel": "debug",
+  "runRelease": false,
+  "appType": "fastgame",
+  "tinyPackageServer": "",
+  "useDebugKey": true,
+  "privatePath": "",
+  "certificatePath": "",
+  "disabledMode": "disabled is-disabled",
+  "npmPath": "",
+  "showNpmPath": false,
+  "packFirstScreenRes": false
+}
