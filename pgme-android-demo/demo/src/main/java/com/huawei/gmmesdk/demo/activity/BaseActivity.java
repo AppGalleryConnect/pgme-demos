@@ -20,8 +20,10 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,15 +46,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huawei.game.gmme.GameMediaEngine;
 import com.huawei.game.common.utils.LogUtil;
-import com.huawei.gmmesdk.demo.Constant;
+import com.huawei.game.gmme.GameMediaEngine;
 import com.huawei.gmmesdk.demo.GmmeApplication;
 import com.huawei.gmmesdk.demo.R;
 import com.huawei.gmmesdk.demo.adapter.NoSlideViewPager;
 import com.huawei.gmmesdk.demo.adapter.RoomMembersAdapter;
 import com.huawei.gmmesdk.demo.adapter.RoomPagerAdapter;
+import com.huawei.gmmesdk.demo.constant.Constant;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.ProtectionDomain;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,14 +69,15 @@ import java.util.Map;
 
 /**
  * 界面初始化
+ *
+ * @since 2023-04-10
  */
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener,
-        CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, TextWatcher {
-
+    CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, TextWatcher {
     /**
      * 日志标签
      */
-    private static final String BASE_TAG = "BaseActivity";
+    private static final String BASE_TAG = BaseActivity.class.getSimpleName();
 
     /**
      * HRTCEngine
@@ -144,6 +152,8 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected RadioButton voiceWarRb;
 
+    protected RadioButton rangeWarRb;
+
     protected CheckBox msgChannelCb;
 
     protected RadioGroup msgRg;
@@ -160,8 +170,14 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected Button leaveChannelBtn;
 
+    protected Button audioClipBtn;
+
+    protected Button playerPositionBtn;
+
+    protected Button btnSetScope;
+
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -178,6 +194,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         initViews();
         initData();
         initPop();
+        initAudioTestFile();
     }
 
     /**
@@ -241,6 +258,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         voiceRg = findViewById(R.id.rg_voice);
         voiceTeamRb = findViewById(R.id.rb_voice_team);
         voiceWarRb = findViewById(R.id.rb_voice_war);
+        rangeWarRb = findViewById(R.id.rb_scope);
 
         msgChannelCb = findViewById(R.id.checkbox_msg);
         msgRg = findViewById(R.id.rg_msg);
@@ -250,17 +268,23 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         joinTeamOrWarBtn = findViewById(R.id.btnJoin);
         sendTextMsgBtn = findViewById(R.id.btnSendTextMsg);
         leaveChannelBtn = findViewById(R.id.btnLeaveChannel);
+        btnSetScope = findViewById(R.id.set_scope);
 
         popTopView = findViewById(R.id.pop_top_view);
-
+        audioClipBtn = findViewById(R.id.textAudioClipView);
+        playerPositionBtn = findViewById(R.id.textPlayerPosition);
         voiceChannelCb.setOnCheckedChangeListener(this);
         voiceRg.setOnCheckedChangeListener(this);
+        btnSetScope.setOnClickListener(this);
         voiceWarRb.setOnClickListener(this);
         msgChannelCb.setOnCheckedChangeListener(this);
         msgRg.setOnCheckedChangeListener(this);
         joinTeamOrWarBtn.setOnClickListener(this);
+        rangeWarRb.setOnClickListener(this);
         sendTextMsgBtn.setOnClickListener(this);
         leaveChannelBtn.setOnClickListener(this);
+        audioClipBtn.setOnClickListener(this);
+        playerPositionBtn.setOnClickListener(this);
     }
 
     private void initData() {
@@ -290,6 +314,82 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
+     * 初始化语音测试文件
+     */
+    private void initAudioTestFile() {
+        new Thread(() -> {
+            File fileDir = getExternalCacheDir();
+            try {
+                if (fileDir != null && (!TextUtils.isEmpty(fileDir.getCanonicalPath()))) {
+                    // 保存混音文件到sdCard
+                    putAssetsToSDCard(Constant.ResourcesSaveDir.MUSIC, fileDir.getCanonicalPath());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
+
+    /**
+     * 将assets下的文件放到sd指定目录下
+     *
+     * @param assetsPath assets下的路径
+     * @param sdCardPath sd卡的路径
+     */
+    private void putAssetsToSDCard(String assetsPath, String sdCardPath) {
+        try {
+            String[] files = getAssets().list(assetsPath);
+            if (files == null) {
+                LogUtil.e(BASE_TAG, "assets不存在此目录： " + assetsPath);
+                return;
+            }
+            if (files.length == 0) {
+                // 说明assetsPath为空,或者assetsPath是一个文件
+                File file = new File(sdCardPath + assetsPath.substring(assetsPath.lastIndexOf('/')));
+                if (file.exists()) {
+                    return;
+                }
+
+                InputStream is = getAssets().open(assetsPath);
+                byte[] mByte = new byte[1024];
+                int len = 0;
+                // 写入流
+                FileOutputStream fos = new FileOutputStream(file);
+                // assets为文件,从文件中读取流
+                while ((len = is.read(mByte)) != -1) {
+                    // 写入流到文件中
+                    fos.write(mByte, 0, len);
+                }
+
+                // 关闭读取流
+                is.close();
+                // 关闭写入流
+                fos.close();
+            } else {
+                // 当files长度大于0,说明其为文件夹
+                String currentDir = assetsPath;
+                if (assetsPath.lastIndexOf('/') != -1) {
+                    currentDir = assetsPath.substring(assetsPath.lastIndexOf('/') + 1);
+                }
+
+                sdCardPath = sdCardPath + File.separator + currentDir;
+                File file = new File(sdCardPath);
+                if (!file.exists()) {
+                    // 在sd下创建目录
+                    file.mkdirs();
+                }
+
+                // 进行递归
+                for (String stringFile : files) {
+                    putAssetsToSDCard(assetsPath + File.separator + stringFile, sdCardPath);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 追加日志
      *
      * @param text 打印日志
@@ -299,9 +399,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault());
         String time = sdf.format(new Date());
         if (!logText.isEmpty()) {
-            logText = logText + "\n\n" + time + "\n" + text;
+            logText = logText + System.lineSeparator() + System.lineSeparator() + time + System.lineSeparator() + text;
         } else {
-            logText = time + "\n" + text;
+            logText = time + System.lineSeparator() + text;
         }
         mLogMonitorView.setText(logText);
         mLogHostView.fullScroll(View.FOCUS_DOWN);

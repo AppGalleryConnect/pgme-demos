@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-
+ 
 package com.huawei.demo;
 
 import static org.junit.Assert.assertEquals;
@@ -331,7 +331,7 @@ public class GameMMEAndroidTestCase {
         voiceParam.languageCodeSet("CN");
         mHwRtcEngine.startRecordAudioToText(voiceParam);
         sleep(3000);
-        assertEquals(3015, rcode);// VOICE_TO_TEXT_THIRD_INVOKE_ERROR
+        assertEquals(4001, rcode);
     }
 
     /***

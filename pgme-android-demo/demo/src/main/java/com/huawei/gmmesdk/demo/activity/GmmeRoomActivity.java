@@ -16,15 +16,22 @@
 
 package com.huawei.gmmesdk.demo.activity;
 
+import static com.huawei.game.gmme.exception.GmmeErrCode.SUCCESS;
+import static com.huawei.gmmesdk.demo.activity.LoginActivity.TAG;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -48,6 +55,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -55,23 +64,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.huawei.game.common.constants.SdkThreadPool;
-import com.huawei.game.common.exception.CommonErrorCode;
 import com.huawei.game.common.utils.LogUtil;
+import com.huawei.game.common.utils.StringUtil;
 import com.huawei.game.gmme.exception.GmmeErrCode;
 import com.huawei.game.gmme.handler.IGameMMEEventHandler;
 import com.huawei.game.gmme.model.AudioMsgFileInfo;
+import com.huawei.game.gmme.model.LocalAudioClipStateInfo;
 import com.huawei.game.gmme.model.Player;
 import com.huawei.game.gmme.model.Room;
 import com.huawei.game.gmme.model.VolumeInfo;
-import com.huawei.gmmesdk.demo.Constant;
 import com.huawei.gmmesdk.demo.GmmeApplication;
-import com.huawei.gmmesdk.demo.IMLogConstant;
 import com.huawei.gmmesdk.demo.R;
-import com.huawei.gmmesdk.demo.adapter.AudioConstant;
 import com.huawei.gmmesdk.demo.adapter.ChatMsgAdapter;
 import com.huawei.gmmesdk.demo.adapter.RoomActivityInfo;
 import com.huawei.gmmesdk.demo.adapter.RoomIdsAdapter;
 import com.huawei.gmmesdk.demo.adapter.RoomMembersAdapter;
+import com.huawei.gmmesdk.demo.component.PlayPositionDialog;
+import com.huawei.gmmesdk.demo.constant.Constant;
+import com.huawei.gmmesdk.demo.constant.IMLogConstant;
 import com.huawei.gmmesdk.demo.handler.MemberEventClick;
 import com.huawei.gmmesdk.demo.log.Log;
 import com.huawei.gmmesdk.demo.util.RandomUtil;
@@ -89,15 +99,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 应用房间界面
+ *
+ * @since 2023-04-10
  */
 public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, IGameMMEEventHandler {
-
     /**
      * 日志标签
      */
-    private static final String ROOM_TAG = "GmmeRoomActivity";
+    private static final String ROOM_TAG = GmmeRoomActivity.class.getSimpleName();
 
     private static final int OFFSET_Y = 600;
 
@@ -109,17 +123,29 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private static final long COUNT_DOWN_INTERVAL = 1000L;
 
-    private static final int LOCAL_CACHE_POSITION = -1;
-
-    private static boolean IS_SEND = false;
-
-
-    private static long startTime = 0;
-
     /**
      * 申请权限请求码
      */
     private static final int REQUEST_PERMISSIONS_CODE = 0X002;
+
+    private static final String REG = "^[1-9]\\d*$";
+
+    private static boolean IS_SEND = false;
+
+    private static long startTime = 0;
+
+    private static boolean threeDimensionalEnable = false;
+
+    private final List<String> channelIdList = new ArrayList<>();
+
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            appendLog2MonitorView("status =" + msg.arg1 + ",message=" + msg.obj);
+        }
+    };
 
     /**
      * 当前房间ID
@@ -131,10 +157,15 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
      */
     protected String mOwnerId;
 
+    /**
+     * 范围值
+     */
+    private String range = null;
+
     protected TimerTask mTimerTask;
 
     @SuppressLint("HandlerLeak")
-    Handler recyclerHandler = new Handler() {
+    Handler recyclerHandler = new Handler(Looper.getMainLooper()) {
         private void handleLeave(Message msg) {
             if (msg.obj == null) {
                 return;
@@ -153,8 +184,9 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             }
             currentRoom.setText(msg.obj.toString());
             if (!mRoomId.equals(msg.obj)) {
-                appendLog2MonitorView("switch room:" + "\n" + "user: " + mLocalUserId + "\n" + "oldRoomId: " + mRoomId
-                    + "\n" + "newRoomId: " + msg.obj.toString());
+                appendLog2MonitorView(
+                    "switch room:" + System.lineSeparator() + "user: " + mLocalUserId + System.lineSeparator()
+                        + "oldRoomId: " + mRoomId + System.lineSeparator() + "newRoomId: " + msg.obj.toString());
                 mHwRtcEngine.switchRoom(msg.obj.toString());
             }
         }
@@ -175,10 +207,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
     };
 
-    private AudioConstant audioConstant;
-
-    private long mLastClickTime = 0L;
-
     private boolean isForbid = false;
 
     private boolean isMute = false;
@@ -191,16 +219,16 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private VoiceToTextPopup popup;
 
+    private AudioClipViewPopup audioClipViewPopup;
+
     private List<String> roomMemberBeansList = new ArrayList<>();
 
     private List<String> roomIdList = new ArrayList<>();
 
-    private final List<String> channelIdList = new ArrayList<>();
-
     private Timer mTimer;
 
     @SuppressLint("HandlerLeak")
-    Handler myHandler = new Handler() {
+    Handler myHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -211,7 +239,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
     };
 
-
     private int roomType;
 
     private int lastOperate = View.FOCUS_LEFT;
@@ -219,15 +246,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     private boolean voiceCheckBoxIsChecked = true;
 
     private boolean msgCheckBoxIsChecked = true;
-
-    @SuppressLint("HandlerLeak")
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            appendLog2MonitorView("status =" + msg.arg1 + ",message=" + msg.obj);
-        }
-    };
 
     private ChatMsgAdapter mChatMsgAdapter;
 
@@ -241,6 +259,30 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private EditText mChatMsgContentEt;
 
+    private ActivityResultLauncher<Intent> launcher = null;
+
+    private SharedPreferences shareData = null;
+
+    private final TextWatcher chatMsgInputListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (msgSingleRb.isChecked()) {
+                mChatMsgSend.setEnabled(
+                    !TextUtils.isEmpty(mChatMsgRecIdEt.getText()) && !TextUtils.isEmpty(mChatMsgContentEt.getText()));
+            } else {
+                mChatMsgSend.setEnabled(!TextUtils.isEmpty(s));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
     private LinearLayout mMsgRecIdLl;
 
     private LinearLayout mAudioView;
@@ -249,11 +291,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private TextView mSpeakerAudioTime;
 
-
-    /**
-     * 当前麦克风的操作
-     */
-    private Constant.MicOperateTypeEnum currentMicOperate;
+    private Button btnThreeDimensionalEnable;
 
     /**
      * 录音倒计时显示
@@ -276,32 +314,24 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
     };
 
+    /**
+     * 当前麦克风的操作
+     */
+    private Constant.MicOperateTypeEnum currentMicOperate;
+
     private String currentChannelId;
-
-    private final TextWatcher chatMsgInputListener = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (msgSingleRb.isChecked()) {
-                mChatMsgSend.setEnabled(
-                    !TextUtils.isEmpty(mChatMsgRecIdEt.getText()) && !TextUtils.isEmpty(mChatMsgContentEt.getText()));
-            } else {
-                mChatMsgSend.setEnabled(!TextUtils.isEmpty(s));
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        });
         ((GmmeApplication) getApplication()).registerEventHandler(this);
+        shareData = getSharedPreferences("playerPositions", MODE_PRIVATE);
+        shareData.edit().clear().apply();
+        SelfPositionRotateInfo selfPositionRotateInfo = SelfPositionRotateInfo.getInstance();
+        selfPositionRotateInfo.setHwRtcEngine(this.mHwRtcEngine);
+        selfPositionRotateInfo.updateSelfPosition(this);
     }
 
     @Override
@@ -330,10 +360,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 onExitRoomClick();
                 break;
             case R.id.hw_gmme_destroy:
-                if (System.currentTimeMillis() - mLastClickTime >= Constant.TIME_INTERVAL) {
-                    mLastClickTime = System.currentTimeMillis();
-                    destroyGmme();
-                }
+                destroyGmme();
                 break;
             case R.id.voiceToText:
                 onVoiceToTextClick();
@@ -350,12 +377,14 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             case R.id.btnJoin:
                 if (voiceTeamRb.isChecked()) {
                     onEnterTeamRoom();
-                } else {
+                } else if (voiceWarRb.isChecked()) {
                     if (userChoiceIdentity == 0) {
                         onEnterNationalRoom(Constant.JOINER);
                     } else {
                         onEnterNationalRoom(Constant.PLAYER);
                     }
+                } else {
+                    onEnterRangeRoom();
                 }
                 break;
             case R.id.btnSendTextMsg:
@@ -364,7 +393,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 }
                 String channelId = mRoomIdView.getText().toString();
                 if (msgGroupRb.isChecked() && !TextUtils.isEmpty(channelId) && !channelIdList.contains(channelId)) {
-                    appendLog2MonitorView("join group channel , channel id :" + channelId);
                     mHwRtcEngine.joinGroupChannel(channelId);
                     return;
                 }
@@ -377,7 +405,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 if (mHwRtcEngine == null) {
                     return;
                 }
-                appendLog2MonitorView("leave channel");
                 leaveAllChannel();
                 break;
             case R.id.rb_voice_war:
@@ -387,8 +414,81 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 String content = mChatMsgContentEt.getText().toString();
                 onSendChatMsg(content);
                 break;
+            case R.id.textAudioClipView:
+                onTextAudioClip();
+                break;
+            case R.id.textPlayerPosition:
+                onTextPlayerPosition();
+                break;
+            case R.id.three_dimensional_enable:
+                int result = mHwRtcEngine.enableSpatialSound(mRoomId, !threeDimensionalEnable);
+                if (result == 0) {
+                    threeDimensionalEnable = !threeDimensionalEnable;
+                    btnThreeDimensionalEnable
+                        .setText(threeDimensionalEnable ? getResources().getString(R.string.three_dimensional_disable)
+                            : getResources().getString(R.string.three_dimensional_enable));
+                    Toast.makeText(this, "设置3D音效成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    String msg = result == 6022 ? "3D音效未集成" : "设置3D音效失败";
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                }
+            case R.id.set_scope:
+                onSetScope();
+                break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 设置范围range
+     */
+    private void onSetScope() {
+        PlayPositionDialog playPositionDialog =
+            new PlayPositionDialog(this, "请输入range", range, Constant.PlayerPositionDialogType.Scope);
+        playPositionDialog.showAtLocation(btnSetScope, Gravity.CENTER, 0, 0);
+        playPositionDialog.setOnDataListener((param, dialogType) -> {
+            if (!StringUtil.isEmpty(param)) {
+                String msg = "设置失败";
+                String number = getNumber(param);
+                int scopeValue;
+                try {
+                    scopeValue = Integer.parseInt(number);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getApplicationContext(), "设置失败，最大值小于2147483648", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int result = mHwRtcEngine.setAudioRecvRange(scopeValue);
+                if (result == 0) {
+                    range = number;
+                    msg = "设置成功";
+                }
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @NonNull
+    private String getNumber(String text) {
+        Pattern pattern = Pattern.compile(REG);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.matches() ? text : "0";
+    }
+
+    /**
+     * 设置玩家位置
+     */
+    private void onTextPlayerPosition() {
+        Intent intent = new Intent(this, PlayerPositionActivity.class);
+        launcher.launch(intent);
+    }
+
+    private void onTextAudioClip() {
+        if (mHwRtcEngine == null) {
+            finish();
+        } else {
+            audioClipViewPopup = new AudioClipViewPopup(this, mHwRtcEngine);
+            audioClipViewPopup.showAtLocation(findViewById(R.id.textAudioClipView), Gravity.CENTER, 0, 0);
         }
     }
 
@@ -421,7 +521,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             String filePath = null;
             try {
                 filePath =
-                        getExternalCacheDir().getCanonicalPath() + "/" + RandomUtil.getRandomNum() + Constant.AUDIO_TYPE;
+                    getExternalCacheDir().getCanonicalPath() + "/" + RandomUtil.getRandomNum() + Constant.AUDIO_TYPE;
             } catch (IOException e) {
                 LogUtil.e(ROOM_TAG, e.getMessage());
             }
@@ -441,11 +541,9 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             }
             if (System.currentTimeMillis() - startTime > 1000) {
                 IS_SEND = y1 - y2 < 50;
-                appendLog2MonitorView("stop record audio then send audio");
                 mHwRtcEngine.stopRecordAudioMsg();
             } else {
                 IS_SEND = false;
-                appendLog2MonitorView("stop record audio, recording less than 1 second");
                 mHwRtcEngine.stopRecordAudioMsg();
                 Toast.makeText(getApplicationContext(), getString(R.string.speak_short), Toast.LENGTH_SHORT).show();
             }
@@ -453,8 +551,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             mAudioView.setVisibility(View.GONE);
         }
     }
-
-
 
     private void leaveAllChannel() {
         if (mHwRtcEngine == null) {
@@ -498,10 +594,9 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private void initChatContent(View msgView) {
         mChatMsgDataList = new ArrayList<>();
-        audioConstant = new AudioConstant();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mChatMsgContentRv.setLayoutManager(layoutManager);
-        mChatMsgAdapter = new ChatMsgAdapter(this, mLocalUserId, mChatMsgDataList, audioConstant);
+        mChatMsgAdapter = new ChatMsgAdapter(this, mLocalUserId, mChatMsgDataList);
         mChatMsgContentRv.setAdapter(mChatMsgAdapter);
 
         PopupWindow popWindow =
@@ -604,7 +699,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
         sendTextMsgBtn.setEnabled(
             msgChannelCb.isChecked() && (msgSingleRb.isChecked() || (msgGroupRb.isChecked() && !TextUtils.isEmpty(s))));
-
     }
 
     @Override
@@ -615,15 +709,12 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     private void onClickRoomId() {
         if (!popupWindow.isShowing()) {
             RoomIdsAdapter roomIdsAdapter = new RoomIdsAdapter(roomIdList);
-            roomIdsAdapter.setOnItemClickListener(new RoomIdsAdapter.OnItemClickListener() {
-                @Override
-                public void OnItemClick(String roomId) {
-                    popupWindow.dismiss();
-                    Message threadMsg = new Message();
-                    threadMsg.obj = roomId;
-                    threadMsg.arg1 = Constant.SWITCHROOM;
-                    recyclerHandler.sendMessage(threadMsg);
-                }
+            roomIdsAdapter.setOnItemClickListener(roomId -> {
+                popupWindow.dismiss();
+                Message threadMsg = new Message();
+                threadMsg.obj = roomId;
+                threadMsg.arg1 = Constant.SWITCHROOM;
+                recyclerHandler.sendMessage(threadMsg);
             });
             recyclerView.setAdapter(roomIdsAdapter);
             popupWindow.showAsDropDown(roomIdView, 0, 0, Gravity.BOTTOM);
@@ -631,6 +722,8 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     }
 
     private void destroyGmme() {
+        SelfPositionRotateInfo.getInstance().clear();
+        shareData.edit().clear().apply();
         ((GmmeApplication) getApplication()).destroyGmmEngine();
         Log.i(ROOM_TAG, "engine destroy success");
     }
@@ -639,6 +732,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     protected void onDestroy() {
         LogUtil.i(ROOM_TAG, "onDestroy!");
         roomIdList = new ArrayList<>();
+        shareData.edit().clear().apply();
         ((GmmeApplication) getApplication()).removeEventHandler(this);
         super.onDestroy();
     }
@@ -666,7 +760,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 showSingleChoiceDialog(mRoomId);
             } else {
                 mHwRtcEngine.leaveRoom(mRoomId, null);
-                appendLog2MonitorView("leaved room");
             }
         }
     }
@@ -686,7 +779,9 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         view.findViewById(R.id.btn_cancel).setOnClickListener(view1 -> aDialog.dismiss());
         view.findViewById(R.id.btn_confirm).setOnClickListener(view12 -> {
             if (newOwner != -1) {
-                if (mLocalOpenId.equals(getOwnerId()) && getRoomMemberList(mRoomId).size() > 1) {
+                Room curRoom = mHwRtcEngine.getRoom(rooms[newOwner]);
+                String ownerId = curRoom.getOwnerId();
+                if (mLocalOpenId.equals(ownerId) && getRoomMemberList(mRoomId).size() > 1) {
                     showSingleChoiceDialog(rooms[newOwner]);
                 } else {
                     mHwRtcEngine.leaveRoom(rooms[newOwner], null);
@@ -694,7 +789,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             }
 
             aDialog.dismiss();
-            appendLog2MonitorView("leaved room");
         });
         addRadioButton(view.findViewById(R.id.radio_grp_l), view.findViewById(R.id.radio_grp_r), roomIdList);
         aDialog.show();
@@ -724,7 +818,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 mHwRtcEngine.leaveRoom(removeRoomId, null);
             }
             aDialog.dismiss();
-            appendLog2MonitorView("leaved room");
         });
         addRadioButton(view.findViewById(R.id.radio_grp_l), view.findViewById(R.id.radio_grp_r), playerIdList);
         aDialog.show();
@@ -736,7 +829,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     private void onTransferOwnerClick() {
         if (mHwRtcEngine == null) {
             finish();
-        } else if (mLocalOpenId.equals(getOwnerId()) && getRoomMemberList(mRoomId).size() > 1) {
+        } else if (mLocalOpenId.equals(getOwnerId())) {
             showSingleChoiceDialog2();
         }
     }
@@ -746,6 +839,9 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
      */
     private void showSingleChoiceDialog2() {
         List<String> playerIdList = getRoomMemberList(mRoomId);
+        if (playerIdList.size() <= 1) {
+            return;
+        }
         playerIdList.remove(mLocalOpenId);
         String[] items = new String[playerIdList.size()];
         String[] players = playerIdList.toArray(items);
@@ -765,7 +861,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 mHwRtcEngine.transferOwner(mRoomId, null);
             }
             aDialog.dismiss();
-            appendLog2MonitorView("transferOwner ");
         });
         addRadioButton(view.findViewById(R.id.transfer_grp_l), view.findViewById(R.id.transfer_grp_r), playerIdList);
         aDialog.show();
@@ -846,7 +941,8 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 aDialog.dismiss();
             });
             RadioGroup radioGroup = view.findViewById(R.id.radio_grp);
-            radioGroup.setOnCheckedChangeListener((radioGroup1, i) -> userChoiceIdentity = (i == R.id.conductors ? 0 : 1));
+            radioGroup
+                .setOnCheckedChangeListener((radioGroup1, i) -> userChoiceIdentity = (i == R.id.conductors ? 0 : 1));
 
             aDialog.show();
         }
@@ -862,6 +958,19 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             String roomId = mRoomIdView.getText().toString().trim();
             appendLog2MonitorView("join NationalRoom, roomId:" + roomId + " user:" + mLocalUserId);
             mHwRtcEngine.joinNationalRoom(roomId, roleType);
+        }
+    }
+
+    /**
+     * 进入范围房间
+     */
+    private void onEnterRangeRoom() {
+        if (mHwRtcEngine == null) {
+            finish();
+        } else {
+            String roomId = mRoomIdView.getText().toString().trim();
+            appendLog2MonitorView("join rangeRoom, roomId:" + roomId + " user:" + mLocalUserId);
+            mHwRtcEngine.joinRangeRoom(roomId);
         }
     }
 
@@ -911,7 +1020,23 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 transferOwner.setVisibility(View.GONE);
             }
             updateMemberCount();
-            getRoomMemberListWithThread(roomMemberView);
+            // 设置3D音效
+            btnThreeDimensionalEnable = findViewById(R.id.three_dimensional_enable);
+            btnThreeDimensionalEnable.setOnClickListener(v -> {
+                int result = mHwRtcEngine.enableSpatialSound(mRoomId, !threeDimensionalEnable);
+                if (result == 0) {
+                    threeDimensionalEnable = !threeDimensionalEnable;
+                    btnThreeDimensionalEnable
+                        .setText(threeDimensionalEnable ? getResources().getString(R.string.three_dimensional_disable)
+                            : getResources().getString(R.string.three_dimensional_enable));
+                    Toast.makeText(this, "设置3D音效成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    String msg = result == 6022 ? "3D音效未集成" : "设置3D音效失败";
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            getRoomMemberListWithThread(roomMemberView, this);
         }
     }
 
@@ -959,14 +1084,14 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
     }
 
-    private boolean checkRecordAudioPermission(){
+    private boolean checkRecordAudioPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,
-                    android.Manifest.permission.RECORD_AUDIO)) {
+                android.Manifest.permission.RECORD_AUDIO)) {
                 mEnableMicView.setChecked(false);
 
                 // 如果权限未获取，则申请权限
-                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_PERMISSIONS_CODE);
+                requestPermissions(new String[] {Manifest.permission.RECORD_AUDIO}, REQUEST_PERMISSIONS_CODE);
                 return false;
             }
         }
@@ -975,10 +1100,10 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+        @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode !=  REQUEST_PERMISSIONS_CODE) {
+        if (requestCode != REQUEST_PERMISSIONS_CODE) {
             return;
         }
         if (grantResults.length == 0) {
@@ -1000,10 +1125,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
     }
 
-
-
-
-    private void doMuteAudio(){
+    private void doMuteAudio() {
         if (mHwRtcEngine == null) {
             finish();
         } else {
@@ -1017,13 +1139,13 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private List<String> getRoomMemberList(String removeRoomId) {
         if (mHwRtcEngine == null) {
-            LogUtil.e("engine init fail");
+            LogUtil.e(TAG, "engine init fail");
             return new ArrayList<>();
         }
         Room curRoom = mHwRtcEngine.getRoom(removeRoomId);
         List<Player> players = curRoom.getPlayers();
         if (players == null || players.isEmpty()) {
-            LogUtil.e("players is empty");
+            LogUtil.e(TAG, "players is empty");
             return new ArrayList<>();
         }
         List<String> playerIdList = new ArrayList<>();
@@ -1038,13 +1160,13 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private List<Player> getRoomMemberInfoList() {
         if (mHwRtcEngine == null) {
-            LogUtil.e("engine init fail");
+            LogUtil.e(TAG, "engine init fail");
             return new ArrayList<>();
         }
         Room curRoom = mHwRtcEngine.getRoom(mRoomId);
         List<Player> players = curRoom.getPlayers();
         if (players == null || players.isEmpty()) {
-            LogUtil.e("players is empty");
+            LogUtil.e(TAG, "players is empty");
             return new ArrayList<>();
         }
         return players;
@@ -1052,7 +1174,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private String getOwnerId() {
         if (mHwRtcEngine == null) {
-            LogUtil.e("engine init fail");
+            LogUtil.e(TAG, "engine init fail");
             return null;
         }
         Room curRoom = mHwRtcEngine.getRoom(mRoomId);
@@ -1061,7 +1183,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private int getRoomType() {
         if (mHwRtcEngine == null) {
-            LogUtil.e("engine init fail");
+            LogUtil.e(TAG, "engine init fail");
             return 0;
         }
         Room curRoom = mHwRtcEngine.getRoom(mRoomId);
@@ -1070,7 +1192,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
 
     private boolean getRoomStatus() {
         if (mHwRtcEngine == null) {
-            LogUtil.e("engine init fail");
+            LogUtil.e(TAG, "engine init fail");
             return false;
         }
         Room curRoom = mHwRtcEngine.getRoom(mRoomId);
@@ -1082,7 +1204,8 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
      *
      * @param rtcMemberListView 用户列表父布局
      */
-    protected void getRoomMemberListWithThread(RecyclerView rtcMemberListView) {
+    protected void getRoomMemberListWithThread(RecyclerView rtcMemberListView, Context context) {
+
         // 此时已在主线程中，可以更新UI了，定义一个线性布局管理器
         LinearLayoutManager manager = new LinearLayoutManager(GmmeRoomActivity.this);
 
@@ -1090,11 +1213,15 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         rtcMemberListView.setLayoutManager(manager);
 
         // 设置adapter
+        boolean allOneKeyMuteState = allMuteImage.get(mRoomId) != null ? allMuteImage.get(mRoomId) : false;
         Map muteState = allMuteState.get(mRoomId) != null ? allMuteState.get(mRoomId) : new HashMap<>();
         Map forbidState = allForbidState.get(mRoomId) != null ? allForbidState.get(mRoomId) : new HashMap<>();
-        rtcMemberListAdapter = new RoomMembersAdapter(GmmeRoomActivity.this, getOwnerId(), mLocalUserId, mLocalOpenId,
-            roomType, new RoomActivityInfo(roomMemberBeansList, muteState, forbidState, muteImg, forbidImg));
+        rtcMemberListAdapter = new RoomMembersAdapter(context, GmmeRoomActivity.this, getOwnerId(), mLocalUserId,
+            mLocalOpenId, roomType,
+            new RoomActivityInfo(roomMemberBeansList, allOneKeyMuteState, muteState, forbidState, muteImg, forbidImg),
+            mHwRtcEngine);
         rtcMemberListView.setAdapter(rtcMemberListAdapter);
+
         // 增加分割线
         if (rtcMemberListView.getItemDecorationCount() != RecyclerView.VERTICAL) {
             rtcMemberListView
@@ -1106,14 +1233,14 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
      * 语音转文字
      */
     public void onVoiceToTextClick() {
-        LogUtil.i(ROOM_TAG, "VoiceToText button Clicked !");
+        LogUtil.i(TAG, "VoiceToText button Clicked !");
         currentMicOperate = Constant.MicOperateTypeEnum.VoiceToText;
         if (checkRecordAudioPermission()) {
             doVoiceToText();
         }
     }
 
-    private void doVoiceToText(){
+    private void doVoiceToText() {
         if (mHwRtcEngine == null) {
             finish();
         } else {
@@ -1131,7 +1258,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             popup.setOnDismissListener(() -> setBackgroundAlpha(1f));
         }
     }
-
 
     /**
      * 修改默认触摸事件传递
@@ -1183,9 +1309,9 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault());
         String time = sdf.format(new Date());
         if (!logText.isEmpty()) {
-            logText = logText + "\n\n" + time + "\n" + text;
+            logText = logText + System.lineSeparator() + System.lineSeparator() + time + System.lineSeparator() + text;
         } else {
-            logText = time + "\n" + text;
+            logText = time + System.lineSeparator() + text;
         }
         mLogMonitorView.setText(logText);
         mLogHostView.fullScroll(View.FOCUS_DOWN);
@@ -1239,8 +1365,9 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             runOnUiThread(() -> {
                 allMuteImage.put(roomId, isMuted);
                 recoveryImage();
-                if (mRoomId.equals(roomId)) {
+                if (rtcMemberListAdapter != null && !StringUtil.isEmpty(mRoomId) && mRoomId.equals(roomId)) {
                     rtcMemberListAdapter.refreshMuteState(muteState);
+                    rtcMemberListAdapter.refreshAllOneKeyMuteState(isMuted);
                 }
             });
         }
@@ -1266,7 +1393,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
         allMuteState.put(mRoomId, muteState);
         runOnUiThread(() -> {
-            if (mRoomId.equals(roomId)) {
+            if (rtcMemberListAdapter != null && !StringUtil.isEmpty(mRoomId) && mRoomId.equals(roomId)) {
                 rtcMemberListAdapter.refreshMuteState(muteState);
             }
         });
@@ -1297,6 +1424,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 "onJoinTeamRoom : roomId=" + roomId + ",+type" + Constant.TEAMROOM + "code=" + code + ", msg=" + msg);
             return;
         }
+
         if (code == 0) {
             mHwRtcEngine.enableSpeakersDetection(roomId, Constant.INTERVAL_PERIOD);
             mRoomId = roomId;
@@ -1320,6 +1448,8 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 mRoomIdView.setText("");
                 onShowOrUpdateMembers();
                 mLeaveRoom.setEnabled(true);
+                threeDimensionalEnable = false;
+                btnThreeDimensionalEnable.setText(getResources().getString(R.string.three_dimensional_enable));
             });
         }
         notifyMainThreadToUpdateView(code, jsonObject);
@@ -1357,6 +1487,55 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 currentRoom.setText(mRoomId);
                 onShowOrUpdateMembers();
                 mLeaveRoom.setEnabled(true);
+                threeDimensionalEnable = false;
+                btnThreeDimensionalEnable.setText(getResources().getString(R.string.three_dimensional_enable));
+            });
+        }
+        notifyMainThreadToUpdateView(code, jsonObject);
+    }
+
+    /**
+     * 创建或者加入范围房间回调
+     *
+     * @param roomId 房间ID
+     * @param code 结果码
+     * @param msg 处理结果信息
+     */
+    @Override
+    public void onJoinRangeRoom(String roomId, int code, String msg) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(Constant.LogConstants.TYPE, Constant.RANGEROOM);
+            jsonObject.put(Constant.LogConstants.ROOMID, roomId);
+            jsonObject.put(Constant.LogConstants.CODE, code);
+            jsonObject.put(Constant.LogConstants.MESSAGE, msg);
+        } catch (JSONException e) {
+            LogUtil.e(ROOM_TAG,
+                "onJoinRangeRoom : roomId=" + roomId + ",+type" + Constant.RANGEROOM + "code=" + code + ", msg=" + msg);
+            return;
+        }
+
+        if (code == 0) {
+            mHwRtcEngine.enableSpeakersDetection(roomId, Constant.INTERVAL_PERIOD);
+            mRoomId = roomId;
+            roomIdList.add(roomId);
+            muteImg = null;
+            forbidImg = null;
+            allMuteImage.put(mRoomId, false);
+            allForbidImage.put(mRoomId, false);
+            Map muteState = allMuteState.get(mRoomId) != null ? allMuteState.get(mRoomId) : new HashMap<>();
+            Map forbidState = allForbidState.get(mRoomId) != null ? allForbidState.get(mRoomId) : new HashMap<>();
+            allMuteState.put(mRoomId, muteState);
+            allForbidState.put(mRoomId, forbidState);
+            recoveryImage();
+            runOnUiThread(() -> {
+                roomIdView.setVisibility(View.VISIBLE);
+                mRoomIdView.setText("");
+                currentRoom.setText(mRoomId);
+                onShowOrUpdateMembers();
+                mLeaveRoom.setEnabled(true);
+                threeDimensionalEnable = false;
+                btnThreeDimensionalEnable.setText(getResources().getString(R.string.three_dimensional_enable));
             });
         }
         notifyMainThreadToUpdateView(code, jsonObject);
@@ -1377,6 +1556,11 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         if (code == 0) {
             mHwRtcEngine.enableSpeakersDetection(roomId, Constant.INTERVAL_PERIOD);
             mRoomId = roomId;
+            boolean spatialSoundEnable = mHwRtcEngine.isEnableSpatialSound(roomId);
+            threeDimensionalEnable = spatialSoundEnable;
+            btnThreeDimensionalEnable
+                .setText(spatialSoundEnable ? getResources().getString(R.string.three_dimensional_disable)
+                    : getResources().getString(R.string.three_dimensional_enable));
             muteImg = null;
             forbidImg = null;
             Map muteState = allMuteState.get(mRoomId) != null ? allMuteState.get(mRoomId) : new HashMap<>();
@@ -1421,7 +1605,6 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
         LogUtil.i(ROOM_TAG, "onDestroy : message=" + message);
         notifyMainThreadToUpdateView(code, jsonObject);
-        ((GmmeApplication) getApplication()).setGameAudioEngine(null);
         finish();
         // 返回到初始页面
     }
@@ -1456,7 +1639,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             allMuteState.remove(roomId);
             allForbidState.remove(roomId);
             allForbidImage.remove(roomId);
-            
+
             Message threadMsg = new Message();
             if (roomIdList.size() > 0) {
                 threadMsg.obj = roomIdList.get(0);
@@ -1478,6 +1661,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         runOnUiThread(() -> {
             if (roomIdList.size() == 0) {
                 mRoomMember.setVisibility(View.GONE);
+                threeDimensionalEnable = false;
                 mLeaveRoom.setEnabled(false);
                 allMuteState.clear();
                 allForbidState.clear();
@@ -1498,7 +1682,11 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
                 public void run() {
                     Message msg = new Message();
                     myHandler.sendMessage(msg);
-                    runOnUiThread(() -> rtcMemberListAdapter.updateSpeakingUsers(null));
+                    runOnUiThread(() -> {
+                        if (rtcMemberListAdapter != null) {
+                            rtcMemberListAdapter.updateSpeakingUsers(null);
+                        }
+                    });
                 }
             };
         }
@@ -1538,7 +1726,11 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
         msg.obj = sb.toString();
         myHandler.sendMessage(msg);
-        runOnUiThread(() -> rtcMemberListAdapter.updateSpeakingUsers(openIds));
+        runOnUiThread(() -> {
+            if (rtcMemberListAdapter != null) {
+                rtcMemberListAdapter.updateSpeakingUsers(openIds);
+            }
+        });
     }
 
     @Override
@@ -1554,7 +1746,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         runOnUiThread(() -> {
             allForbidImage.put(roomId, isForbidden);
             recoveryImage();
-            if (mRoomId.equals(roomId)) {
+            if (rtcMemberListAdapter != null && !StringUtil.isEmpty(mRoomId) && mRoomId.equals(roomId)) {
                 rtcMemberListAdapter.refreshForbidState(forbidState);
             }
         });
@@ -1581,7 +1773,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
         allForbidState.put(mRoomId, forbidState);
         runOnUiThread(() -> {
-            if (mRoomId.equals(roomId)) {
+            if (rtcMemberListAdapter != null && !StringUtil.isEmpty(mRoomId) && mRoomId.equals(roomId)) {
                 rtcMemberListAdapter.refreshForbidState(forbidState);
             }
         });
@@ -1608,7 +1800,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         }
         allForbidState.put(roomId, forbidState);
         runOnUiThread(() -> {
-            if (mRoomId.equals(roomId)) {
+            if (rtcMemberListAdapter != null && !StringUtil.isEmpty(mRoomId) && mRoomId.equals(roomId)) {
                 rtcMemberListAdapter.refreshForbidState(forbidState);
             }
         });
@@ -1627,14 +1819,11 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     @Override
     public void onVoiceToText(String text, int status, String message) {
         runOnUiThread(() -> {
-            if (status == CommonErrorCode.SUCCESS.getCode()) {
-                popup.setVoiceToText(text);
-            } else if (status == GmmeErrCode.VOICE_TO_TEXT_FEATURE_DISABLE.getCode()) {
-                popup.setVoiceToText("语音转文字功能未开通");
-            } else {
-                popup.setVoiceToText("网络繁忙，请取消重试");
+            if (popup != null) {
+                setPopup(text, status, message);
+
+                popup.clearTimerAndOnSpeaker();
             }
-            popup.clearTimerAndOnSpeaker();
         });
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1645,6 +1834,20 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             return;
         }
         notifyMainThreadToUpdateView(status, jsonObject);
+    }
+
+    private void setPopup(String text, int status, String message) {
+        if (status == SUCCESS.getCode()) {
+            popup.setVoiceToText(text);
+            return;
+        }
+
+        if (status == GmmeErrCode.VOICE_TO_TEXT_FEATURE_DISABLE.getCode()) {
+            popup.setVoiceToText("语音转文字功能未开通");
+            return;
+        }
+
+        popup.setVoiceToText("网络繁忙，请取消重试");
     }
 
     @Override
@@ -1665,14 +1868,16 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
         muteImg = null;
         forbidImg = null;
         Map muteState = allMuteState.get(mRoomId) != null ? allMuteState.get(mRoomId) : new HashMap<>();
+        muteState.put(openId, false);
         Map forbidState = allForbidState.get(mRoomId) != null ? allForbidState.get(mRoomId) : new HashMap<>();
+        Boolean allOneKeyMuteState = allMuteImage.get(mRoomId) != null ? allMuteImage.get(mRoomId) : false;
         List<Player> players = getRoomMemberInfoList();
         for (Player player : players) {
             forbidState.put(player.getOpenId(), player.getIsForbidden() == 1);
         }
         allForbidState.put(mRoomId, forbidState);
         allMuteState.put(mRoomId, muteState);
-        allMuteImage.put(mRoomId, false);
+        allMuteImage.put(mRoomId, allOneKeyMuteState);
         allForbidImage.put(mRoomId, getRoomStatus());
         recoveryImage();
         runOnUiThread(this::onShowOrUpdateMembers);
@@ -1691,7 +1896,7 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             return;
         }
         runOnUiThread(() -> {
-            if (mRoomId.equals(roomId)) {
+            if (rtcMemberListAdapter != null && !StringUtil.isEmpty(mRoomId) && mRoomId.equals(roomId)) {
                 rtcMemberListAdapter.removePlayer(openId);
             }
             updateMemberCount();
@@ -1714,10 +1919,12 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
             LogUtil.e(ROOM_TAG, "onTransferOwner: status=" + code + ", msg=" + msg);
             return;
         }
+        boolean isForbidden = getRoomStatus();
+        allForbidImage.put(roomId, isForbidden);
         mOwnerId = getOwnerId();
         recoveryImage();
         runOnUiThread(() -> {
-            if (mRoomId.equals(roomId)) {
+            if (!StringUtil.isEmpty(mRoomId) && mRoomId.equals(roomId)) {
                 onShowOrUpdateMembers();
             }
         });
@@ -1843,6 +2050,18 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     }
 
     /**
+     * 播放本地音效文件状态回调。
+     *
+     * @param localAudioClipStateInfo 音频文件状态对象
+     */
+    @Override
+    public void onAudioClipStateChangedNotify(LocalAudioClipStateInfo localAudioClipStateInfo) {
+        if (audioClipViewPopup != null) {
+            runOnUiThread(() -> audioClipViewPopup.onAudioClipStateChangedNotify(localAudioClipStateInfo));
+        }
+    }
+
+    /**
      * 录制语音消息回调。
      *
      * @param filePath 待上传的语音文件的地址
@@ -1910,14 +2129,12 @@ public class GmmeRoomActivity extends BaseActivity implements MemberEventClick, 
     public void onPlayAudioMsg(String filePath, int code, String msg) {
         runOnUiThread(
             () -> appendLog2MonitorView("onPlayAudioMsg filePath:" + filePath + ",code:" + code + ",message:" + msg));
+        if (code == GmmeErrCode.AUDIO_MSG_PLAY_CURRENT_UNFINISHED.getCode()) {
+            mHwRtcEngine.stopPlayAudioMsg();
+        }
         if (code == GmmeErrCode.AUDIO_MSG_PLAY_LAST_UNFINISHED.getCode()) {
-            if (LOCAL_CACHE_POSITION == audioConstant.getLocalCachePosition()) {
-                audioConstant.setLocalCachePosition(-1);
-                mHwRtcEngine.stopPlayAudioMsg();
-            } else {
-                mHwRtcEngine.stopPlayAudioMsg();
-                mHwRtcEngine.playAudioMsg(filePath);
-            }
+            mHwRtcEngine.stopPlayAudioMsg();
+            mHwRtcEngine.playAudioMsg(filePath);
         }
     }
 }

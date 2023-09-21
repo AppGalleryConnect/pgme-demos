@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 /**
  * 日志和房间成员adapter
+ *
+ * @since 2023-04-10
  */
 public class RoomPagerAdapter extends PagerAdapter {
     private ArrayList<View> pageView;

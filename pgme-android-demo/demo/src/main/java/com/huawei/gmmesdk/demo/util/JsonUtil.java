@@ -25,13 +25,14 @@ import org.json.JSONObject;
 
 /**
  * json串工具类
+ *
+ * @since 2023-04-10
  */
 public class JsonUtil {
-
     /**
      * 日志标签
      */
-    private static final String JSON_UTIL = "JsonUtil";
+    private static final String JSON_UTIL = JsonUtil.class.getSimpleName();
 
     /**
      * 判断是否为json字符串

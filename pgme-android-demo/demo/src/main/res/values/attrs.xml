@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="music">
+        <item>在线</item>
+        <item>a1.3gp</item>
+        <item>a2.amr</item>
+        <item>a3.aac</item>
+        <item>a4.mp3</item>
+        <item>a5.amr</item>
+        <item>a6.flac</item>
+        <item>a7.ogg</item>
+        <item>a8.m4a</item>
+        <item>a9.mp4</item>
+        <item>a10.asf</item>
+        <item>a11.avi</item>
+        <item>a12.mkv</item>
+        <item>a13.opus</item>
+        <item>a14.wma</item>
+        <item>a15.wav</item>
+        <item>a16.mkv</item>
+    </string-array>
+</resources>

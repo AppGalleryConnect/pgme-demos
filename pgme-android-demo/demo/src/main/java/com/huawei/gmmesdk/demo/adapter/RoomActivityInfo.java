@@ -25,9 +25,10 @@ import java.util.Map;
 
 /**
  * 页面房间信息
+ *
+ * @since 2023-04-10
  */
 public class RoomActivityInfo {
-
     private ImageView muteAllImg;
 
     private ImageView forbidAllImg;
@@ -38,22 +39,25 @@ public class RoomActivityInfo {
 
     private Map<String, Boolean> forbidState = new HashMap<>();
 
+    private boolean allOneKeyMuteState;
+
     /**
      * 房间页面信息，传入成员列表页面
      *
      * @param roomMemberList  成员列表
      * @param muteStates      屏蔽状态
      * @param forbidStates    禁言状态
+     * @param allOneKeyMuteState 一键屏蔽状态
      * @param muteImageView   屏蔽图标
      * @param forbidImageView 禁言图标
      */
-    public RoomActivityInfo(List<String> roomMemberList, Map<String, Boolean> muteStates,
+    public RoomActivityInfo(List<String> roomMemberList, Boolean allOneKeyMuteState, Map<String, Boolean> muteStates,
                             Map<String, Boolean> forbidStates, ImageView muteImageView, ImageView forbidImageView) {
-
         muteState = muteStates;
         forbidState = forbidStates;
         muteAllImg = muteImageView;
         forbidAllImg = forbidImageView;
+        this.allOneKeyMuteState = allOneKeyMuteState;
         this.roomMemberList = roomMemberList;
     }
 
@@ -95,5 +99,13 @@ public class RoomActivityInfo {
 
     public void setForbidState(Map<String, Boolean> forbidState) {
         this.forbidState = forbidState;
+    }
+
+    public boolean getAllOneKeyMuteState() {
+        return allOneKeyMuteState;
+    }
+
+    public void setAllOneKeyMuteState(boolean allOneKeyMuteState) {
+        this.allOneKeyMuteState = allOneKeyMuteState;
     }
 }

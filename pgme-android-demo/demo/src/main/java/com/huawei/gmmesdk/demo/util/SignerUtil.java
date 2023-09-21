@@ -1,5 +1,5 @@
 /*
-   Copyright 2022. Huawei Technologies Co., Ltd. All rights reserved.
+   Copyright 2023. Huawei Technologies Co., Ltd. All rights reserved.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
    limitations under the License.
  */
 
-package com.huawei.gmmesdk.demo.sign;
+package com.huawei.gmmesdk.demo.util;
 
 import android.text.TextUtils;
 import android.util.Base64;
@@ -36,8 +36,10 @@ import java.security.spec.PSSParameterSpec;
 
 /**
  * 生成接入签名，使用SHA256withRSA/PSS
+ *
+ * @since 2023-04-10
  */
-public class Signer {
+public class SignerUtil {
     public static final String ALGORITHM_NAME = "SHA256withRSA/PSS";
 
     public static final String MD_NAME = "SHA-256";
@@ -48,7 +50,7 @@ public class Signer {
 
     public static final int TRAILER_FIELD = 1;
 
-    private static final String TAG = Signer.class.getSimpleName();
+    private static final String TAG = SignerUtil.class.getSimpleName();
 
     public static String generate(String appId, String openId, String nonce, String timestamp, String privateKey) {
         if (TextUtils.isEmpty(privateKey)) {
@@ -73,8 +75,8 @@ public class Signer {
 
     public static PrivateKey getPrivateKey(String privateKeyStr) {
         try {
-            byte[] privatekey = Base64.decode(privateKeyStr, Base64.NO_WRAP);
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privatekey);
+            byte[] privateKey = Base64.decode(privateKeyStr, Base64.NO_WRAP);
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePrivate(keySpec);
         } catch (IllegalArgumentException e) {

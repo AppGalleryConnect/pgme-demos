@@ -18,18 +18,17 @@ package com.huawei.gmmesdk.demo;
 
 import android.app.Application;
 
-import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.GameMediaEngine;
 import com.huawei.game.gmme.handler.IGameMMEEventHandler;
 import com.huawei.game.gmme.model.EngineCreateParams;
 import com.huawei.gmmesdk.demo.handler.GMMECallbackHandler;
-import com.huawei.gmmesdk.demo.sign.Signer;
 import com.huawei.gmmesdk.demo.util.RandomUtil;
-
-import java.io.IOException;
+import com.huawei.gmmesdk.demo.util.SignerUtil;
 
 /**
  * 应用Application,初始化HRTCEngine
+ *
+ * @since 2023-04-10
  */
 public class GmmeApplication extends Application {
     /**
@@ -40,7 +39,7 @@ public class GmmeApplication extends Application {
     /**
      * RTC 引擎回调事件
      */
-    private GMMECallbackHandler mHwHandler = new GMMECallbackHandler();
+    private final GMMECallbackHandler mHwHandler = new GMMECallbackHandler();
 
     /**
      * openId
@@ -78,15 +77,7 @@ public class GmmeApplication extends Application {
             params.setClientSecret(BuildConfig.agcClientSecret);
             params.setApiKey(BuildConfig.agcApiKey);
             params.setOpenId(openId);
-            params.setCountryCode("CN");
             params.setContext(this);
-            params.setLogEnable(true);
-            try {
-                params.setLogPath(getFilesDir().getCanonicalPath());
-            } catch (IOException ioException) {
-                LogUtil.e("log dir not exist, err=" + ioException.getMessage());
-            }
-            params.setLogSize(Constant.LOG_SIZE);
             setAccessSign(params);
             gameAudioEngine = GameMediaEngine.create(params, mHwHandler);
         }
@@ -95,12 +86,14 @@ public class GmmeApplication extends Application {
 
     private void setAccessSign(EngineCreateParams params) {
         String appId = BuildConfig.agcAppId;
+
         // 当前游戏密钥的获取方式仅做demo示例，开发者需要放到远端服务器下发给apk
         String gameSecret = BuildConfig.gameSecret;
+
         // 当前随机数方式仅做demo示例，开发者需要使用更安全的算法来生成随机数
         String nonce = String.valueOf(RandomUtil.getRandomNum());
         String timestamp = String.valueOf(System.currentTimeMillis());
-        params.setSign(Signer.generate(appId, openId, nonce, timestamp, gameSecret));
+        params.setSign(SignerUtil.generate(appId, openId, nonce, timestamp, gameSecret));
         params.setNonce(nonce);
         params.setTimeStamp(timestamp);
     }
@@ -113,14 +106,6 @@ public class GmmeApplication extends Application {
             gameAudioEngine = null;
         }
         GameMediaEngine.destroy();
-    }
-
-    public GameMediaEngine getGameAudioEngine() {
-        return gameAudioEngine;
-    }
-
-    public void setGameAudioEngine(GameMediaEngine gameAudioEngine) {
-        this.gameAudioEngine = gameAudioEngine;
     }
 
     /**

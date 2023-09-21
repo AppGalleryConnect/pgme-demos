@@ -18,6 +18,8 @@ package com.huawei.gmmesdk.demo.handler;
 
 /**
  * 与会者列表用户订阅开关处理
+ *
+ * @since 2023-04-10
  */
 public interface MemberEventClick {
     /**

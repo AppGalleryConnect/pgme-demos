@@ -27,6 +27,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -34,7 +36,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.huawei.game.gmme.GameMediaEngine;
-import com.huawei.gmmesdk.demo.Constant;
+import com.huawei.gmmesdk.demo.constant.Constant;
 import com.huawei.gmmesdk.demo.GmmeApplication;
 import com.huawei.gmmesdk.demo.R;
 import com.huawei.gmmesdk.demo.log.Log;
@@ -42,6 +44,8 @@ import com.huawei.gmmesdk.demo.log.LogFragment;
 
 /**
  * demo首页
+ *
+ * @since 2023-04-10
  */
 public class LoginActivity extends LoginLoggerActivity implements View.OnClickListener {
     /**
@@ -69,6 +73,8 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
      */
     private boolean mPermissionGranted = false;
 
+    private ActivityResultLauncher<Intent> launcher = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +85,7 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
         setContentView(R.layout.activity_main);
         findViewById(R.id.hw_gmme_init).setOnClickListener(this);
         userIdView = findViewById(R.id.openid_input);
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {});
         addLogFragment();
     }
 
@@ -93,6 +100,7 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
                     android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 || PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this,
                     android.Manifest.permission.READ_PHONE_STATE)) {
+
                 // 如果权限未获取，则申请权限
                 requestPermissions(NEED_PERMISSIONS, REQUEST_PERMISSIONS_CODE);
                 return;
@@ -112,10 +120,12 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
             for (int index = 0; index < grantResults.length; index++) {
                 if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[index])) {
+
                         // 在用户已经拒绝授权的情况下，如果shouldShowRequestPermissionRationale返回false则
                         // 可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
                         new AlertDialog.Builder(this).setMessage("需要开启权限才能使用此功能")
                             .setPositiveButton("设置", (dialog, which) -> {
+
                                 // 引导用户到设置中去进行设置
                                 Intent intent = new Intent();
                                 intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
@@ -176,9 +186,14 @@ public class LoginActivity extends LoginLoggerActivity implements View.OnClickLi
             return;
         }
         rtcEngine.enableMic(false);
+        rtcEngine.initSpatialSound();
         Intent intent = new Intent(this, GmmeRoomActivity.class);
         intent.putExtra(Constant.KEY_USER_ID, userId);
-        startActivityForResult(intent, Constant.GMME_INIT_ENGINE);
+        if (launcher == null) {
+            Log.i(TAG, "launcher is null");
+            return;
+        }
+        launcher.launch(intent);
         Log.i(TAG, "engine create success");
     }
 

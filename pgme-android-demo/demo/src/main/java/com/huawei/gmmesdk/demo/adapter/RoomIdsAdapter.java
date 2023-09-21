@@ -28,6 +28,8 @@ import java.util.List;
 
 /**
  * 房间ID下拉列表页面
+ *
+ * @since 2023-04-10
  */
 
 public class RoomIdsAdapter extends RecyclerView.Adapter<RoomIdsAdapter.ViewHolder> {
@@ -64,13 +66,10 @@ public class RoomIdsAdapter extends RecyclerView.Adapter<RoomIdsAdapter.ViewHold
         final View view =
                 LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_item, viewGroup, false);
         ViewHolder holder = new ViewHolder(view);
-        holder.roomId.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = holder.getAbsoluteAdapterPosition();
-                String roomId = roomIdList.get(position);
-                mOnItemClickListener.OnItemClick(roomId);
-            }
+        holder.roomId.setOnClickListener(view1 -> {
+            int position = holder.getAbsoluteAdapterPosition();
+            String roomId = roomIdList.get(position);
+            mOnItemClickListener.OnItemClick(roomId);
         });
         return holder;
     }

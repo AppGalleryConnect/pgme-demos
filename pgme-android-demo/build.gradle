@@ -4,7 +4,6 @@ ext {
     localMavenDir = '../../'
     localMavenRepoUrl = new File(rootProject.rootDir, 'repo').toURI().toString()
     groupId = 'com.huawei.game.midplatform'
-    version = '1.8.1.307'
 
     buildToolsVersion = '30.0.3'
     compileSdkVersion = 30

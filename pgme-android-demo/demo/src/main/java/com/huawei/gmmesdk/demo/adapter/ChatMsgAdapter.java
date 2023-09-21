@@ -30,10 +30,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.GameMediaEngine;
 import com.huawei.game.gmme.model.Message;
-import com.huawei.gmmesdk.demo.Constant;
 import com.huawei.gmmesdk.demo.GmmeApplication;
 import com.huawei.gmmesdk.demo.R;
 import com.huawei.gmmesdk.demo.activity.GmmeRoomActivity;
+import com.huawei.gmmesdk.demo.constant.Constant;
 import com.huawei.gmmesdk.demo.util.JsonUtil;
 import com.huawei.gmmesdk.demo.util.RandomUtil;
 
@@ -48,9 +48,10 @@ import java.util.Locale;
 
 /**
  * 聊天界面适配器
+ *
+ * @since 2023-04-10
  */
 public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHolder> {
-
     private static final int SEND_TEXT_MSG_SUCCEEDED = 0;
 
     private static final String TAG = ChatMsgAdapter.class.getSimpleName();
@@ -66,13 +67,10 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
 
     private String mUserId;
 
-    private AudioConstant audioConstant;
-
-    public ChatMsgAdapter(Context context, String userId, List<Message> msgList, AudioConstant audioConst) {
+    public ChatMsgAdapter(Context context, String userId, List<Message> msgList) {
         mContext = context;
         mUserId = userId;
         mChatMsgList = msgList;
-        audioConstant = audioConst;
     }
 
     @NonNull
@@ -94,7 +92,7 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
             JSONObject jobj = JsonUtil.stringToJsonObject(content);
             if (jobj != null && jobj.getInt("msgType") == Constant.MsgType.MSG_TYPE_AUDIO) {
                 // 适配语音类型的视图
-                audioViewAdapter(holder, msg, time, jobj, position);
+                audioViewAdapter(holder, msg, time, jobj);
             } else {
                 // 适配文本类型的视图
                 textViewAdapter(holder, msg, time);
@@ -104,19 +102,20 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
         }
     }
 
-    private void audioViewAdapter(ViewHolder holder, Message msg, String time, JSONObject jobj, int position)
+    private void audioViewAdapter(ViewHolder holder, Message msg, String time, JSONObject jsonObj)
         throws JSONException, IOException {
         mHwRtcEngine = ((GmmeApplication) ((GmmeRoomActivity) mContext).getApplication()).getEngine();
-        int audioSeconds = jobj.getInt("audioMilliSeconds") / 1000;
+        int audioSeconds = jsonObj.getInt("audioMilliSeconds") / 1000;
         boolean isOwner = TextUtils.isEmpty(msg.getSenderId()) || msg.getSenderId().equals(mUserId);
         holder.receiveAudioLayout.setVisibility(isOwner ? View.GONE : View.VISIBLE);
         holder.sendAudioLayout.setVisibility(isOwner ? View.VISIBLE : View.GONE);
         holder.receiveMsgLayout.setVisibility(View.GONE);
         holder.sendMsgLayout.setVisibility(View.GONE);
         if (isOwner) {
+
             // 发送者页面渲染和点击事件监听
             sendAndReceiveAdapter(holder.sendAudioContent, holder.sendAudioUserId, msg, time,
-                jobj.getString("filePath"), audioSeconds, position);
+                jsonObj.getString("filePath"), audioSeconds);
             holder.sendAudioTip.setVisibility(View.VISIBLE);
             if (msg.getCode() == SEND_TEXT_MSG_SUCCEEDED) {
                 holder.sendAudioTip.setVisibility(View.GONE);
@@ -124,13 +123,13 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
             return;
         }
         // 下载音频
-        String fileId = jobj.getString("fileId");
+        String fileId = jsonObj.getString("fileId");
         String filePath =
             mContext.getExternalCacheDir().getCanonicalPath() + "/" + RandomUtil.getRandomNum() + Constant.AUDIO_TYPE;
         mHwRtcEngine.downloadAudioMsgFile(fileId, filePath, 5000);
+
         // 接收者页面渲染和点击事件监听
-        sendAndReceiveAdapter(holder.receiveAudioContent, holder.receiveAudioUserId, msg, time, filePath, audioSeconds,
-            position);
+        sendAndReceiveAdapter(holder.receiveAudioContent, holder.receiveAudioUserId, msg, time, filePath, audioSeconds);
 
     }
 
@@ -143,34 +142,24 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
      * @param time 时间
      * @param filePath 文件路径
      * @param audioSeconds 音频时间
-     * @param position 点击位置
      */
     private void sendAndReceiveAdapter(@NonNull TextView contentTv, @NonNull TextView userTv, Message msg, String time,
-        String filePath, int audioSeconds, int position) {
-        audioConstant.setLocalCachePosition(-1);
+        String filePath, int audioSeconds) {
         contentTv.setText(String.format("(%s秒) 点击播放/停止语音", audioSeconds));
         userTv.setText(String.format("%s %s", msg.getSenderId(), time));
         contentTv.setOnClickListener(v -> {
-            playOrStopAudioMsg(filePath, position);
+            playAudioMsg(filePath);
         });
     }
 
     /**
-     * 播放或者停止音频
+     * 播放音频
      *
      * @param filePath 文件路径
-     * @param position 点击位置
      */
-    private void playOrStopAudioMsg(String filePath, int position) {
-        if (audioConstant.getLocalCachePosition() == -1 || audioConstant.getLocalCachePosition() != position) {
-            // 播放音频
-            audioConstant.setLocalCachePosition(position);
-            mHwRtcEngine.playAudioMsg(filePath);
-        } else {
-            // 停止播放音频
-            audioConstant.setLocalCachePosition(-1);
-            mHwRtcEngine.stopPlayAudioMsg();
-        }
+    private void playAudioMsg(String filePath) {
+        // 播放音频
+        mHwRtcEngine.playAudioMsg(filePath);
     }
 
     private void textViewAdapter(ViewHolder holder, Message msg, String time) {
@@ -218,8 +207,6 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
 
         private final LinearLayout receiveAudioLayout;
 
-        private final LinearLayout receivePlayAudioLayout;
-
         private final LinearLayout sendAudioLayout;
 
         private final TextView receiveAudioContent;
@@ -244,7 +231,6 @@ public class ChatMsgAdapter extends RecyclerView.Adapter<ChatMsgAdapter.ViewHold
             sendMsgTip = itemView.findViewById(R.id.send_msg_tip);
 
             receiveAudioLayout = itemView.findViewById(R.id.receive_audio_layout);
-            receivePlayAudioLayout = itemView.findViewById(R.id.receive_play_audio);
             receiveAudioContent = itemView.findViewById(R.id.receive_audio_content);
             receiveAudioUserId = itemView.findViewById(R.id.receive_audio_user_id);
 

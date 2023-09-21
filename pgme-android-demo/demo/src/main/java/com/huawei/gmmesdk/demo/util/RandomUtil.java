@@ -25,16 +25,18 @@ import java.security.SecureRandom;
 
 /**
  * 随机函数工具类
+ *
+ * @since 2023-04-10
  */
 public class RandomUtil {
-
     /**
      * 日志标签
      */
-    private static final String RANDOM_UTIL = "RandomUtil";
+    private static final String RANDOM_UTIL = RandomUtil.class.getSimpleName();
 
     /**
      * 获取int类型的随机函数
+     * 
      * @return 随机数
      */
     public static int getRandomNum() {
@@ -42,7 +44,7 @@ public class RandomUtil {
             SecureRandom random;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // 安全随机数
-                 random = SecureRandom.getInstanceStrong();
+                random = SecureRandom.getInstanceStrong();
             } else {
                 // 当前随机数方式仅做demo示例，开发者需要使用更安全的算法来生成随机数
                 random = new SecureRandom();

@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/item_user_id"
-        android:layout_width="80dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="6dp"
@@ -27,16 +27,29 @@
 
     <TextView
         android:id="@+id/owner"
-        android:layout_width="40dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="6dp"
         android:layout_toRightOf="@id/item_user_id"
         android:gravity="center_vertical"
         android:text="@string/text_owner"
-        android:visibility="gone"
         android:textColor="#66bbfd"
-        android:textSize="42px" />
+        android:textSize="35px" />
+
+    <Button
+        android:id="@+id/scope_btn"
+        style="@style/ButtonStyle"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/owner"
+        android:width="100dp"
+        android:background="@drawable/button_3"
+        android:text="位置" />
 
     <ImageView
         android:id="@+id/img_speaker"

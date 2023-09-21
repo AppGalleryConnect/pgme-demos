@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_list"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_all_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/audio_volume" />
+
+        <SeekBar
+            android:id="@+id/all_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center_vertical"
+        android:minHeight="45dp">
+
+        <Button
+            android:id="@+id/stop_all_audio_clip"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_3"
+            android:text="@string/stop_all_audio_clip" />
+
+        <Button
+            android:id="@+id/pause_all_audio_clip"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_3"
+            android:text="@string/pause_all_audio_clip" />
+
+        <Button
+            android:id="@+id/restore_all_audio_clip"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_3"
+            android:text="@string/restore_all_audio_clip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_list"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/audio_sound_effects_one" />
+
+            <Spinner
+                android:id="@+id/spinner_one"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:popupBackground="@drawable/bg_list"
+                android:dropDownVerticalOffset="20dp"
+                android:gravity="center"
+                android:hapticFeedbackEnabled="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:minHeight="45dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/audio_play_times" />
+
+            <EditText
+                android:id="@+id/edit_audio_clip_one"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:inputType="number"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="12dp" />
+
+
+            <TextView
+                android:id="@+id/text_audio_clip_one"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/audio_volume" />
+
+            <SeekBar
+                android:id="@+id/audio_clip_one_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/play_audio_clip_one"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:text="@string/play_audio_clip" />
+
+            <Button
+                android:id="@+id/stop_audio_clip_one"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:visibility="gone"
+                android:text="@string/stop_audio_clip" />
+
+            <Button
+                android:id="@+id/pause_audio_clip_one"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:enabled="false"
+                android:text="@string/pause_audio_clip" />
+
+            <Button
+                android:id="@+id/restore_audio_clip_one"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:enabled="false"
+                android:visibility="gone"
+                android:text="@string/restore_audio_clip" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_list"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/audio_sound_effects_two" />
+
+            <Spinner
+                android:id="@+id/spinner_two"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:popupBackground="@drawable/bg_list"
+                android:dropDownVerticalOffset="20dp"
+                android:gravity="center"
+                android:hapticFeedbackEnabled="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:minHeight="45dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/audio_play_times" />
+
+            <EditText
+                android:id="@+id/edit_audio_clip_two"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:inputType="number"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/text_audio_clip_two"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/audio_volume" />
+
+            <SeekBar
+                android:id="@+id/audio_clip_two_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/play_audio_clip_two"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:text="@string/play_audio_clip" />
+
+            <Button
+                android:id="@+id/stop_audio_clip_two"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:visibility="gone"
+                android:text="@string/stop_audio_clip" />
+
+            <Button
+                android:id="@+id/pause_audio_clip_two"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:enabled="false"
+                android:text="@string/pause_audio_clip" />
+
+            <Button
+                android:id="@+id/restore_audio_clip_two"
+                style="@style/ButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:width="100dp"
+                android:background="@drawable/button_3"
+                android:enabled="false"
+                android:visibility="gone"
+                android:text="@string/restore_audio_clip" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

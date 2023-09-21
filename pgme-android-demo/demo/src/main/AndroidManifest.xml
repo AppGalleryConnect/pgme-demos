@@ -20,7 +20,7 @@
 
     <application
         android:name=".GmmeApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -38,6 +38,9 @@
 
         <activity
             android:name="com.huawei.gmmesdk.demo.activity.GmmeRoomActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.huawei.gmmesdk.demo.activity.PlayerPositionActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

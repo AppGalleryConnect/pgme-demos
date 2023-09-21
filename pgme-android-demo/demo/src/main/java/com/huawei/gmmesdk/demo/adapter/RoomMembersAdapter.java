@@ -16,18 +16,22 @@
 
 package com.huawei.gmmesdk.demo.adapter;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huawei.gmmesdk.demo.Constant;
+import com.huawei.game.gmme.GameMediaEngine;
 import com.huawei.gmmesdk.demo.R;
+import com.huawei.gmmesdk.demo.activity.AudioScopePopup;
+import com.huawei.gmmesdk.demo.constant.Constant;
 import com.huawei.gmmesdk.demo.handler.MemberEventClick;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -39,6 +43,8 @@ import java.util.Map;
 
 /**
  * 与会者列表adapter
+ *
+ * @since 2023-04-10
  */
 public class RoomMembersAdapter extends RecyclerView.Adapter {
     /**
@@ -50,6 +56,11 @@ public class RoomMembersAdapter extends RecyclerView.Adapter {
      * 成员列表
      */
     private List<String> mEntityList;
+
+    /**
+     * 一键禁言状态
+     */
+    private boolean allOneKeyMuteState;
 
     /**
      * 房主ID
@@ -97,34 +108,43 @@ public class RoomMembersAdapter extends RecyclerView.Adapter {
 
     private List<String> speakingPlayers;
 
+    private Context context;
+
+    private GameMediaEngine mHwRtcEngine;
+
     /**
      * 构造方法
-     *
+     * 
      * @param eventClick 点击事件
      * @param ownerId 房主ID
      * @param user 用户ID
      * @param playerId 多媒体玩家ID
      * @param roomActivityInfo 房间信息
+     * @param mHwRtcEngine
      */
-    public RoomMembersAdapter(MemberEventClick eventClick, String ownerId, String user, String playerId,
-        Integer roomType, RoomActivityInfo roomActivityInfo) {
+    public RoomMembersAdapter(Context context, MemberEventClick eventClick, String ownerId, String user,
+        String playerId, Integer roomType, RoomActivityInfo roomActivityInfo, GameMediaEngine mHwRtcEngine) {
+        this.mHwRtcEngine = mHwRtcEngine;
         mEventClick = eventClick;
         localUsr = user;
         localPlayerId = playerId;
         this.ownerId = ownerId;
         this.roomType = roomType;
+        this.context = context;
         if (roomActivityInfo == null) {
             mEntityList = new ArrayList<>();
             muteState = new HashMap<>();
             forbidState = new HashMap<>();
             forbidAllImg = null;
             muteAllImg = null;
+            allOneKeyMuteState = false;
         } else {
             mEntityList = roomActivityInfo.getRoomMemberList();
             muteState = roomActivityInfo.getMuteState();
             forbidState = roomActivityInfo.getForbidState();
             forbidAllImg = roomActivityInfo.getForbidAllImg();
             muteAllImg = roomActivityInfo.getMuteAllImg();
+            allOneKeyMuteState = roomActivityInfo.getAllOneKeyMuteState();
         }
     }
 
@@ -152,11 +172,21 @@ public class RoomMembersAdapter extends RecyclerView.Adapter {
         } else {
             viewHolder.forbidImg.setVisibility(View.VISIBLE);
         }
-        viewHolder.muteImg.setVisibility(View.VISIBLE);
+
+        if (!localPlayerId.equals(viewHolder.userId)) {
+            viewHolder.scopeBtn.setVisibility(View.GONE);
+        }
+
+        if (roomType == Constant.RANGEROOM) {
+            viewHolder.muteImg.setVisibility(View.GONE);
+            viewHolder.forbidImg.setVisibility(View.GONE);
+        } else {
+            viewHolder.muteImg.setVisibility(View.VISIBLE);
+        }
         handleMutePlayer(viewHolder);
         handleForbidPlayer(viewHolder);
         if (muteState.containsKey(entity)) {
-            if (muteState.get(entity)) {
+            if (muteState.get(entity) || allOneKeyMuteState) {
                 viewHolder.muteImg.setTag(Constant.UN_SELECT);
                 viewHolder.muteImg.setImageResource(R.drawable.btn_mic_off);
             } else {
@@ -176,33 +206,30 @@ public class RoomMembersAdapter extends RecyclerView.Adapter {
         if (speakingPlayers != null && speakingPlayers.contains(entity)) {
             viewHolder.muteImg.setImageResource(R.drawable.btn_speaker_speaking);
         }
-        viewHolder.muteImg.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onClick(View v) {
-                if (viewHolder.userId.equals(localPlayerId)) {
-                    return;
-                }
-                if (viewHolder.muteImg.getTag().equals(Constant.UN_SELECT)) {
-                    mEventClick.muteRemote(viewHolder.userId, false);
-                } else {
-                    mEventClick.muteRemote(viewHolder.userId, true);
-                }
+        viewHolder.muteImg.setOnClickListener(v -> {
+            if (viewHolder.userId.equals(localPlayerId)) {
+                return;
+            }
+            if (viewHolder.muteImg.getTag().equals(Constant.UN_SELECT)) {
+                mEventClick.muteRemote(viewHolder.userId, false);
+            } else {
+                mEventClick.muteRemote(viewHolder.userId, true);
             }
         });
-        viewHolder.forbidImg.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onClick(View v) {
-                if (!localPlayerId.equals(ownerId)) {
-                    return;
-                }
-                if (viewHolder.forbidImg.getTag().equals(Constant.UN_SELECT)) {
-                    mEventClick.mutePlayer(viewHolder.userId, false);
-                } else {
-                    mEventClick.mutePlayer(viewHolder.userId, true);
-                }
+        viewHolder.forbidImg.setOnClickListener(v -> {
+            if (!localPlayerId.equals(ownerId)) {
+                return;
             }
+            if (viewHolder.forbidImg.getTag().equals(Constant.UN_SELECT)) {
+                mEventClick.mutePlayer(viewHolder.userId, false);
+            } else {
+                mEventClick.mutePlayer(viewHolder.userId, true);
+            }
+        });
+        viewHolder.scopeBtn.setOnClickListener(v -> {
+            AudioScopePopup audioScopePopup =
+                new AudioScopePopup(this.context, mHwRtcEngine, mEntityList, localPlayerId);
+            audioScopePopup.showAtLocation(viewHolder.scopeBtn, Gravity.CENTER, 0, 0);
         });
     }
 
@@ -288,6 +315,11 @@ public class RoomMembersAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    public void refreshAllOneKeyMuteState(Boolean allOneKeyMuteState) {
+        this.allOneKeyMuteState = allOneKeyMuteState;
+        notifyDataSetChanged();
+    }
+
     public void refreshForbidState(Map<String, Boolean> forbidState) {
         this.forbidState = forbidState;
         notifyDataSetChanged();
@@ -304,12 +336,15 @@ public class RoomMembersAdapter extends RecyclerView.Adapter {
 
         private TextView owner;
 
+        private Button scopeBtn;
+
         public RoomMemberRecyclerHolder(View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.item_user_id);
             muteImg = itemView.findViewById(R.id.img_audio);
             forbidImg = itemView.findViewById(R.id.img_speaker);
             owner = itemView.findViewById(R.id.owner);
+            scopeBtn = itemView.findViewById(R.id.scope_btn);
         }
     }
 }

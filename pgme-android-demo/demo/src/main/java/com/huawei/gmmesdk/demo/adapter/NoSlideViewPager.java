@@ -24,9 +24,10 @@ import androidx.viewpager.widget.ViewPager;
 
 /**
  * 无滑动视图页面
+ *
+ * @since 2023-04-10
  */
 public class NoSlideViewPager extends ViewPager {
-
     public NoSlideViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

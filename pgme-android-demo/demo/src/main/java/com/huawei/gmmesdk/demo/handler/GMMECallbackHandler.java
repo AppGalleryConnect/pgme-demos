@@ -16,9 +16,10 @@
 
 package com.huawei.gmmesdk.demo.handler;
 
-import com.huawei.game.common.utils.CollectionUtil;
+import com.huawei.game.common.utils.CollectionUtils;
 import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.handler.IGameMMEEventHandler;
+import com.huawei.game.gmme.model.LocalAudioClipStateInfo;
 import com.huawei.game.gmme.model.Message;
 import com.huawei.game.gmme.model.VolumeInfo;
 
@@ -27,6 +28,8 @@ import java.util.List;
 
 /**
  * 用户实现的统一回调
+ *
+ * @since 2023-04-10
  */
 public class GMMECallbackHandler implements IGameMMEEventHandler {
     private static final String TAG = GMMECallbackHandler.class.getSimpleName();
@@ -105,6 +108,27 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
         }
     }
 
+    /**
+     * 创建或者加入范围房间回调
+     *
+     * @param roomId 房间ID
+     * @param code   结果码
+     * @param msg    处理结果信息
+     */
+    @Override
+    public void onJoinRangeRoom(String roomId, int code, String msg) {
+        StringBuilder sb = new StringBuilder("onJoinRangeRoom : ").append("roomId=")
+                .append(roomId)
+                .append(", code=")
+                .append(code)
+                .append(", msg=")
+                .append(msg);
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onJoinRangeRoom(roomId, code, msg);
+        }
+    }
+
     @Override
     public void onSwitchRoom(String roomId, int code, String msg) {
         StringBuilder sb = new StringBuilder("onSwitchRoom : ").append("roomId=")
@@ -138,7 +162,7 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
     @Override
     public void onSpeakersDetection(List<String> openIds) {
         LogUtil.d(TAG, "onSpeakersDetection : openIds=" + openIds);
-        if (CollectionUtil.isNotEmpty(openIds)) {
+        if (CollectionUtils.isNotEmpty(openIds)) {
             for (IGameMMEEventHandler handler : mHandler) {
                 handler.onSpeakersDetection(openIds);
             }
@@ -148,7 +172,7 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
     @Override
     public void onSpeakersDetectionEx(List<VolumeInfo> userVolumeInfos) {
         LogUtil.d(TAG, "onSpeakersDetectionEx : userVolumeInfos=" + userVolumeInfos);
-        if (CollectionUtil.isNotEmpty(userVolumeInfos)) {
+        if (CollectionUtils.isNotEmpty(userVolumeInfos)) {
             for (IGameMMEEventHandler handler : mHandler) {
                 handler.onSpeakersDetectionEx(userVolumeInfos);
             }
@@ -276,6 +300,18 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
     public void onRemoteMicroStateChanged(String roomId, String openId, boolean isMute) {
         for (IGameMMEEventHandler handler : mHandler) {
             handler.onRemoteMicroStateChanged(roomId, openId, isMute);
+        }
+    }
+
+    /**
+     * 播放本地音效文件状态回调。
+     *
+     * @param localAudioClipStateInfo 音频文件状态对象
+     */
+    @Override
+    public void onAudioClipStateChangedNotify(LocalAudioClipStateInfo localAudioClipStateInfo) {
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onAudioClipStateChangedNotify(localAudioClipStateInfo);
         }
     }
 

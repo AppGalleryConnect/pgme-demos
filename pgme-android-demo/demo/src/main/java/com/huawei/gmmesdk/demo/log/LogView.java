@@ -30,10 +30,11 @@ import java.util.Date;
 
 /**
  * 文本输出视图
+ *
+ * @since 2023-04-10
  */
 @SuppressLint("AppCompatCustomView")
 public class LogView extends TextView implements LogNode {
-
     private LogNode outputText;
 
     /**
@@ -103,6 +104,6 @@ public class LogView extends TextView implements LogNode {
      * @param input 输出
      */
     public void appendToLog(String input) {
-        append("\n" + input);
+        append(System.lineSeparator() + input);
     }
 }

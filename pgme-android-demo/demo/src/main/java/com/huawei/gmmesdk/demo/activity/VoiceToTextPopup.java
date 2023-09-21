@@ -34,6 +34,8 @@ import com.huawei.gmmesdk.demo.R;
 
 /**
  * 语音转文字弹框
+ *
+ * @since 2023-04-10
  */
 public class VoiceToTextPopup extends PopupWindow {
     private static final String TAG = VoiceToTextPopup.class.getSimpleName();

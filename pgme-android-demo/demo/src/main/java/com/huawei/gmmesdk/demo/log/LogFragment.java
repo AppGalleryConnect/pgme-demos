@@ -28,10 +28,12 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
-import com.huawei.gmmesdk.demo.Constant;
+import com.huawei.gmmesdk.demo.constant.Constant;
 
 /**
  * 日志视图
+ *
+ * @since 2023-04-10
  */
 public class LogFragment extends Fragment {
     private ScrollView scrollView;

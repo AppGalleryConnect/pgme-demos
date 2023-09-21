@@ -1,5 +1,5 @@
 /*
-   Copyright 2022. Huawei Technologies Co., Ltd. All rights reserved.
+   Copyright 2023. Huawei Technologies Co., Ltd. All rights reserved.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
    limitations under the License.
  */
 
-package com.huawei.gmmesdk.demo;
+package com.huawei.gmmesdk.demo.constant;
 
 /**
  * Request code
+ *
+ * @since 2023-04-10
  */
 public interface Constant {
     /**
@@ -35,8 +37,6 @@ public interface Constant {
      */
     String EMPTY_STRING = "";
 
-
-
     /**
      * 默认用户ID
      */
@@ -46,17 +46,6 @@ public interface Constant {
      * 默认用户名
      */
     String KEY_USER_NAME = "user_name";
-
-
-    /**
-     * 初始化引擎
-     */
-    int GMME_INIT_ENGINE = 1002;
-
-    /**
-     * 日志大小
-     */
-    int LOG_SIZE = 1024 * 10;
 
     /**
      * 话筒按钮关闭标签
@@ -76,11 +65,13 @@ public interface Constant {
     int PLAYER = 2;
 
     /**
-     * 房间类型 1-TEAMROOM 2-NATIONALROOM
+     * 房间类型 1-TEAMROOM 2-NATIONALROOM 3-RANGEROOM
      */
     int TEAMROOM = 1;
 
     int NATIONALROOM = 2;
+
+    int RANGEROOM = 3;
 
     /**
      * 玩家操作房间类型 1-LEAVEROOM 2-JOINROOM 3-SWITCHROOM
@@ -99,13 +90,12 @@ public interface Constant {
      */
     long REFRESH_MEMBER_LIST_PERIOD = 2000L;
 
-
     /**
      * 音频格式
      */
     String AUDIO_TYPE = ".m4a";
 
-    String[] roomTitle = {"房间成员", "小队成员", "国战成员"};
+    String[] roomTitle = {"房间", "小队", "国战", "范围"};
 
     /**
      * 记录日志相关常量
@@ -142,7 +132,6 @@ public interface Constant {
          */
         String TYPE = "type";
 
-
         /**
          * 是否屏蔽
          */
@@ -175,7 +164,68 @@ public interface Constant {
     enum MicOperateTypeEnum {
         MicOperate,
         VoiceToText,
-
-        VoiceMsg;
+        VoiceMsg
     }
+
+    /**
+     * 音效类型
+     */
+    interface AudioClipType {
+        /**
+         * 全部音效
+         */
+        int AllAudioClip = 1;
+
+        /**
+         * 音效1
+         */
+        int AudioClipOne = 2;
+
+        /**
+         * 音效2
+         */
+        int AudioClipTwo = 3;
+    }
+
+    /**
+     * 资源存放目录
+     */
+    interface ResourcesSaveDir {
+        /**
+         * 目录
+         */
+        String MUSIC = "music";
+    }
+
+    /**
+     * 玩家位置弹框类型
+     */
+    interface PlayerPositionDialogType {
+        /**
+         * 新增玩家
+         */
+        int AddPlayer = 1;
+
+        /**
+         * 设置范围
+         */
+        int Scope = 2;
+    }
+
+    /**
+     * 玩家位置设置类型
+     */
+    interface PlayerPositionSetType {
+        /**
+         * 位置
+         */
+        int Position = 1;
+
+        /**
+         * 朝向
+         */
+        int Axis = 2;
+
+    }
+
 }

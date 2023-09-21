@@ -13,10 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package com.huawei.gmmesdk.demo.log;
 
 /**
  * 日志工具
+ *
+ * @since 2023-04-10
  */
 public class Log {
     private static final int DEBUG = android.util.Log.DEBUG;

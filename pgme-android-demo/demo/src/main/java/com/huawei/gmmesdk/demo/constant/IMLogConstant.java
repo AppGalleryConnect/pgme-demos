@@ -1,5 +1,5 @@
 /*
-   Copyright 2022. Huawei Technologies Co., Ltd. All rights reserved.
+   Copyright 2023. Huawei Technologies Co., Ltd. All rights reserved.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,14 +14,18 @@
    limitations under the License.
  */
 
-package com.huawei.gmmesdk.demo;
+package com.huawei.gmmesdk.demo.constant;
 
+/**
+ * IM日志常数
+ *
+ * @since 2023-04-10
+ */
 public interface IMLogConstant {
-
+    /**
+     * 返回消息的错误码
+     */
     interface Common {
-        /**
-         * 返回消息的错误码
-         */
         String CODE = "code";
     }
 
@@ -59,20 +63,5 @@ public interface IMLogConstant {
      * 消息内容
      */
     String MSG = "msg";
-
-    /**
-     * 频道类型
-     */
-    String CHANNEL_TYPE = "channelType";
-
-    /**
-     * 群主id
-     */
-    String OWNER_ID = "ownerId";
-
-    /**
-     * 玩家数量
-     */
-    String PLAYER_COUNT = "playerCount";
 
 }

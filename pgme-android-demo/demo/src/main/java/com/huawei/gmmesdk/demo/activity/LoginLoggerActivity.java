@@ -25,6 +25,8 @@ import com.huawei.gmmesdk.demo.log.LogFragment;
 
 /**
  * 登录界面日志输出
+ *
+ * @since 2023-04-10
  */
 public class LoginLoggerActivity extends AppCompatActivity {
     @Override

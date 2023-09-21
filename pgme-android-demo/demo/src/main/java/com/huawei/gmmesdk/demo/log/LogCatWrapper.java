@@ -20,9 +20,10 @@ import com.huawei.gmmesdk.demo.log.Log.LogNode;
 
 /**
  * 日志封装
+ *
+ * @since 2023-04-10
  */
 public class LogCatWrapper implements LogNode {
-
     private LogNode logView;
 
     public LogNode getLogView() {
@@ -41,7 +42,7 @@ public class LogCatWrapper implements LogNode {
         }
 
         if (tr != null) {
-            useMsg += "\n" + android.util.Log.getStackTraceString(tr);
+            useMsg += System.lineSeparator() + android.util.Log.getStackTraceString(tr);
         }
 
         android.util.Log.println(priority, tag, useMsg);
