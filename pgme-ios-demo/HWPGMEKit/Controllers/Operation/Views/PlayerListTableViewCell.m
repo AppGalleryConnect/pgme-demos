@@ -124,9 +124,9 @@
     }
     if (player.isSpeaking) {
         [_speakButton beginSpeaking];
-    }else {
-        [_speakButton stopSpeaking];
+        player.isSpeaking = NO;
     }
+    self.micButton.enabled = !player.isForbiddenBtnDisabled;
 }
 
 #pragma mark - event
@@ -144,6 +144,7 @@
 /// 禁言/解禁言指定成员
 /// @param button 麦克风按钮
 - (void)micButtonPressed:(UIButton *)button {
+    button.enabled = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:FORBID_OR_NOT object:nil userInfo:@{
         @"userId" : self.userId,
         @"index" : self.indexPath,

@@ -16,9 +16,11 @@
 #import "RoomPlayerListViewController.h"
 #import "PlayerListTableViewCell.h"
 #import "PlayerHeaderView.h"
-#import "HWPGMEObject.h"
+#import <HWPGMEKit/HWPGMEngine.h>
 #import "Player+RoomPlayer.h"
-
+#import "RoomMuteInfo.h"
+#import "RoomBtnEnabledInfo.h"
+#import "Constants.h"
 @interface RoomPlayerListViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 /// 玩家列表
@@ -42,6 +44,9 @@
 /// 房主的openId
 @property (nonatomic, copy) NSString *ownerId;
 
+/// 房间的屏蔽信息
+@property(nonatomic, strong) RoomMuteInfo *roomMuteInfo;
+@property(nonatomic, strong) RoomBtnEnabledInfo *roomBtnEnabledInfo;
 @end
 
 @implementation RoomPlayerListViewController
@@ -49,6 +54,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
+    [self addNotification];
+}
+
+- (void)addNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ForbiddenFunc:) name:FORBID_OR_NOT object:nil];
 }
 
 - (void)setupViews {
@@ -80,7 +90,23 @@
     }
     _roomInfo = roomInfo;
     _ownerId = ownerId;
+    BOOL allPlayerIsMute = [self.roomMuteInfo allPlayerIsMuteForKey:roomInfo.roomId];
+    NSMutableArray *muteArray = [self.roomMuteInfo muteArrayForKey:roomInfo.roomId];
     for (Player *player in roomInfo.players) {
+        if (allPlayerIsMute) {
+            player.isMute = ![player.openId isEqualToString:self.ownerId];
+        } else {
+            for (Player *mutePlayer in muteArray) {
+                if ([player.openId isEqualToString:mutePlayer.openId]) {
+                    player.isMute = mutePlayer.isMute;
+                }
+            }
+        }
+        for (Player *btnPlayer in [self.roomBtnEnabledInfo playerArrayForKey:roomInfo.roomId]) {
+            if ([player.openId isEqualToString:btnPlayer.openId]) {
+                player.isForbiddenBtnDisabled = btnPlayer.isForbiddenBtnDisabled;
+            }
+        }
         [_playerListMArr addObject:player];
     }
     [self.tableView reloadData];
@@ -97,17 +123,20 @@
     [self reloadData];
 }
 
-- (void)forbidPlayer:(NSString *)openId isForbidden:(BOOL)isForbidden {
+- (void)forbidPlayer:(NSString *)roomId openId:(NSString *)openId isForbidden:(BOOL)isForbidden {
     for (Player *player in self.playerListMArr) {
         if ([player.openId isEqualToString:openId]) {
             player.isForbidden = isForbidden;
+            player.isForbiddenBtnDisabled = NO;
         }
     }
+    [self.roomBtnEnabledInfo setObjectPlayerArray:[self.playerListMArr copy] roomId:roomId];
     [self reloadData];
 }
 
 - (void)forbidAllPlayers:(NSString *)roomId openIds:(NSArray *)openIds isForbidden:(BOOL)isForbidden {
     self.allPlayerIsForbidden = isForbidden;
+    [self.roomMuteInfo setForbiddenAll:isForbidden roomId:roomId];
     for (Player *player in self.playerListMArr) {
         if (![player.openId isEqualToString:self.ownerId]) {
             player.isForbidden = isForbidden;
@@ -116,12 +145,13 @@
     [self reloadData];
 }
 
-- (void)mutePlayer:(NSString *)openId isMuted:(BOOL)isMuted {
+- (void)mutePlayer:(NSString *)roomId openId:(NSString *)openId isMuted:(BOOL)isMuted {
     for (Player *player in self.playerListMArr) {
         if ([player.openId isEqualToString:openId]) {
             player.isMute = isMuted;
         }
     }
+    [self.roomMuteInfo setObjectMuteArray:[self.playerListMArr mutableCopy] allPlayerIsMute:NO roomId:roomId];
     [self reloadData];
 }
 
@@ -132,7 +162,31 @@
             player.isMute = isMuted;
         }
     }
+    [self.roomMuteInfo setObjectMuteArray:[self.playerListMArr mutableCopy] allPlayerIsMute:isMuted roomId:roomId];
     [self reloadData];
+}
+
+- (void)leaveRoom:(NSString *)roomId {
+    [self.roomMuteInfo removeCacheRoom:roomId];
+    [self.roomBtnEnabledInfo removeCacheRoom:roomId];
+    [self.roomMuteInfo removeForbiddenAllForKey:roomId];
+}
+
+- (void)playerOffline:(NSString *)roomId openId:(NSString *)openId {
+    [self.roomMuteInfo removeCachePlayerWithRoomId:roomId openId:openId];
+    [self.roomBtnEnabledInfo removeCachePlayerWithRoomId:roomId openId:openId];
+}
+
+- (void)changeSpatialAudioButtonEnable:(BOOL)enable {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.headerView changeSpatialAudioButtonEnable:enable];
+    });
+}
+
+- (void)updateSpatialAudioButtonSelected:(BOOL)selected {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.headerView updateSpatialAudioButtonSelected:selected];
+    });
 }
 
 - (void)reloadData {
@@ -141,6 +195,22 @@
     });
 }
 
+/// 禁言
+- (void)ForbiddenFunc:(NSNotification *)notification {
+    if (![[HWPGMEngine getInstance].engineParam.openId isEqualToString:self.roomInfo.ownerId]) {
+        return;
+    }
+    NSDictionary *info = [notification userInfo];
+    NSString *userId = info[@"userId"];
+    for (Player *player in self.playerListMArr) {
+        if ([player.openId isEqualToString:userId]) {
+            player.isForbiddenBtnDisabled = YES;
+        }
+    }
+    [self.roomBtnEnabledInfo setObjectPlayerArray:[self.playerListMArr copy] roomId:self.roomInfo.roomId];
+}
+
+
 #pragma mark - UITableViewDataSource UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -148,7 +218,9 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    self.headerView = [[PlayerHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 55)];
+    if (!self.headerView) {
+        self.headerView = [[PlayerHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 55)];
+    }
     if (self.roomInfo.roomType == ROOM_TYPE_TEAM && [self.roomInfo.ownerId isEqualToString:self.ownerId]) {
         self.headerView.isMicHidden = NO;
     }else {
@@ -161,11 +233,19 @@
     }
     
     self.headerView.isOwnerTransferHidden = ![self.roomInfo.ownerId isEqualToString:self.ownerId];
-    NSString *roomTitle = self.roomInfo.roomType == ROOM_TYPE_TEAM ? @"小队" : @"国战";
+    
+    [self.headerView changeSpatialAudioButtonEnable:self.isEnableSpatialAudio];
+    NSString *roomTitle = @"小队";
+    if (self.roomInfo.roomType == ROOM_TYPE_NATIONAL) {
+        roomTitle = @"国战";
+    }
+    if (self.roomInfo.roomType == ROOM_TYPE_RANGE) {
+        roomTitle = @"范围";
+    }
     [self.headerView headerTitleWithRoomType:roomTitle
                                  playerCount:self.playerListMArr.count
-                        allPlayerIsForbidden:self.allPlayerIsForbidden
-                        allPlayerSpeakIsMute:self.allPlayerIsMute];
+                        allPlayerIsForbidden:[self.roomMuteInfo allPlayerIsForbiddenForKey:self.roomInfo.roomId]
+                        allPlayerSpeakIsMute:[self.roomMuteInfo allPlayerIsMuteForKey:self.roomInfo.roomId]];
     self.headerView.hidden = self.playerListMArr.count > 0 ? NO : YES;
     return self.headerView;
 }
@@ -182,10 +262,20 @@
     }
     Player *player = self.playerListMArr[indexPath.row];
     [cell cellWithIndexPath:indexPath
-                  roomInfo:self.roomInfo
-                    player:player];
+                   roomInfo:self.roomInfo
+                     player:player];
     return cell;
 }
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:FORBID_OR_NOT object:nil];
+}
+#pragma mark - getter setter -
+
+- (void)setIsEnableSpatialAudio:(BOOL)isEnableSpatialAudio {
+    _isEnableSpatialAudio = isEnableSpatialAudio;
+}
+
 
 - (NSMutableArray *)playerListMArr {
     if (!_playerListMArr) {
@@ -194,4 +284,17 @@
     return _playerListMArr;
 }
 
+- (RoomMuteInfo *)roomMuteInfo {
+    if (!_roomMuteInfo) {
+        _roomMuteInfo = [[RoomMuteInfo alloc] init];
+    }
+    return _roomMuteInfo;
+}
+
+- (RoomBtnEnabledInfo *)roomBtnEnabledInfo {
+    if (!_roomBtnEnabledInfo) {
+        _roomBtnEnabledInfo = [[RoomBtnEnabledInfo alloc] init];
+    }
+    return _roomBtnEnabledInfo;
+}
 @end

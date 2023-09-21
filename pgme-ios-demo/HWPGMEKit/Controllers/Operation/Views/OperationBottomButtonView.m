@@ -15,14 +15,15 @@
  */
 
 #import "OperationBottomButtonView.h"
+#import "OperationBottomCollectionViewCell.h"
 
-@interface OperationBottomButtonView ()
+@interface OperationBottomButtonView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
-/// 查看日志/房间成员切换按钮
-@property (nonatomic, strong) UIButton *switchButton;
+/// collectionView
+@property (nonatomic, strong) UICollectionView *collectionView;
 
-/// 引擎销毁按钮
-@property (nonatomic, strong) UIButton *destoryButton;
+/// 数据
+@property (nonatomic, strong) NSArray *dataArr;
 
 @end
 
@@ -33,20 +34,49 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setupViews];
+        [self initData];
+        [self.collectionView reloadData];
     }
     return self;
 }
 
 - (void)setupViews {
-    [self addSubview:self.switchButton];
-    [self addSubview:self.destoryButton];
-    
-    NSArray *buttonArray = [NSArray arrayWithObjects:self.switchButton,self.destoryButton, nil];
-    [buttonArray mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:70 leadSpacing:50 tailSpacing:50];
-    [buttonArray mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(18);
-        make.height.equalTo(@42);
+    [self addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self).inset(20);
+        make.top.equalTo(self).inset(8);
+        make.bottom.equalTo(self).inset(kGetSafeAreaBottomHeight + 8);
     }];
+}
+
+- (void)initData {
+    self.dataArr = @[@{NORMALTITLE : @"查看日志",
+                       SELECTEDTITLE : @"房间成员",
+                       NORMALIMAGE : @"bt_switch_normal",
+                       LIGHTEDIMAGE : @"bt_switch_down",
+                       TYPE : @(BottomButtonType_Switch),
+                     },
+                     @{NORMALTITLE : @"引擎销毁",
+                       NORMALIMAGE : @"bt_cancel_normal",
+                       LIGHTEDIMAGE : @"bt_cancel_down",
+                       TYPE : @(BottomButtonType_Destory),
+                     },
+                     @{NORMALTITLE : @"语音消息",
+                       NORMALIMAGE : @"bt_switch_normal",
+                       LIGHTEDIMAGE : @"bt_switch_normal",
+                       TYPE : @(BottomButtonType_AudioMsg),
+                     },
+                     @{NORMALTITLE : @"媒体音效",
+                       NORMALIMAGE : @"bt_switch_normal",
+                       LIGHTEDIMAGE : @"bt_switch_normal",
+                       TYPE : @(BottomButtonType_AduioEffect),
+                     },
+                     @{NORMALTITLE : @"玩家位置",
+                       NORMALIMAGE : @"bt_switch_normal",
+                       LIGHTEDIMAGE : @"bt_switch_normal",
+                       TYPE : @(BottomButtonType_PlayerPosition),
+                     },
+    ];
 }
 
 - (void)switchButtonPressed:(UIButton *)button {
@@ -62,33 +92,102 @@
     }
 }
 
-- (UIButton *)switchButton {
-    if (!_switchButton) {
-        _switchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_switchButton setTitle:@"查看日志" forState:UIControlStateNormal];
-        [_switchButton setTitle:@"房间成员" forState:UIControlStateSelected];
-        [_switchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _switchButton.titleLabel.font = [UIFont systemFontOfSize:16];
-        [_switchButton setBackgroundImage:[UIImage imageNamed:@"bt_switch_normal"] forState:UIControlStateNormal];
-        [_switchButton setBackgroundImage:[UIImage imageNamed:@"bt_switch_down"] forState:UIControlStateHighlighted];
-        _switchButton.layer.cornerRadius = 6;
-        [_switchButton addTarget:self action:@selector(switchButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+- (void)audioMsgButtonPressed:(UIButton *)button {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(audioMsgButtonPressed:audioMsgButton:)]){
+        [self.delegate audioMsgButtonPressed:self audioMsgButton:button];
     }
-    return _switchButton;
 }
 
-- (UIButton *)destoryButton {
-    if (!_destoryButton) {
-        _destoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_destoryButton setTitle:@"引擎销毁" forState:UIControlStateNormal];
-        [_destoryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _destoryButton.titleLabel.font = [UIFont systemFontOfSize:16];
-        [_destoryButton setBackgroundImage:[UIImage imageNamed:@"bt_cancel_normal"] forState:UIControlStateNormal];
-        [_destoryButton setBackgroundImage:[UIImage imageNamed:@"bt_cancel_down"] forState:UIControlStateHighlighted];
-        _destoryButton.layer.cornerRadius = 6;
-        [_destoryButton addTarget:self action:@selector(destoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+- (void)audioEffectButtonPressed:(UIButton *)button {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(audioEffectButtonPressed:audioEffectButton:)]){
+        [self.delegate audioEffectButtonPressed:self audioEffectButton:button];
     }
-    return _destoryButton;
+}
+
+- (void)playerPositionButtonPressed:(UIButton *)button {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(playerPositionButtonPressed:playerPositionButton:)]){
+        [self.delegate playerPositionButtonPressed:self playerPositionButton:button];
+    }
+}
+
+- (void)buttonnPressed:(UIButton *)button type:(BottomButtonType)type {
+    switch (type) {
+        case BottomButtonType_Switch:
+            [self switchButtonPressed:button];
+            break;
+        case BottomButtonType_Destory:
+            [self destoryButtonPressed:button];
+            break;
+        case BottomButtonType_AudioMsg:
+            [self audioMsgButtonPressed:button];
+            break;
+        case BottomButtonType_AduioEffect:
+            [self audioEffectButtonPressed:button];
+            break;
+        case BottomButtonType_PlayerPosition:
+            [self playerPositionButtonPressed:button];
+            break;
+        default:
+            break;
+    }
+}
+
+#pragma mark  设置CollectionView的组数
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+#pragma mark  设置CollectionView每组所包含的个数
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.self.dataArr.count;
+}
+
+#pragma mark  设置CollectionCell的内容
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *identify = NSStringFromClass([OperationBottomCollectionViewCell class]);
+    OperationBottomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
+    cell.dataDic = self.dataArr[indexPath.row];
+    __weak typeof(self) weakSelf = self;
+    cell.touchBlock = ^(UIButton * _Nonnull btn, BottomButtonType type) {
+        [weakSelf buttonnPressed:btn type:type];
+    };
+    return cell;
+}
+
+#pragma mark  定义每个UICollectionView的大小
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return  CGSizeMake(CGRectGetWidth(self.bounds) / 3 - 30, 44);
+}
+
+#pragma mark  定义整个CollectionViewCell与整个View的间距
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    return UIEdgeInsetsMake(0, 10, 0, 10);
+}
+
+- (CGFloat)operationBottomViewHeight {
+    return (self.dataArr.count / 3 + (self.dataArr.count % 3 ? 1 : 0)) * 64 + kGetSafeAreaBottomHeight + 16;
+}
+
+- (UICollectionView *)collectionView {
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+        flowLayout.minimumLineSpacing = 10;
+        flowLayout.minimumInteritemSpacing = 0;
+        [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:flowLayout];
+        _collectionView.backgroundColor = [UIColor clearColor];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.bounces = NO;
+        _collectionView.scrollEnabled = NO;
+        [_collectionView registerClass:[OperationBottomCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([OperationBottomCollectionViewCell class])];
+    }
+    return _collectionView;
 }
 
 @end

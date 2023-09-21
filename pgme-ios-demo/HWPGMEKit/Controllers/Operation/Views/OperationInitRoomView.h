@@ -21,17 +21,23 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol OperationInitRoomViewDelegate <NSObject>
 
 @optional
-/// 创建/加入小队 按钮点击代理
+/// 加入小队 按钮点击代理
 /// @param initRoomView 顶部操作view
-/// @param teamButton 创建/加入小队按钮
+/// @param teamButton 加入小队按钮
 /// @param roomID 房间ID
 - (void)teamButtonPressed:(UIView *)initRoomView teamButton:(UIButton *)teamButton roomID:(NSString *)roomID;
 
-/// 创建/加入国战 按钮点击代理
+/// 加入国战 按钮点击代理
 /// @param initRoomView 顶部操作view
-/// @param nationalWarButton 创建/加入国战按钮
+/// @param nationalWarButton 加入国战按钮
 /// @param roomID 房间ID
 - (void)nationalWarButtonPressed:(UIView *)initRoomView nationalWarButton:(UIButton *)nationalWarButton roomID:(NSString *)roomID;
+
+/// 加入范围语音 按钮点击代理
+/// @param initRoomView 顶部操作view
+/// @param joinRangeButton 加入范围按钮
+/// @param roomID 房间ID
+- (void)joinRangeButtonPressed:(UIView *)initRoomView joinRangeButton:(UIButton *)joinRangeButton roomID:(NSString *)roomID;
 
 /// 离开房间 按钮点击代理
 /// @param initRoomView 顶部操作view

@@ -112,11 +112,11 @@
                            isEnable:(BOOL)isEnable {
     switch (playerState) {
         case kPlayerMicState: {
-            [_playerListVC forbidPlayer:openId isForbidden:isEnable];
+            [_playerListVC forbidPlayer:roomId openId:openId isForbidden:isEnable];
         }
             break;
         case kPlayerSpeakState: {
-            [_playerListVC mutePlayer:openId isMuted:isEnable];
+            [_playerListVC mutePlayer:roomId openId:openId isMuted:isEnable];
         }
             break;
             
@@ -142,6 +142,23 @@
         default:
             break;
     }
+}
+
+- (void)leaveRoom:(NSString *)roomId {
+    [self.playerListVC leaveRoom:roomId];
+}
+
+- (void)playerOffline:(NSString *)roomId
+               openId:(NSString *)openId {
+    [self.playerListVC playerOffline:roomId openId:openId];
+}
+
+- (void)changeSpatialAudioButtonEnable:(BOOL)enable {
+    self.playerListVC.isEnableSpatialAudio = enable;
+}
+
+- (void)updateSpatialAudioButtonSelected:(BOOL)selected {
+    [self.playerListVC updateSpatialAudioButtonSelected:selected];
 }
 
 - (UIScrollView *)scrollView {

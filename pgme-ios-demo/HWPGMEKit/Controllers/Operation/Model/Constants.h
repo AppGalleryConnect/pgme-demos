@@ -33,3 +33,6 @@ static NSString* const MUTE_OR_NOT = @"muteOrNot";
 
 /// 清屏通知
 static NSString* const CLEAR_SCREEN = @"clearScreen";
+
+///  开启3D音效
+static NSString* const ENABLE_SPATIAL_AUDIO = @"enableSpatialAudio";

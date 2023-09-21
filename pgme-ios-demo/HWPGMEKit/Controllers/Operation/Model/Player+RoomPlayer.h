@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-#import "HWPGMEObject.h"
+#import <HWPGMEKit/HWPGMEObject.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 玩家声音是否被屏蔽
 @property (nonatomic, assign) BOOL isMute;
 
+/// 禁言按钮是否可以点击
+@property(nonatomic, assign) BOOL isForbiddenBtnDisabled;
 @end
 
 NS_ASSUME_NONNULL_END

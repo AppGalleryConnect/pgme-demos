@@ -19,6 +19,7 @@
 #import "LoginLogTableView.h"
 #import "HWPGMEDelegate.h"
 #import "OperationViewController.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @interface LoginViewController ()<UserIdLoginViewDelegate,HWPGMEngineDelegate>
 
@@ -61,6 +62,8 @@
     engineParam.openId = openId;
     engineParam.cpAccessToken = @"";
     engineParam.apiKey = @"";
+    NSString *gameSecret = @"";
+    [self setAccessSign:engineParam withPrivateKey:gameSecret];
     HWPGMEngine *engine = [HWPGMEngine create:engineParam engineDelegate:HWPGMEDelegate.getInstance];
     if (engine) {
         NSLog(@"init engine success");
@@ -71,11 +74,25 @@
     return ERROR;
 }
 
+- (void)setAccessSign:(EngineCreateParams *)engineParam withPrivateKey:(NSString *) privateKey {
+    NSString *nonce = [NSString stringWithFormat:@"%d", arc4random()];
+    NSString *timestamp = [NSString stringWithFormat:@"%ld", (long)([[NSDate date] timeIntervalSince1970] * 1000)];
+    NSString *dataString = [NSString stringWithFormat:@"appId=%@&nonce=%@&openId=%@&timestamp=%@", engineParam.agcAppId, nonce, engineParam.openId, timestamp];
+    NSString *sign = [HWTools sign:dataString withPrivateKey:privateKey];
+    
+    engineParam.sign = sign;
+    engineParam.nonce = nonce;
+    engineParam.timeStamp = timestamp;
+}
+
+
 #pragma mark - UserIdLoginViewDelegate
 - (void)initEnginePressed:(UIView *)loginView button:(UIButton *)button userID:(NSString *)userID {
     if (StringEmpty(userID)) {
         _userID = userID;
-        [self initEngineWithOpenId:userID];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self initEngineWithOpenId:userID];
+        });
     }
 }
 

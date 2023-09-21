@@ -30,12 +30,31 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param destoryButton 引擎销毁按钮
 - (void)destoryButtonPressed:(UIView *)buttonView destoryButton:(UIButton *)destoryButton;
 
+/// 语音消息 按钮点击代理
+/// @param buttonView  底部按钮的view
+/// @param audioMsgButton 语音消息按钮
+- (void)audioMsgButtonPressed:(UIView *)buttonView audioMsgButton:(UIButton *)audioMsgButton;
+
+/// 音效 按钮点击代理
+/// @param buttonView  底部按钮的view
+/// @param audioEffectButton 音效按钮
+- (void)audioEffectButtonPressed:(UIView *)buttonView audioEffectButton:(UIButton *)audioEffectButton;
+
+/// 玩家位置 按钮点击代理
+/// @param buttonView  底部按钮的view
+/// @param playerPositonButton 玩家位置按钮
+- (void)playerPositionButtonPressed:(UIView *)buttonView playerPositionButton:(UIButton *)playerPositionButton;
+
 @end
 
 @interface OperationBottomButtonView : UIView
 
 /// 代理
 @property (nonatomic, weak) id<OperationBottomButtonViewDelegate> delegate;
+
+/// 获取view总高度
+/// @return view高度
+- (CGFloat)operationBottomViewHeight;
 
 @end
 

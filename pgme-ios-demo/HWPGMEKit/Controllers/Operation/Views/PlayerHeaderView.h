@@ -31,6 +31,14 @@ NS_ASSUME_NONNULL_BEGIN
            allPlayerIsForbidden:(BOOL)isForbidden
            allPlayerSpeakIsMute:(BOOL)isMute;
 
+/// 修改3D音效button 是否可点击
+/// @param enable YES:可点击 NO：不可点击
+- (void)changeSpatialAudioButtonEnable:(BOOL)enable;
+
+/// 更新3D音效按钮选中状态
+/// @param selected true：选中 false：未选中
+- (void)updateSpatialAudioButtonSelected:(BOOL)selected;
+
 /// 是否隐藏语音按钮
 @property (nonatomic, assign) BOOL isMicHidden;
 

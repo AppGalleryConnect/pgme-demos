@@ -33,6 +33,10 @@
 
 /// 扬声器按钮
 @property (nonatomic, strong) UIButton *speakButton;
+
+/// 开启3D音效
+@property (nonatomic, strong) UIButton *spatialAudioButton;
+
 @end
 
 @implementation PlayerHeaderView
@@ -52,27 +56,37 @@
     [self addSubview:self.ownerTransferButton];
     [self addSubview:self.micButton];
     [self addSubview:self.speakButton];
+    [self addSubview:self.spatialAudioButton];
     
     [self.bgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
     [self.playerHeaderTitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self);
-        make.left.equalTo(self).offset(15);
+        make.left.equalTo(self).inset(8);
     }];
+    
     [self.ownerTransferButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.mas_centerY);
-        make.right.equalTo(self.micButton.mas_left).offset(-16);
+        make.right.equalTo(self.micButton.mas_left).inset(12);
     }];
+    
+    [self.spatialAudioButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.right.equalTo(self.ownerTransferButton.mas_left).inset(12);
+        make.height.equalTo(@(32));
+        make.width.equalTo(@(60));
+    }];
+    
     [self.micButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.mas_centerY);
-        make.right.equalTo(self.speakButton.mas_left).offset(-6);
-        make.size.mas_equalTo(CGSizeMake(36, 36));
+        make.right.equalTo(self.speakButton.mas_left).inset(12);
+        make.size.mas_equalTo(CGSizeMake(32, 32));
     }];
     [self.speakButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.mas_centerY);
-        make.right.equalTo(self).offset(-12);
-        make.size.mas_equalTo(CGSizeMake(36, 36));
+        make.right.equalTo(self).inset(12);
+        make.size.mas_equalTo(CGSizeMake(32, 32));
     }];
 }
 
@@ -96,9 +110,17 @@
                     playerCount:(NSInteger)playerCount
            allPlayerIsForbidden:(BOOL)isForbidden
            allPlayerSpeakIsMute:(BOOL)isMute {
-    self.playerHeaderTitle.text = [NSString stringWithFormat:@"%@成员（%ld）",roomType,(long)playerCount];
+    self.playerHeaderTitle.text = [NSString stringWithFormat:@"%@（%ld）",roomType,(long)playerCount];
     self.micButton.selected = isForbidden;
     self.speakButton.selected = isMute;
+}
+
+- (void)updateSpatialAudioButtonSelected:(BOOL)selected {
+    self.spatialAudioButton.selected = selected;
+}
+
+- (void)changeSpatialAudioButtonEnable:(BOOL)enable {
+    self.spatialAudioButton.enabled = enable;
 }
 
 #pragma mark - event
@@ -127,6 +149,15 @@
     }];
 }
 
+/// 开启/关闭3D音效
+/// @param button 3D音效按钮
+- (void)spatialAudioButtonPressed:(UIButton *)button {
+    button.selected ^= 1;
+    [[NSNotificationCenter defaultCenter] postNotificationName:ENABLE_SPATIAL_AUDIO object:nil userInfo:@{
+        @"button" : button
+    }];
+}
+
 - (UIImageView *)bgImageView {
     if (!_bgImageView) {
         _bgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_cell"]];
@@ -139,7 +170,7 @@
         _playerHeaderTitle = [[UILabel alloc] init];
         _playerHeaderTitle.font = [UIFont systemFontOfSize:14 weight:UIFontWeightBold];
         _playerHeaderTitle.textColor = [UIColor hw_textColor];
-        _playerHeaderTitle.text = @"小队成员（0）";
+        _playerHeaderTitle.text = @"小队（0）";
     }
     return _playerHeaderTitle;
 }
@@ -172,6 +203,25 @@
         [_speakButton addTarget:self action:@selector(speakButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _speakButton;
+}
+
+- (UIButton *)spatialAudioButton {
+    if (!_spatialAudioButton) {
+        _spatialAudioButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_spatialAudioButton setTitle:@"开启音效" forState:UIControlStateNormal];
+        [_spatialAudioButton setTitle:@"关闭音效" forState:UIControlStateSelected];
+        [_spatialAudioButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_spatialAudioButton setTitleColor:[UIColor hw_textColor] forState:UIControlStateSelected];
+        [_spatialAudioButton setBackgroundImage:[UIImage imageNamed:@"bt_join_normal"] forState:UIControlStateNormal];
+        [_spatialAudioButton setBackgroundImage:[UIImage imageNamed:@"bt_cancel_down"] forState:UIControlStateSelected];
+        [_spatialAudioButton setBackgroundImage:[UIImage imageNamed:@"bt_cancel_disable"] forState:UIControlStateDisabled];
+        _spatialAudioButton.titleLabel.font = [UIFont systemFontOfSize:12];
+        _spatialAudioButton.layer.cornerRadius = 4;
+        _spatialAudioButton.layer.masksToBounds = YES;
+        _spatialAudioButton.enabled = NO;
+        [_spatialAudioButton addTarget:self action:@selector(spatialAudioButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _spatialAudioButton;
 }
 
 @end

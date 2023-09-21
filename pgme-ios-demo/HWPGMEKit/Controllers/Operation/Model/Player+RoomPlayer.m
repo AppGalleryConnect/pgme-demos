@@ -19,6 +19,7 @@
 
 static const void *objc_is_speaking = @"objc_is_speaking";
 static const void *objc_is_mute = @"objc_is_mute";
+static const void *objc_is_forbidden_btn_disabled = @"objc_is_forbidden_btn_disabled";
 
 @implementation Player (RoomPlayer)
 
@@ -40,5 +41,12 @@ static const void *objc_is_mute = @"objc_is_mute";
     return [objc_getAssociatedObject(self, &objc_is_mute) boolValue];
 }
 
+- (void)setIsForbiddenBtnDisabled:(BOOL)isForbiddenBtnDisabled {
+    NSNumber *num = [NSNumber numberWithBool:isForbiddenBtnDisabled];
+    objc_setAssociatedObject(self, &objc_is_forbidden_btn_disabled, num, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
 
+- (BOOL)isForbiddenBtnDisabled {
+    return [objc_getAssociatedObject(self, &objc_is_forbidden_btn_disabled) boolValue];
+}
 @end

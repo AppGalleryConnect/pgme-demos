@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取当前时间
 + (NSString *)nowDate;
 
+/// 使用Sha256WithRsa/PSS进行签名
++ (NSString *)sign:(NSString *)dataToSign withPrivateKey: (NSString *) privateKey;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -30,11 +30,14 @@
 /// roomID输入框
 @property (nonatomic, strong) UITextField *roomIdTextField;
 
-/// 创建/加入小队按钮
+/// 加入小队按钮
 @property (nonatomic, strong) UIButton *teamButton;
 
-/// 创建/加入国战按钮
+/// 加入国战按钮
 @property (nonatomic, strong) UIButton *nationalWarButton;
+
+/// 加入范围音效按钮
+@property (nonatomic, strong) UIButton *joinRangeButton;
 
 /// 离开房间按钮
 @property (nonatomic, strong) UIButton *leaveRoomButton;
@@ -68,12 +71,13 @@
     [self addSubview:self.roomIdTextField];
     [self addSubview:self.teamButton];
     [self addSubview:self.nationalWarButton];
+    [self addSubview:self.joinRangeButton];
     [self addSubview:self.leaveRoomButton];
     [self addSubview:self.turnonMicButton];
     [self addSubview:self.voiceToTextButton];
     [self.switchRoomListTextField addSubview:self.arrowImageView];
     
-    CGFloat ButtonW = (SCREENWIDTH - 45*3) / 2;
+    CGFloat ButtonW = (SCREENWIDTH - 45*3);
     CGFloat ButtonH = 38;
     
     [self.switchRoomTitle mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,25 +102,34 @@
         make.right.equalTo(self).offset(-45);
         make.height.equalTo(@42);
     }];
+    
     [self.teamButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.switchRoomTitle.mas_left);
         make.top.equalTo(self.roomIDTitle.mas_bottom).offset(12);
-        make.size.mas_equalTo(CGSizeMake(ButtonW, ButtonH));
+        make.size.mas_equalTo(CGSizeMake(ButtonW * 0.5, ButtonH));
     }];
+    
     [self.nationalWarButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.roomIdTextField);
         make.top.equalTo(self.teamButton);
         make.size.equalTo(self.teamButton);
     }];
+    
+    [self.joinRangeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.teamButton);
+        make.size.equalTo(self.teamButton);
+    }];
+    
+    NSArray *buttonArray = [NSArray arrayWithObjects:self.teamButton, self.nationalWarButton, self.joinRangeButton, nil];
+    [buttonArray mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:10 leadSpacing:45 tailSpacing:45];
+    
     [self.leaveRoomButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.nationalWarButton);
+        make.right.equalTo(self.switchRoomListTextField);
         make.top.equalTo(self.nationalWarButton.mas_bottom).offset(20);
-        make.size.mas_equalTo(CGSizeMake(ButtonW * 0.8, ButtonH));
+        make.size.mas_equalTo(CGSizeMake(ButtonW * 0.4, ButtonH));
     }];
     [self.turnonMicButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.teamButton);
         make.centerY.equalTo(self.leaveRoomButton);
-        make.size.mas_equalTo(CGSizeMake(ButtonW * 0.6, ButtonH));
+        make.size.mas_equalTo(CGSizeMake(ButtonW * 0.3, ButtonH));
     }];
     [self.voiceToTextButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.turnonMicButton.mas_right).offset(28);
@@ -180,6 +193,13 @@
     [self.roomIdTextField resignFirstResponder];
     if (self.delegate && [self.delegate respondsToSelector:@selector(nationalWarButtonPressed:nationalWarButton:roomID:)]) {
         [self.delegate nationalWarButtonPressed:self nationalWarButton:button roomID:self.roomIdTextField.text];
+    }
+}
+
+- (void)joinRangeButtonPressed:(UIButton *)button {
+    [self.roomIdTextField resignFirstResponder];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(joinRangeButtonPressed:joinRangeButton:roomID:)]) {
+        [self.delegate joinRangeButtonPressed:self joinRangeButton:button roomID:self.roomIdTextField.text];
     }
 }
 
@@ -262,7 +282,7 @@
 - (UIButton *)teamButton {
     if (!_teamButton) {
         _teamButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_teamButton setTitle:@"创建/加入小队" forState:UIControlStateNormal];
+        [_teamButton setTitle:@"加入小队" forState:UIControlStateNormal];
         [_teamButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _teamButton.titleLabel.font = [UIFont systemFontOfSize:13];
         [_teamButton setBackgroundImage:[UIImage imageNamed:@"bt_join_normal"] forState:UIControlStateNormal];
@@ -276,7 +296,7 @@
 - (UIButton *)nationalWarButton {
     if (!_nationalWarButton) {
         _nationalWarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_nationalWarButton setTitle:@"创建/加入国战" forState:UIControlStateNormal];
+        [_nationalWarButton setTitle:@"加入国战" forState:UIControlStateNormal];
         [_nationalWarButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _nationalWarButton.titleLabel.font = [UIFont systemFontOfSize:13];
         [_nationalWarButton setBackgroundImage:[UIImage imageNamed:@"bt_join_normal"] forState:UIControlStateNormal];
@@ -285,6 +305,21 @@
         [_nationalWarButton addTarget:self action:@selector(nationalWarButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _nationalWarButton;
+}
+
+- (UIButton *)joinRangeButton {
+    if (!_joinRangeButton) {
+        _joinRangeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_joinRangeButton setTitle:@"加入范围" forState:UIControlStateNormal];
+        [_joinRangeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _joinRangeButton.titleLabel.font = [UIFont systemFontOfSize:13];
+        [_joinRangeButton setBackgroundImage:[UIImage imageNamed:@"bt_join_normal"] forState:UIControlStateNormal];
+        [_joinRangeButton setBackgroundImage:[UIImage imageNamed:@"bt_join_down"] forState:UIControlStateHighlighted];
+        _joinRangeButton.layer.cornerRadius = 6;
+        _joinRangeButton.layer.masksToBounds = YES;
+        [_joinRangeButton addTarget:self action:@selector(joinRangeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _joinRangeButton;
 }
 
 - (UIButton *)leaveRoomButton {

@@ -32,9 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)speakingWithUsers:(NSArray *)users;
 
 /// 是否禁止玩家使用麦克风
+/// @param roomId 房间Id
 /// @param openId 玩家openId
 /// @param isForbidden 麦克风是否被禁止
-- (void)forbidPlayer:(NSString *)openId isForbidden:(BOOL)isForbidden;
+- (void)forbidPlayer:(NSString *)roomId openId:(NSString *)openId isForbidden:(BOOL)isForbidden;
+
 
 /// 是否禁止所有玩家使用麦克风
 /// @param roomId 房间Id
@@ -45,9 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
              isForbidden:(BOOL)isForbidden;
 
 /// 是否屏蔽玩家语音
+/// @param roomId 房间Id
 /// @param openId 玩家openId
 /// @param isMuted 是否屏蔽玩家语音
-- (void)mutePlayer:(NSString *)openId isMuted:(BOOL)isMuted;
+- (void)mutePlayer:(NSString *)roomId openId:(NSString *)openId isMuted:(BOOL)isMuted;
 
 /// 是否屏蔽所有玩家语音
 /// @param roomId 房间Id
@@ -56,6 +59,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)muteAllPlayers:(NSString *)roomId
                openIds:(NSArray *)openIds
                isMuted:(BOOL)isMuted;
+
+/// 当前玩家离开房间
+- (void)leaveRoom:(NSString *)roomId;
+
+/// 玩家离开房间
+- (void)playerOffline:(NSString *)roomId openId:(NSString *)openId;
+
+/// 更新3D音效按钮选中状态
+/// @param selected true：选中 false：未选中
+- (void)updateSpatialAudioButtonSelected:(BOOL)selected;
+
+/// 是否有开启3D音效的能力
+@property (nonatomic, assign) BOOL isEnableSpatialAudio;
 
 @end
 

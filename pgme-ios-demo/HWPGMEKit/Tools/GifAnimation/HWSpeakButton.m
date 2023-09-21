@@ -49,7 +49,7 @@
 
 - (void)beginSpeaking {
     self.isSpeaking = YES;
-    [self startAnimationWithImages:beginArray duration:1 repeatCount:0];
+    [self startAnimationWithImages:beginArray duration:1 repeatCount:1];
 }
 
 - (void)stopSpeaking {

@@ -35,4 +35,31 @@
     return [formatter stringFromDate:[NSDate date]];
 }
 
++ (NSString *)sign:(NSString *)dataToSign withPrivateKey: (NSString *) privateKey {
+    NSData *keyData = [[NSData alloc]initWithBase64EncodedString:privateKey options:0];
+    NSMutableDictionary *dicPrikey = [[NSMutableDictionary alloc]initWithCapacity:2];
+   [dicPrikey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+   [dicPrikey setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
+   
+    CFErrorRef error = NULL;
+    SecKeyRef privateKeyRef = SecKeyCreateWithData((__bridge CFDataRef)keyData, (__bridge CFDictionaryRef) dicPrikey, &error);
+    if (privateKeyRef == NULL) {
+        NSLog(@"init privateKey failed");
+        return nil;
+    }
+
+    NSData *data = [dataToSign dataUsingEncoding:NSUTF8StringEncoding];
+    CFDataRef cfSign = SecKeyCreateSignature(privateKeyRef, kSecKeyAlgorithmRSASignatureMessagePSSSHA256, (__bridge CFDataRef)data, &error);
+    if (cfSign == NULL) {
+        NSLog(@"init sign failed");
+        CFRelease(privateKeyRef);
+        return nil;
+    }
+
+    NSData *sign = (__bridge_transfer NSData *)cfSign;
+    NSString* signStr = [sign base64EncodedStringWithOptions:0];
+    CFRelease(privateKeyRef);
+    return signStr;
+}
+
 @end

@@ -25,6 +25,47 @@
 		188540C62834E23800CF4209 /* PlayerListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 188540BC2834E23800CF4209 /* PlayerListTableViewCell.m */; };
 		188540C72834E23800CF4209 /* OperationListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 188540BD2834E23800CF4209 /* OperationListView.m */; };
 		188540C82834E23800CF4209 /* OperationBottomButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 188540BF2834E23800CF4209 /* OperationBottomButtonView.m */; };
+		18D23C5B2AAAC15900EF41A1 /* MJExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C4F2AAAC15900EF41A1 /* MJExtension.framework */; };
+		18D23C5C2AAAC15900EF41A1 /* HWPGMEVoiceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C502AAAC15900EF41A1 /* HWPGMEVoiceKit.framework */; };
+		18D23C5D2AAAC15900EF41A1 /* RTC.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18D23C512AAAC15900EF41A1 /* RTC.bundle */; };
+		18D23C5E2AAAC15900EF41A1 /* HWPGMEAudioMsgKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C522AAAC15900EF41A1 /* HWPGMEAudioMsgKit.framework */; };
+		18D23C5F2AAAC15900EF41A1 /* AudioToolCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C532AAAC15900EF41A1 /* AudioToolCommon.framework */; };
+		18D23C602AAAC15900EF41A1 /* HAFormalAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C542AAAC15900EF41A1 /* HAFormalAnalytics.framework */; };
+		18D23C612AAAC15900EF41A1 /* HWPGMEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C552AAAC15900EF41A1 /* HWPGMEKit.framework */; };
+		18D23C622AAAC15900EF41A1 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C562AAAC15900EF41A1 /* SocketRocket.framework */; };
+		18D23C632AAAC15900EF41A1 /* SpatialAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C572AAAC15900EF41A1 /* SpatialAudio.framework */; };
+		18D23C642AAAC15900EF41A1 /* hwffmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C582AAAC15900EF41A1 /* hwffmpeg.framework */; };
+		18D23C652AAAC15900EF41A1 /* HWRTCEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C592AAAC15900EF41A1 /* HWRTCEngine.framework */; };
+		18D23C662AAAC15900EF41A1 /* HWPGMESpatialAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D23C5A2AAAC15900EF41A1 /* HWPGMESpatialAudioKit.framework */; };
+		18D23C672AAAC16F00EF41A1 /* MJExtension.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C4F2AAAC15900EF41A1 /* MJExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C682AAAC16F00EF41A1 /* HWPGMEVoiceKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C502AAAC15900EF41A1 /* HWPGMEVoiceKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C692AAAC16F00EF41A1 /* HWPGMEAudioMsgKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C522AAAC15900EF41A1 /* HWPGMEAudioMsgKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C6A2AAAC16F00EF41A1 /* AudioToolCommon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C532AAAC15900EF41A1 /* AudioToolCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C6B2AAAC16F00EF41A1 /* HWPGMEKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C552AAAC15900EF41A1 /* HWPGMEKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C6C2AAAC16F00EF41A1 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C562AAAC15900EF41A1 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C6D2AAAC16F00EF41A1 /* SpatialAudio.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C572AAAC15900EF41A1 /* SpatialAudio.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C6E2AAAC17000EF41A1 /* hwffmpeg.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C582AAAC15900EF41A1 /* hwffmpeg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C6F2AAAC17000EF41A1 /* HWRTCEngine.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C592AAAC15900EF41A1 /* HWRTCEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C702AAAC17000EF41A1 /* HWPGMESpatialAudioKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18D23C5A2AAAC15900EF41A1 /* HWPGMESpatialAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18D23C722AAAC2C300EF41A1 /* audioEffect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 18D23C712AAAC2C300EF41A1 /* audioEffect.bundle */; };
+		18D23C7F2AAAC3A900EF41A1 /* RoomBtnEnabledInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C732AAAC3A800EF41A1 /* RoomBtnEnabledInfo.m */; };
+		18D23C802AAAC3A900EF41A1 /* PlayerLocationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C752AAAC3A800EF41A1 /* PlayerLocationModel.m */; };
+		18D23C812AAAC3A900EF41A1 /* PlayerLocationCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C772AAAC3A800EF41A1 /* PlayerLocationCache.m */; };
+		18D23C822AAAC3A900EF41A1 /* MatrixTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C792AAAC3A800EF41A1 /* MatrixTool.m */; };
+		18D23C832AAAC3A900EF41A1 /* AudioMsgModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C7A2AAAC3A800EF41A1 /* AudioMsgModel.m */; };
+		18D23C842AAAC3A900EF41A1 /* RoomMuteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C7B2AAAC3A800EF41A1 /* RoomMuteInfo.m */; };
+		18D23C972AAAC45200EF41A1 /* AudioMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C852AAAC45200EF41A1 /* AudioMessageCell.m */; };
+		18D23C982AAAC45200EF41A1 /* AudioEffectAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C872AAAC45200EF41A1 /* AudioEffectAlertView.m */; };
+		18D23C992AAAC45200EF41A1 /* AudioEffectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C882AAAC45200EF41A1 /* AudioEffectView.m */; };
+		18D23C9A2AAAC45200EF41A1 /* AllAudioEffectControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C892AAAC45200EF41A1 /* AllAudioEffectControlView.m */; };
+		18D23C9B2AAAC45200EF41A1 /* SelfLocationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C8F2AAAC45200EF41A1 /* SelfLocationView.m */; };
+		18D23C9C2AAAC45200EF41A1 /* LocationAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C902AAAC45200EF41A1 /* LocationAlertView.m */; };
+		18D23C9D2AAAC45200EF41A1 /* PlayerLocationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C912AAAC45200EF41A1 /* PlayerLocationCell.m */; };
+		18D23C9E2AAAC45200EF41A1 /* OperationBottomCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C962AAAC45200EF41A1 /* OperationBottomCollectionViewCell.m */; };
+		18D23CA32AAAC47C00EF41A1 /* AudioMsgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23C9F2AAAC47C00EF41A1 /* AudioMsgViewController.m */; };
+		18D23CA42AAAC47C00EF41A1 /* PlayerLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23CA22AAAC47C00EF41A1 /* PlayerLocationViewController.m */; };
+		18D23CA92AAAC4D700EF41A1 /* HWProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23CA52AAAC4D700EF41A1 /* HWProgressHUD.m */; };
+		18D23CAA2AAAC4D700EF41A1 /* HWProgressMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D23CA72AAAC4D700EF41A1 /* HWProgressMaskView.m */; };
 		18D35345286316DA00126326 /* UITextField+HWTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D35344286316DA00126326 /* UITextField+HWTextField.m */; };
 		18D3534928643EE700126326 /* HWAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D3534828643EE700126326 /* HWAlertView.m */; };
 		18D570BA2886461300BC3A82 /* HWSpeakButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D570B92886461300BC3A82 /* HWSpeakButton.m */; };
@@ -60,6 +101,16 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				18D23C672AAAC16F00EF41A1 /* MJExtension.framework in CopyFiles */,
+				18D23C682AAAC16F00EF41A1 /* HWPGMEVoiceKit.framework in CopyFiles */,
+				18D23C692AAAC16F00EF41A1 /* HWPGMEAudioMsgKit.framework in CopyFiles */,
+				18D23C6A2AAAC16F00EF41A1 /* AudioToolCommon.framework in CopyFiles */,
+				18D23C6B2AAAC16F00EF41A1 /* HWPGMEKit.framework in CopyFiles */,
+				18D23C6C2AAAC16F00EF41A1 /* SocketRocket.framework in CopyFiles */,
+				18D23C6D2AAAC16F00EF41A1 /* SpatialAudio.framework in CopyFiles */,
+				18D23C6E2AAAC17000EF41A1 /* hwffmpeg.framework in CopyFiles */,
+				18D23C6F2AAAC17000EF41A1 /* HWRTCEngine.framework in CopyFiles */,
+				18D23C702AAAC17000EF41A1 /* HWPGMESpatialAudioKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +161,55 @@
 		188540BF2834E23800CF4209 /* OperationBottomButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OperationBottomButtonView.m; sourceTree = "<group>"; };
 		188540C02834E23800CF4209 /* PlayerListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerListTableViewCell.h; sourceTree = "<group>"; };
 		188540C12834E23800CF4209 /* OperationListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OperationListView.h; sourceTree = "<group>"; };
+		18D23C4F2AAAC15900EF41A1 /* MJExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MJExtension.framework; sourceTree = "<group>"; };
+		18D23C502AAAC15900EF41A1 /* HWPGMEVoiceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HWPGMEVoiceKit.framework; sourceTree = "<group>"; };
+		18D23C512AAAC15900EF41A1 /* RTC.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RTC.bundle; sourceTree = "<group>"; };
+		18D23C522AAAC15900EF41A1 /* HWPGMEAudioMsgKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HWPGMEAudioMsgKit.framework; sourceTree = "<group>"; };
+		18D23C532AAAC15900EF41A1 /* AudioToolCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AudioToolCommon.framework; sourceTree = "<group>"; };
+		18D23C542AAAC15900EF41A1 /* HAFormalAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HAFormalAnalytics.framework; sourceTree = "<group>"; };
+		18D23C552AAAC15900EF41A1 /* HWPGMEKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HWPGMEKit.framework; sourceTree = "<group>"; };
+		18D23C562AAAC15900EF41A1 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SocketRocket.framework; sourceTree = "<group>"; };
+		18D23C572AAAC15900EF41A1 /* SpatialAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpatialAudio.framework; sourceTree = "<group>"; };
+		18D23C582AAAC15900EF41A1 /* hwffmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = hwffmpeg.framework; sourceTree = "<group>"; };
+		18D23C592AAAC15900EF41A1 /* HWRTCEngine.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HWRTCEngine.framework; sourceTree = "<group>"; };
+		18D23C5A2AAAC15900EF41A1 /* HWPGMESpatialAudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HWPGMESpatialAudioKit.framework; sourceTree = "<group>"; };
+		18D23C712AAAC2C300EF41A1 /* audioEffect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = audioEffect.bundle; sourceTree = "<group>"; };
+		18D23C732AAAC3A800EF41A1 /* RoomBtnEnabledInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomBtnEnabledInfo.m; sourceTree = "<group>"; };
+		18D23C742AAAC3A800EF41A1 /* RoomMuteInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomMuteInfo.h; sourceTree = "<group>"; };
+		18D23C752AAAC3A800EF41A1 /* PlayerLocationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerLocationModel.m; sourceTree = "<group>"; };
+		18D23C762AAAC3A800EF41A1 /* MatrixTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatrixTool.h; sourceTree = "<group>"; };
+		18D23C772AAAC3A800EF41A1 /* PlayerLocationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerLocationCache.m; sourceTree = "<group>"; };
+		18D23C782AAAC3A800EF41A1 /* PlayerLocationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerLocationModel.h; sourceTree = "<group>"; };
+		18D23C792AAAC3A800EF41A1 /* MatrixTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatrixTool.m; sourceTree = "<group>"; };
+		18D23C7A2AAAC3A800EF41A1 /* AudioMsgModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioMsgModel.m; sourceTree = "<group>"; };
+		18D23C7B2AAAC3A800EF41A1 /* RoomMuteInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomMuteInfo.m; sourceTree = "<group>"; };
+		18D23C7C2AAAC3A900EF41A1 /* AudioMsgModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioMsgModel.h; sourceTree = "<group>"; };
+		18D23C7D2AAAC3A900EF41A1 /* PlayerLocationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerLocationCache.h; sourceTree = "<group>"; };
+		18D23C7E2AAAC3A900EF41A1 /* RoomBtnEnabledInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomBtnEnabledInfo.h; sourceTree = "<group>"; };
+		18D23C852AAAC45200EF41A1 /* AudioMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioMessageCell.m; sourceTree = "<group>"; };
+		18D23C872AAAC45200EF41A1 /* AudioEffectAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioEffectAlertView.m; sourceTree = "<group>"; };
+		18D23C882AAAC45200EF41A1 /* AudioEffectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioEffectView.m; sourceTree = "<group>"; };
+		18D23C892AAAC45200EF41A1 /* AllAudioEffectControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllAudioEffectControlView.m; sourceTree = "<group>"; };
+		18D23C8A2AAAC45200EF41A1 /* AudioEffectAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEffectAlertView.h; sourceTree = "<group>"; };
+		18D23C8B2AAAC45200EF41A1 /* AudioEffectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEffectView.h; sourceTree = "<group>"; };
+		18D23C8C2AAAC45200EF41A1 /* AllAudioEffectControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllAudioEffectControlView.h; sourceTree = "<group>"; };
+		18D23C8D2AAAC45200EF41A1 /* OperationBottomCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OperationBottomCollectionViewCell.h; sourceTree = "<group>"; };
+		18D23C8F2AAAC45200EF41A1 /* SelfLocationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelfLocationView.m; sourceTree = "<group>"; };
+		18D23C902AAAC45200EF41A1 /* LocationAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationAlertView.m; sourceTree = "<group>"; };
+		18D23C912AAAC45200EF41A1 /* PlayerLocationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerLocationCell.m; sourceTree = "<group>"; };
+		18D23C922AAAC45200EF41A1 /* LocationAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationAlertView.h; sourceTree = "<group>"; };
+		18D23C932AAAC45200EF41A1 /* SelfLocationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelfLocationView.h; sourceTree = "<group>"; };
+		18D23C942AAAC45200EF41A1 /* PlayerLocationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerLocationCell.h; sourceTree = "<group>"; };
+		18D23C952AAAC45200EF41A1 /* AudioMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioMessageCell.h; sourceTree = "<group>"; };
+		18D23C962AAAC45200EF41A1 /* OperationBottomCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OperationBottomCollectionViewCell.m; sourceTree = "<group>"; };
+		18D23C9F2AAAC47C00EF41A1 /* AudioMsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioMsgViewController.m; sourceTree = "<group>"; };
+		18D23CA02AAAC47C00EF41A1 /* AudioMsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioMsgViewController.h; sourceTree = "<group>"; };
+		18D23CA12AAAC47C00EF41A1 /* PlayerLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerLocationViewController.h; sourceTree = "<group>"; };
+		18D23CA22AAAC47C00EF41A1 /* PlayerLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerLocationViewController.m; sourceTree = "<group>"; };
+		18D23CA52AAAC4D700EF41A1 /* HWProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWProgressHUD.m; path = AlertView/HWProgressHUD.m; sourceTree = "<group>"; };
+		18D23CA62AAAC4D700EF41A1 /* HWProgressMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWProgressMaskView.h; path = AlertView/HWProgressMaskView.h; sourceTree = "<group>"; };
+		18D23CA72AAAC4D700EF41A1 /* HWProgressMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HWProgressMaskView.m; path = AlertView/HWProgressMaskView.m; sourceTree = "<group>"; };
+		18D23CA82AAAC4D700EF41A1 /* HWProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HWProgressHUD.h; path = AlertView/HWProgressHUD.h; sourceTree = "<group>"; };
 		18D35343286316DA00126326 /* UITextField+HWTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextField+HWTextField.h"; sourceTree = "<group>"; };
 		18D35344286316DA00126326 /* UITextField+HWTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextField+HWTextField.m"; sourceTree = "<group>"; };
 		18D3534728643EE700126326 /* HWAlertView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HWAlertView.h; sourceTree = "<group>"; };
@@ -152,7 +252,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18D23C652AAAC15900EF41A1 /* HWRTCEngine.framework in Frameworks */,
+				18D23C5E2AAAC15900EF41A1 /* HWPGMEAudioMsgKit.framework in Frameworks */,
+				18D23C5F2AAAC15900EF41A1 /* AudioToolCommon.framework in Frameworks */,
+				18D23C612AAAC15900EF41A1 /* HWPGMEKit.framework in Frameworks */,
+				18D23C622AAAC15900EF41A1 /* SocketRocket.framework in Frameworks */,
 				C6012777284D936A006AC748 /* Pods_HWPGMEKit_Example.framework in Frameworks */,
+				18D23C602AAAC15900EF41A1 /* HAFormalAnalytics.framework in Frameworks */,
+				18D23C632AAAC15900EF41A1 /* SpatialAudio.framework in Frameworks */,
+				18D23C5B2AAAC15900EF41A1 /* MJExtension.framework in Frameworks */,
+				18D23C642AAAC15900EF41A1 /* hwffmpeg.framework in Frameworks */,
+				18D23C5C2AAAC15900EF41A1 /* HWPGMEVoiceKit.framework in Frameworks */,
+				18D23C662AAAC15900EF41A1 /* HWPGMESpatialAudioKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +300,7 @@
 		18346ADD2833BCB4006D872E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				18D23C712AAAC2C300EF41A1 /* audioEffect.bundle */,
 				185216292869957B00922C88 /* btn_speaker_speaking.gif */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 			);
@@ -220,6 +332,10 @@
 		18639B38283497EB000F071A /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				18D23CA82AAAC4D700EF41A1 /* HWProgressHUD.h */,
+				18D23CA52AAAC4D700EF41A1 /* HWProgressHUD.m */,
+				18D23CA62AAAC4D700EF41A1 /* HWProgressMaskView.h */,
+				18D23CA72AAAC4D700EF41A1 /* HWProgressMaskView.m */,
 				18521633286A9BB200922C88 /* GifAnimation */,
 				18D3534628643ECE00126326 /* AlertView */,
 				C653057F283B311500E8714C /* DropDownMenu */,
@@ -304,6 +420,10 @@
 				188540B52834E23800CF4209 /* RoomLogViewController.m */,
 				188540B42834E23800CF4209 /* RoomPlayerListViewController.h */,
 				188540B82834E23800CF4209 /* RoomPlayerListViewController.m */,
+				18D23CA02AAAC47C00EF41A1 /* AudioMsgViewController.h */,
+				18D23C9F2AAAC47C00EF41A1 /* AudioMsgViewController.m */,
+				18D23CA12AAAC47C00EF41A1 /* PlayerLocationViewController.h */,
+				18D23CA22AAAC47C00EF41A1 /* PlayerLocationViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -311,6 +431,12 @@
 		188540B92834E23800CF4209 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				18D23C862AAAC45200EF41A1 /* AudioEffect */,
+				18D23C952AAAC45200EF41A1 /* AudioMessageCell.h */,
+				18D23C852AAAC45200EF41A1 /* AudioMessageCell.m */,
+				18D23C8D2AAAC45200EF41A1 /* OperationBottomCollectionViewCell.h */,
+				18D23C962AAAC45200EF41A1 /* OperationBottomCollectionViewCell.m */,
+				18D23C8E2AAAC45200EF41A1 /* PlayerLocation */,
 				188540BB2834E23800CF4209 /* OperationBottomButtonView.h */,
 				188540BF2834E23800CF4209 /* OperationBottomButtonView.m */,
 				188540BE2834E23800CF4209 /* OperationInitRoomView.h */,
@@ -323,6 +449,51 @@
 				183224AD2859FCDC0054FE08 /* PlayerHeaderView.m */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		18D23C4E2AAAC15900EF41A1 /* SDK */ = {
+			isa = PBXGroup;
+			children = (
+				18D23C4F2AAAC15900EF41A1 /* MJExtension.framework */,
+				18D23C502AAAC15900EF41A1 /* HWPGMEVoiceKit.framework */,
+				18D23C512AAAC15900EF41A1 /* RTC.bundle */,
+				18D23C522AAAC15900EF41A1 /* HWPGMEAudioMsgKit.framework */,
+				18D23C532AAAC15900EF41A1 /* AudioToolCommon.framework */,
+				18D23C542AAAC15900EF41A1 /* HAFormalAnalytics.framework */,
+				18D23C552AAAC15900EF41A1 /* HWPGMEKit.framework */,
+				18D23C562AAAC15900EF41A1 /* SocketRocket.framework */,
+				18D23C572AAAC15900EF41A1 /* SpatialAudio.framework */,
+				18D23C582AAAC15900EF41A1 /* hwffmpeg.framework */,
+				18D23C592AAAC15900EF41A1 /* HWRTCEngine.framework */,
+				18D23C5A2AAAC15900EF41A1 /* HWPGMESpatialAudioKit.framework */,
+			);
+			path = SDK;
+			sourceTree = "<group>";
+		};
+		18D23C862AAAC45200EF41A1 /* AudioEffect */ = {
+			isa = PBXGroup;
+			children = (
+				18D23C8A2AAAC45200EF41A1 /* AudioEffectAlertView.h */,
+				18D23C872AAAC45200EF41A1 /* AudioEffectAlertView.m */,
+				18D23C882AAAC45200EF41A1 /* AudioEffectView.m */,
+				18D23C8B2AAAC45200EF41A1 /* AudioEffectView.h */,
+				18D23C892AAAC45200EF41A1 /* AllAudioEffectControlView.m */,
+				18D23C8C2AAAC45200EF41A1 /* AllAudioEffectControlView.h */,
+			);
+			path = AudioEffect;
+			sourceTree = "<group>";
+		};
+		18D23C8E2AAAC45200EF41A1 /* PlayerLocation */ = {
+			isa = PBXGroup;
+			children = (
+				18D23C932AAAC45200EF41A1 /* SelfLocationView.h */,
+				18D23C8F2AAAC45200EF41A1 /* SelfLocationView.m */,
+				18D23C922AAAC45200EF41A1 /* LocationAlertView.h */,
+				18D23C902AAAC45200EF41A1 /* LocationAlertView.m */,
+				18D23C942AAAC45200EF41A1 /* PlayerLocationCell.h */,
+				18D23C912AAAC45200EF41A1 /* PlayerLocationCell.m */,
+			);
+			path = PlayerLocation;
 			sourceTree = "<group>";
 		};
 		18D3534628643ECE00126326 /* AlertView */ = {
@@ -368,6 +539,7 @@
 		6003F593195388D20070C39A /* Example for HWPGMEKit */ = {
 			isa = PBXGroup;
 			children = (
+				18D23C4E2AAAC15900EF41A1 /* SDK */,
 				18639B38283497EB000F071A /* Tools */,
 				18639B2E28349744000F071A /* Category */,
 				18346ADD2833BCB4006D872E /* Resources */,
@@ -427,6 +599,18 @@
 			children = (
 				18547069287308DF00462F8A /* Player+RoomPlayer.h */,
 				1854706A287308DF00462F8A /* Player+RoomPlayer.m */,
+				18D23C7C2AAAC3A900EF41A1 /* AudioMsgModel.h */,
+				18D23C7A2AAAC3A800EF41A1 /* AudioMsgModel.m */,
+				18D23C762AAAC3A800EF41A1 /* MatrixTool.h */,
+				18D23C792AAAC3A800EF41A1 /* MatrixTool.m */,
+				18D23C7D2AAAC3A900EF41A1 /* PlayerLocationCache.h */,
+				18D23C772AAAC3A800EF41A1 /* PlayerLocationCache.m */,
+				18D23C782AAAC3A800EF41A1 /* PlayerLocationModel.h */,
+				18D23C752AAAC3A800EF41A1 /* PlayerLocationModel.m */,
+				18D23C7E2AAAC3A900EF41A1 /* RoomBtnEnabledInfo.h */,
+				18D23C732AAAC3A800EF41A1 /* RoomBtnEnabledInfo.m */,
+				18D23C742AAAC3A800EF41A1 /* RoomMuteInfo.h */,
+				18D23C7B2AAAC3A800EF41A1 /* RoomMuteInfo.m */,
 				C653057D283B309B00E8714C /* RoomIdList.h */,
 				C653057C283B309B00E8714C /* RoomIdList.m */,
 				607CD55A291A361B00BC2BAB /* Constants.h */,
@@ -497,7 +681,7 @@
 				ORGANIZATIONNAME = hanweibin;
 				TargetAttributes = {
 					6003F589195388D20070C39A = {
-						DevelopmentTeam = KKB4QVVV4F;
+						DevelopmentTeam = W24EZ74XXS;
 						ProvisioningStyle = Manual;
 					};
 					6003F5AD195388D20070C39A = {
@@ -534,6 +718,8 @@
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
+				18D23C5D2AAAC15900EF41A1 /* RTC.bundle in Resources */,
+				18D23C722AAAC2C300EF41A1 /* audioEffect.bundle in Resources */,
 				18346ADC2833A263006D872E /* Main.storyboard in Resources */,
 				1852162A2869957B00922C88 /* btn_speaker_speaking.gif in Resources */,
 			);
@@ -619,31 +805,49 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18D23C822AAAC3A900EF41A1 /* MatrixTool.m in Sources */,
 				1854706B287308DF00462F8A /* Player+RoomPlayer.m in Sources */,
+				18D23C842AAAC3A900EF41A1 /* RoomMuteInfo.m in Sources */,
 				C6530582283B311500E8714C /* HWDropDownMenu.m in Sources */,
+				18D23C992AAAC45200EF41A1 /* AudioEffectView.m in Sources */,
+				18D23C972AAAC45200EF41A1 /* AudioMessageCell.m in Sources */,
+				18D23C812AAAC3A900EF41A1 /* PlayerLocationCache.m in Sources */,
 				183224AE2859FCDD0054FE08 /* PlayerHeaderView.m in Sources */,
 				188540C62834E23800CF4209 /* PlayerListTableViewCell.m in Sources */,
+				18D23CA42AAAC47C00EF41A1 /* PlayerLocationViewController.m in Sources */,
 				188540C52834E23800CF4209 /* OperationInitRoomView.m in Sources */,
 				18D3534928643EE700126326 /* HWAlertView.m in Sources */,
 				18639B8F283498A0000F071A /* LoginLogTableView.m in Sources */,
 				188540C82834E23800CF4209 /* OperationBottomButtonView.m in Sources */,
+				18D23C9C2AAAC45200EF41A1 /* LocationAlertView.m in Sources */,
 				18D35345286316DA00126326 /* UITextField+HWTextField.m in Sources */,
+				18D23C7F2AAAC3A900EF41A1 /* RoomBtnEnabledInfo.m in Sources */,
 				C653057E283B309B00E8714C /* RoomIdList.m in Sources */,
 				18639B8D283498A0000F071A /* LoginViewController.m in Sources */,
 				188540C42834E23800CF4209 /* RoomPlayerListViewController.m in Sources */,
+				18D23CA32AAAC47C00EF41A1 /* AudioMsgViewController.m in Sources */,
+				18D23C9E2AAAC45200EF41A1 /* OperationBottomCollectionViewCell.m in Sources */,
 				188540C22834E23800CF4209 /* OperationViewController.m in Sources */,
+				18D23C9B2AAAC45200EF41A1 /* SelfLocationView.m in Sources */,
 				18639B6728349855000F071A /* HWTools.m in Sources */,
 				188540C72834E23800CF4209 /* OperationListView.m in Sources */,
+				18D23C9A2AAAC45200EF41A1 /* AllAudioEffectControlView.m in Sources */,
 				18D570BA2886461300BC3A82 /* HWSpeakButton.m in Sources */,
 				6003F59E195388D20070C39A /* HWAppDelegate.m in Sources */,
 				18639B37283497AC000F071A /* UIImage+HWColor.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				18D23CA92AAAC4D700EF41A1 /* HWProgressHUD.m in Sources */,
 				18639B8E283498A0000F071A /* UserIdLoginView.m in Sources */,
+				18D23C802AAAC3A900EF41A1 /* PlayerLocationModel.m in Sources */,
 				188540C32834E23800CF4209 /* RoomLogViewController.m in Sources */,
+				18D23C9D2AAAC45200EF41A1 /* PlayerLocationCell.m in Sources */,
 				18639B90283498A0000F071A /* HWBaseViewController.m in Sources */,
 				C69AA72328791B740097D5BD /* HWPGMEDelegate.m in Sources */,
 				18639B3328349744000F071A /* UIColor+HWColor.m in Sources */,
+				18D23CAA2AAAC4D700EF41A1 /* HWProgressMaskView.m in Sources */,
+				18D23C832AAAC3A900EF41A1 /* AudioMsgModel.m in Sources */,
 				602282E829232D9900AEAB4D /* HWVoiceAlertView.m in Sources */,
+				18D23C982AAAC45200EF41A1 /* AudioEffectAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -777,11 +981,14 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = KKB4QVVV4F;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = W24EZ74XXS;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/SDK",
+					"$(PROJECT_DIR)/HWPGMEKit/SDK/pgme-ios-sdk-1.11.1.300",
+					"$(PROJECT_DIR)/HWPGMEKit/SDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HWPGMEKit/Macro/HWPGMEKit-Prefix.pch";
@@ -794,9 +1001,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gamecenter.pgme.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gamecenter.pgmekit.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = pgmesdk_develop;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "2023-8-15";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -818,6 +1026,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/SDK",
+					"$(PROJECT_DIR)/HWPGMEKit/SDK/pgme-ios-sdk-1.11.1.300",
+					"$(PROJECT_DIR)/HWPGMEKit/SDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HWPGMEKit/Macro/HWPGMEKit-Prefix.pch";

@@ -79,12 +79,23 @@
     }
 }
 
+
 - (void)onJoinNationalRoom:(NSString*)roomId
                       code:(int)code
                        msg:(NSString*)msg {
     for (int i = 0; i < self.delegateArray.count; i++) {
         if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onJoinNationalRoom:code:msg:)]) {
             [self.delegateArray[i] onJoinNationalRoom:roomId code:code msg:msg];
+        }
+    }
+}
+
+- (void)onJoinRangeRoom:(NSString*)roomId
+                   code:(int)code
+                    msg:(NSString*)msg {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onJoinRangeRoom:code:msg:)]) {
+            [self.delegateArray[i] onJoinRangeRoom:roomId code:code msg:msg];
         }
     }
 }
@@ -231,6 +242,46 @@
     for (int i = 0; i < self.delegateArray.count; i++) {
         if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onRemoteMicroStateChanged:openId:isMute:)]) {
             [self.delegateArray[i] onRemoteMicroStateChanged:roomId openId:openId isMute:isMute];
+        }
+    }
+}
+
+- (void)onUploadAudioMsgFile:(NSString *)filePath fileId:(NSString *)fileId code:(int)code msg:(NSString *)msg {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onUploadAudioMsgFile:fileId:code:msg:)]) {
+            [self.delegateArray[i] onUploadAudioMsgFile:filePath fileId:fileId code:code msg:msg];
+        }
+    }
+}
+
+- (void)onDownloadAudioMsgFile:(NSString *)filePath fileId:(NSString *)fileId code:(int)code msg:(NSString *)msg {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onDownloadAudioMsgFile:fileId:code:msg:)]) {
+            [self.delegateArray[i] onDownloadAudioMsgFile:filePath fileId:fileId code:code msg:msg];
+        }
+    }
+}
+
+- (void)onRecordAudioMsg:(NSString *)filePath code:(int)code msg:(NSString *)msg {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onRecordAudioMsg:code:msg:)]) {
+            [self.delegateArray[i] onRecordAudioMsg:filePath code:code msg:msg];
+        }
+    }
+}
+
+- (void)onPlayAudioMsg:(NSString *)filePath code:(int)code msg:(NSString *)msg {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onPlayAudioMsg:code:msg:)]) {
+            [self.delegateArray[i] onPlayAudioMsg:filePath code:code msg:msg];
+        }
+    }
+}
+
+- (void)onAudioClipStateChangedNotify:(LocalAudioClipStateInfo *)stateInfo {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onAudioClipStateChangedNotify:)]) {
+            [self.delegateArray[i] onAudioClipStateChangedNotify:stateInfo];
         }
     }
 }

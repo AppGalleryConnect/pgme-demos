@@ -20,18 +20,25 @@
 #import "OperationBottomButtonView.h"
 #import "RoomIdList.h"
 #import "HWDropDownMenu.h"
-#import "HWPGMEKit/HWPGMEngine.h"
-#import "HWPGMEObject.h"
+#import <HWPGMEKit/HWPGMEngine.h>
 #import "HWAlertView.h"
 #import "HWVoiceAlertView.h"
 #import "HWPGMEDelegate.h"
 #import "Constants.h"
-#import "VoiceParam.h"
-#import "HWPGMEError.h"
+#import <HWPGMEKit/VoiceParam.h>
+#import "AudioMsgViewController.h"
+#import "AudioEffectAlertView.h"
+#import "PlayerLocationViewController.h"
+#import "PlayerLocationCache.h"
+#import "MatrixTool.h"
+#import <simd/simd.h>
+
 
 @interface OperationViewController ()<OperationInitRoomViewDelegate,OperationBottomButtonViewDelegate,HWDropDownMenuDelegate,HWPGMEngineDelegate> {
 }
 
+/// 全局容器scrollView
+@property (nonatomic, strong) UIScrollView *scrollView;
 /// 顶部按钮的父容器view
 @property (nonatomic, strong) OperationInitRoomView *operationRoomView;
 /// 房间成员和日志列表的view
@@ -42,7 +49,9 @@
 @property (nonatomic, copy) NSString *userId;
 /// 语音转文字弹框
 @property (nonatomic, strong) HWVoiceAlertView *voiceAlertView;
-
+/// 音效弹框
+@property(nonatomic, strong) AudioEffectAlertView *effectAlertView;
+@property(nonatomic, strong) PlayerLocationCache *locationCache;
 @end
 
 @implementation OperationViewController
@@ -58,6 +67,12 @@
     [super viewDidLoad];
     [self setupViews];
     [self setupNotificationObserver];
+    int code = [[HWPGMEngine getInstance] initSpatialSound];
+    [self.listView changeSpatialAudioButtonEnable:!code];
+    if (code != SUCCESS) {
+        [HWTools showMessage:@"3D音效初始化失败"];
+    }
+    [self defaultSelfPosition];
 }
 
 - (void)setupViews {
@@ -65,19 +80,24 @@
     self.title = @"Real Time Voice";
     self.roomIdList = [[RoomIdList alloc] init];
     [HWPGMEDelegate.getInstance addDelegate:self];
-    
-    OperationInitRoomView *initView = [[OperationInitRoomView alloc] initWithFrame:CGRectMake(0, kGetSafeAreaTopHeight+kNavBarHeight, SCREENWIDTH, 230)];
+    self.scrollView.frame = CGRectMake(0, kGetSafeAreaTopHeight+kNavBarHeight, SCREENWIDTH, SCREENHEIGHT - (kGetSafeAreaTopHeight+kNavBarHeight + kGetSafeAreaBottomHeight));
+    [self.view addSubview:self.scrollView];
+    OperationInitRoomView *initView = [[OperationInitRoomView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 230)];
     initView.delegate = self;
     _operationRoomView = initView;
-    [self.view addSubview:initView];
+    [self.scrollView addSubview:initView];
     
-    OperationBottomButtonView *buttonView = [[OperationBottomButtonView alloc] initWithFrame:CGRectMake(0, SCREENHEIGHT - 120, SCREENWIDTH, 120)];
-    buttonView.delegate = self;
-    [self.view addSubview:buttonView];
-    
-    OperationListView *listView = [[OperationListView alloc] initWithFrame:CGRectMake(35, CGRectGetMaxY(initView.frame), SCREENWIDTH-35*2, self.view.frame.size.height - CGRectGetHeight(initView.frame) - CGRectGetHeight(buttonView.frame) - kGetSafeAreaTopHeight-kNavBarHeight)];
+    OperationListView *listView = [[OperationListView alloc] initWithFrame:CGRectMake(35, CGRectGetMaxY(initView.frame), SCREENWIDTH-35*2, 350)];
     _listView = listView;
-    [self.view addSubview:listView];
+    [self.scrollView addSubview:listView];
+    
+    OperationBottomButtonView *buttonView = [[OperationBottomButtonView alloc] init];
+    buttonView.frame = CGRectMake(0, CGRectGetMaxY(_listView.frame), SCREENWIDTH, [buttonView operationBottomViewHeight]);
+    buttonView.delegate = self;
+    [self.scrollView addSubview:buttonView];
+    
+    CGFloat bounceHeight = CGRectGetMaxY(buttonView.frame) > self.scrollView.bounds.size.height ? 80 : 0;
+    [self.scrollView setContentSize:CGSizeMake(SCREENWIDTH, CGRectGetMaxY(buttonView.frame) + bounceHeight)];
 }
 
 - (void)setupNotificationObserver {
@@ -87,13 +107,21 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forbidAllButtonPressed:) name:FORBID_ALL_OR_NOT object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(muteAllButtonPressed:) name:MUTE_ALL_OR_NOT object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ownerTransferButtonPressed) name:OWNER_TRANSFER object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spatialAudioButtonPressed:) name:ENABLE_SPATIAL_AUDIO object:nil];
     [_roomIdList addObserver:self forKeyPath:@"roomIdMArr" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 // 返回到登陆页
 - (void)backToLogin {
     [HWPGMEDelegate.getInstance removeDelegate:self];
-    [self.navigationController popViewControllerAnimated:YES];
+    __block UIViewController *loginVC;
+    [self.navigationController.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:NSClassFromString(@"LoginViewController")]) {
+            loginVC = obj;
+            *stop = YES;
+        }
+    }];
+    [self.navigationController popToViewController:loginVC animated:YES];
 }
 
 /// 通过监听数组来改变离开房间按钮的状态
@@ -106,6 +134,14 @@
 }
 
 #pragma mark - private func
+
+// 获取房间3D音效开启状态，更新房间3D音效状态按钮
+- (void)getRoomSpatialAudioEnable:(NSString *)roomId {
+    if ([roomId isEqual: self.operationRoomView.roomID]) {
+        BOOL enable = [[HWPGMEngine getInstance] isEnableSpatialSound:roomId];
+        [self.listView updateSpatialAudioButtonSelected:enable];
+    }
+}
 
 - (void)getRoomInfoWithRoomId:(NSString *)roomId {
     if ([roomId isEqual: self.operationRoomView.roomID]) {
@@ -130,7 +166,7 @@
 
 /// 离开房间选择房主
 - (void)leaveChangeRole {
-    int roomCount = self.roomIdList.dataList.count;
+    NSUInteger roomCount = self.roomIdList.dataList.count;
     if (roomCount == 0) {
         return;
     }
@@ -203,7 +239,7 @@
     [[HWPGMEngine getInstance] mutePlayer:self.operationRoomView.roomID openId:userId isMuted:!button.selected];
 }
 
-/// 小队扬声器按钮点击
+/// 扬声器按钮点击
 /// @param notification notification
 - (void)muteAllButtonPressed:(NSNotification *)notification {
     NSDictionary *info = [notification userInfo];
@@ -228,6 +264,18 @@
             NSString *ownerId = (index == NotSelected) ? @"" : playerIds[index];
             [[HWPGMEngine getInstance] transferOwner:self.operationRoomView.roomID ownerId:ownerId];
         }];
+    }
+}
+
+/// 开启/关闭3D音效按钮点击
+/// @param notification 通知内容
+- (void)spatialAudioButtonPressed:(NSNotification *)notification {
+    NSDictionary *info = [notification userInfo];
+    UIButton *spatialAudioButton = (UIButton *)info[@"button"];
+    int code = [[HWPGMEngine getInstance] enableSpatialSound:self.operationRoomView.roomID enable:spatialAudioButton.isSelected];
+    if (code != SUCCESS) {
+        [self.listView updateSpatialAudioButtonSelected:!spatialAudioButton.isSelected];
+        [HWTools showMessage:(spatialAudioButton.isSelected ? @"开启3D音效失败" : @"关闭3D音效失败")];
     }
 }
 
@@ -261,12 +309,12 @@
     }];
 }
 
-// 创建/加入小队
+// 加入小队
 - (void)teamButtonPressed:(UIView *)initRoomView teamButton:(UIButton *)teamButton roomID:(NSString *)roomID {
     [[HWPGMEngine getInstance] joinTeamRoom:roomID];
 }
 
-// 创建/加入国战
+// 加入国战
 - (void)nationalWarButtonPressed:(UIView *)initRoomView
                nationalWarButton:(UIButton *)nationalWarButton
                           roomID:(NSString *)roomID {
@@ -277,6 +325,13 @@
         RoomRole roleType = index == 0 ? ROOM_ROLE_JOINER : ROOM_ROLE_PLAYER;
         [[HWPGMEngine getInstance] joinNationalRoom:roomID roleType:roleType];
     }];
+}
+
+// 加入范围
+- (void)joinRangeButtonPressed:(UIView *)initRoomView
+               joinRangeButton:(UIButton *)joinRangeButton
+                            roomID:(NSString *)roomID {
+    [[HWPGMEngine getInstance] joinRangeRoom:roomID];
 }
 
 // 离开房间
@@ -312,6 +367,75 @@
     [[HWPGMEngine getInstance] destroy];
 }
 
+/// 语音消息
+- (void)audioMsgButtonPressed:(UIView *)buttonView audioMsgButton:(UIButton *)audioMsgButton {
+    AudioMsgViewController *audioMsgVC = [[AudioMsgViewController alloc] init];
+    [self.navigationController pushViewController:audioMsgVC animated:YES];
+}
+    
+/// 音效
+- (void)audioEffectButtonPressed:(UIView *)buttonView audioEffectButton:(UIButton *)audioEffectButton {
+    [self.effectAlertView showAlerOnView:self.view];
+}
+
+- (PlayerPosition *)convertToPlayerPosition:(PositionModel *)positionModel {
+    PlayerPosition *playerPosition = [[PlayerPosition alloc]init];
+    playerPosition.forward = positionModel.forward;
+    playerPosition.right = positionModel.right;
+    playerPosition.up = positionModel.up;
+    return playerPosition;
+}
+
+- (Axis *)convertToAxis:(AxisModel *)axisModel {
+    Axis *axis = [[Axis alloc]init];
+    NSArray* matrix = [MatrixTool getRotateMatrix:axisModel.right up:axisModel.up forward:axisModel.forward];
+    axis.forward = simd_make_float3([matrix[0][0] floatValue], [matrix[1][0] floatValue], [matrix[2][0] floatValue]);
+    axis.right = simd_make_float3([matrix[0][1] floatValue], [matrix[1][1] floatValue], [matrix[2][1] floatValue]);
+    axis.up = simd_make_float3([matrix[0][2] floatValue], [matrix[1][2] floatValue], [matrix[2][2] floatValue]);
+    return axis;
+}
+
+/// 玩家位置
+- (void)playerPositionButtonPressed:(UIView *)buttonView playerPositionButton:(UIButton *)playerPositionButton {
+    PlayerLocationViewController *locationVC = [[PlayerLocationViewController alloc] init];
+    [locationVC configDataSelfModel:self.locationCache.selfLocationModel othersModel:self.locationCache.otherLocationModel audioRecvRange:self.locationCache.audioRecvRange];
+    __weak typeof(self) weakSelf = self;
+    locationVC.updateSelfLocationBlock = ^(SelfLocationModel * _Nonnull model) {
+        SelfPosition *selfPosition = [[SelfPosition alloc]init];
+        selfPosition.position = [weakSelf convertToPlayerPosition:model.position];
+        selfPosition.axis = [weakSelf convertToAxis:model.axis];
+        [HWPGMEngine.getInstance updateSelfPosition:selfPosition];
+        weakSelf.locationCache.selfLocationModel = model;
+    };
+    locationVC.updateOthersLocationBlock = ^(NSArray<OtherLocationModel *> * _Nonnull models) {
+        if (models != nil) {
+            NSMutableArray<RemotePlayerPosition *> *remotePlayers = [[NSMutableArray alloc]init];
+            for (OtherLocationModel *otherLocationModel in models) {
+                RemotePlayerPosition *position = [[RemotePlayerPosition alloc]init];
+                position.openId = otherLocationModel.openId;
+                position.position =  [weakSelf convertToPlayerPosition:otherLocationModel.position];
+                [remotePlayers addObject:position];
+                
+            }
+            [HWPGMEngine.getInstance updateRemotePosition:remotePlayers];
+        }
+        weakSelf.locationCache.otherLocationModel = models;
+    };
+    locationVC.updateAudioRecvRangeBlock = ^(NSInteger range) {
+        int result = [[HWPGMEngine getInstance]setAudioRecvRange:(int)range];
+        NSString *description = [NSString stringWithFormat:
+                                 @"setAudioRecvRange : code : %d",
+                                 result];
+        NSLog(@"%@",description);
+        if (result != 0) {
+            [HWTools showMessage:[NSString stringWithFormat:@"设置失败，code:%d", result]];
+            return;
+        }
+        weakSelf.locationCache.audioRecvRange = range;
+    };
+    [self.navigationController pushViewController:locationVC animated:YES];
+}
+
 #pragma mark - HWPGMEngineDelegate
 - (void)onJoinTeamRoom:(NSString *)roomId code:(int)code msg:(NSString *)msg {
     NSString *description = [NSString stringWithFormat:
@@ -325,6 +449,9 @@
     if (code == 0) {
         self.operationRoomView.roomID = roomId;
         [self getRoomInfoWithRoomId:roomId];
+        [self getRoomSpatialAudioEnable:roomId];
+    } else {
+        [HWTools showMessage:description];
     }
 }
 
@@ -340,18 +467,40 @@
     if (code == 0) {
         self.operationRoomView.roomID = roomId;
         [self getRoomInfoWithRoomId:roomId];
+        [self getRoomSpatialAudioEnable:roomId];
+    } else {
+        [HWTools showMessage:description];
+    }
+}
+
+- (void)onJoinRangeRoom:(NSString *)roomId code:(int)code msg:(NSString *)msg {
+    NSString *description = [NSString stringWithFormat:
+            @"onJoinRangeRoom : \n [%@] \n roomId : %@ \n code : %d \n massage : %@",
+            [HWTools nowDate],
+            roomId,
+            code,
+            msg];
+    NSLog(@"%@",description);
+    [self.listView addLog:description];
+    if (code == 0) {
+        self.operationRoomView.roomID = roomId;
+        [self getRoomInfoWithRoomId:roomId];
+        [self getRoomSpatialAudioEnable:roomId];
+    } else {
+        [HWTools showMessage:description];
     }
 }
 
 - (void)onLeaveRoom:(NSString *)roomId code:(int)code msg:(NSString *)msg {
     NSString *description = [NSString stringWithFormat:
-                             @"onLeaveTeamRoomLog : \n [%@] \n roomId : %@ \n code : %d \n massage : %@",
+                             @"onLeaveRoomLog : \n [%@] \n roomId : %@ \n code : %d \n massage : %@",
                              [HWTools nowDate],
                              roomId,
                              code,
                              msg];
     NSLog(@"%@",description);
     [self.listView addLog:description];
+    [self.listView leaveRoom:roomId];
     if (code == 0 && self.roomIdList.dataList.count > 0) {
         NSUInteger idx = [[self getRoomIdsArray] indexOfObject:roomId];
         [self.roomIdList removeObjectAtIndex:idx];
@@ -379,6 +528,7 @@
     if (code == 0) {
         self.operationRoomView.roomID = roomId;
         [self getRoomInfoWithRoomId:roomId];
+        [self getRoomSpatialAudioEnable:roomId];
     }else {
         Room *room = [self.roomIdList objectAtIndex:0];
         self.operationRoomView.roomID = room.roomId;
@@ -404,6 +554,7 @@
                              openId];
     NSLog(@"%@",description);
     [self.listView addLog:description];
+    [self.listView playerOffline:roomId openId:openId];
     [self getRoomInfoWithRoomId:roomId];
 }
 
@@ -419,6 +570,9 @@
         NSLog(@"%@",description);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self backToLogin];
+            if (_effectAlertView) {
+                [_effectAlertView alertViewDestory];
+            }
         });
     }
 }
@@ -427,7 +581,7 @@
 }
 
 - (void)onSpeakerDetectionEx:(NSMutableArray<VolumeInfo *> *)userVolumeInfos {
-    if (userVolumeInfos) {
+    if (userVolumeInfos && userVolumeInfos.count > 0) {
         NSMutableArray* openIds = [NSMutableArray arrayWithCapacity:[userVolumeInfos count]];
         for (VolumeInfo* volumeInfo in userVolumeInfos) {
             [openIds addObject:volumeInfo.openId];
@@ -570,6 +724,8 @@
             self.voiceAlertView.voiceText = text;
         } else if (code == VOICE_TO_TEXT_FEATURE_DISABLE) {
             self.voiceAlertView.voiceText = @"语音转文字功能未开通";
+        } else if (code == AUDIO_AUTH_DENIED) {
+            self.voiceAlertView.voiceText = @"请打开麦克风权限";
         } else {
             self.voiceAlertView.voiceText = @"网络繁忙，请取消重试";
         }
@@ -589,6 +745,14 @@
     [self.listView addLog:description];
 }
 
+- (void)defaultSelfPosition {
+    SelfPosition *selfPosition = [[SelfPosition alloc]init];
+    selfPosition.position = [[PlayerPosition alloc] init];
+    AxisModel *axisModel = [[AxisModel alloc] init];
+    selfPosition.axis = [self convertToAxis:axisModel];
+    [HWPGMEngine.getInstance updateSelfPosition:selfPosition];
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CLEAR_SCREEN object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MUTE_OR_NOT object:nil];
@@ -596,8 +760,33 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:FORBID_ALL_OR_NOT object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MUTE_ALL_OR_NOT object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:OWNER_TRANSFER object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ENABLE_SPATIAL_AUDIO object:nil];
     [_roomIdList removeObserver:self forKeyPath:@"roomIdMArr"];
 }
-        
+
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc] init];
+    }
+    return _scrollView;
+}
+
+- (AudioEffectAlertView *)effectAlertView {
+    if (!_effectAlertView) {
+        _effectAlertView = [[AudioEffectAlertView alloc] init];
+    }
+    return _effectAlertView;
+}
+   
+- (PlayerLocationCache *)locationCache {
+    if (!_locationCache) {
+        _locationCache = [[PlayerLocationCache alloc] init];
+        SelfLocationModel *selfModel = [[SelfLocationModel alloc] init];
+        selfModel.openId = HWPGMEngine.getInstance.engineParam.openId;
+        _locationCache.selfLocationModel = selfModel;
+        _locationCache.otherLocationModel = @[];
+    }
+    return _locationCache;
+}
 @end
  

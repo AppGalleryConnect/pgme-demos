@@ -70,6 +70,22 @@ typedef NS_ENUM(NSInteger, kPlayerState) {
                            playerState:(kPlayerState)playerState
                               isEnable:(BOOL)isEnable;
 
+/// 当前玩家离开房间
+- (void)leaveRoom:(NSString *)roomId;
+
+/// 玩家离开房间
+- (void)playerOffline:(NSString *)roomId
+               openId:(NSString *)openId;
+
+
+/// 修改3D音效button 是否可点击
+/// @param enable YES:可点击 NO：不可点击
+- (void)changeSpatialAudioButtonEnable:(BOOL)enable;
+
+/// 更新3D音效按钮选中状态
+/// @param selected true：选中 false：未选中
+- (void)updateSpatialAudioButtonSelected:(BOOL)selected;
+
 @end
 
 NS_ASSUME_NONNULL_END
