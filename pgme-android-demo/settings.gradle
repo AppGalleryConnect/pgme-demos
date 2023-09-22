@@ -1,0 +1,2 @@
+rootProject.name = 'pgme-android-demo'
+include ':demo'
