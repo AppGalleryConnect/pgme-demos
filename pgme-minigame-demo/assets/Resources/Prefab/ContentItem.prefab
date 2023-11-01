@@ -29,7 +29,7 @@
     "_prefab": {
       "__id__": 4
     },
-    "_opacity": 255,
+    "_opacity": 200,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -39,12 +39,12 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 500,
-      "height": 37.8
+      "width": 850,
+      "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_trs": {
@@ -94,7 +94,7 @@
     "_string": "",
     "_N$string": "",
     "_fontSize": 28,
-    "_lineHeight": 30,
+    "_lineHeight": 40,
     "_enableWrapText": true,
     "_N$file": null,
     "_isSystemFontUsed": true,
@@ -128,7 +128,7 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "b6988589-cc11-4d4a-b30f-c6a63a0f8538"
+      "__uuid__": "535b8e36-70cb-41fd-b565-daf652de2789"
     },
     "fileId": "",
     "sync": false

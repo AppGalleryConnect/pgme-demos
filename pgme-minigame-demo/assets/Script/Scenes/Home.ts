@@ -14,73 +14,81 @@
  *  limitations under the License.
  */
 
-import {EngineCreateParams, GameMediaEngine} from "../../GMME/GMMEForMiniGames";
-import {getSign} from '../Function/Utils';
-import configs from "../../Config";
-import LogUtil from "../Function/LogUtils";
-import {LogType} from "../Function/Enum";
-import GlobalData from "../../GlobalData";
+import { EngineCreateParams, GameMediaEngine } from '../../GMME/GMMEForMiniGames';
+import { getSign } from '../Function/Utils';
+import configs from '../../Config';
+import LogUtil from '../Function/LogUtils';
+import { LogType } from '../Function/Enum';
+import GlobalData from '../../GlobalData';
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
+const regex = /^[a-zA-Z0-9_]+$/;
 
 @ccclass
 export default class Home extends cc.Component {
-    @property(cc.Layout)
-    content: cc.Layout = null;
+  @property(cc.Layout)
+  content: cc.Layout = null;
 
-    @property(cc.EditBox)
-    openIdEdit: cc.EditBox = null;
+  @property(cc.EditBox)
+  openIdEdit: cc.EditBox = null;
 
-    @property(cc.Button)
-    intiButton: cc.Button = null;
+  @property(cc.Button)
+  initButton: cc.Button = null;
 
-    start() {
-        this.init()
-    }
+  protected update(dt: number) {
+    this.initButton.interactable = this.openIdEdit.string.length > 0 && regex.test(this.openIdEdit.string);
+  }
 
-    private init() {
-        this.initListener();
-        this.initLogConsole();
-    }
+  start() {
+    this.init();
+  }
 
-    private initListener() {
-        this.intiButton.node.on(cc.Node.EventType.TOUCH_START, () => this.onInitEngine());
-    }
+  private init() {
+    this.initListener();
+    this.initLogConsole();
+  }
 
-    onInitEngine() {
-        const openId = this.openIdEdit.string;
-        const signParams = getSign(configs.appId, openId);
-        const options: EngineCreateParams = {
-            openId: openId, // 玩家ID
-            appId: configs.appId, // 应用ID
-            clientId: configs.clientId, // 客户端ID
-            clientSecret: configs.clientSecret, // 客户端ID对应的秘钥
-            ...signParams,
-        };
-        GameMediaEngine.create(options).then((gameMediaEngine) => {
-            GlobalData.gameMediaEngine = gameMediaEngine;
-            cc.director.loadScene("AudioMsg");
-        }).catch((e) => {
-            LogUtil.printLog("初始化失败:" + e.message, LogType.HOME_LOG_TYPE, this.node);
-        });
-    }
+  private initListener() {
+    this.initButton.node.on(cc.Node.EventType.TOUCH_START, () => this.onInitEngine());
+  }
 
-    // 初始化日志控制台
-    private initLogConsole() {
-        let scriptComponent = this.content.getComponent("ItemList")
-        scriptComponent.fresh(LogType.HOME_LOG_TYPE);
-    }
+  onInitEngine() {
+    const openId = this.openIdEdit.string;
+    const signParams = getSign(configs.appId, openId);
+    const options: EngineCreateParams = {
+      openId: openId, // 玩家ID
+      appId: configs.appId, // 应用ID
+      clientId: configs.clientId, // 客户端ID
+      clientSecret: configs.clientSecret, // 客户端ID对应的秘钥
+      ...signParams,
+    };
+    GameMediaEngine.create(options)
+      .then((gameMediaEngine) => {
+        GlobalData.gameMediaEngine = gameMediaEngine;
+        GlobalData.openId = openId;
+        cc.director.loadScene('FunctionHall');
+      })
+      .catch((e) => {
+        LogUtil.printLog('初始化失败:' + e.message, LogType.HOME_LOG_TYPE, this.node);
+      });
+  }
 
-    // 事件监听
-    protected onEnable() {
-        this.node.on("homeLogEvent", this.callBackHomeLog, this);
-    }
+  // 初始化日志控制台
+  private initLogConsole() {
+    const scriptComponent = this.content.getComponent('ItemList');
+    scriptComponent.fresh(LogType.HOME_LOG_TYPE);
+  }
 
-    protected onDisable() {
-        this.node.off("homeLogEvent", this.callBackHomeLog, this);
-    }
+  // 事件监听
+  protected onEnable() {
+    this.node.on('homeLogEvent', this.callBackHomeLog, this);
+  }
 
-    private callBackHomeLog() {
-        this.initLogConsole();
-    }
+  protected onDisable() {
+    this.node.off('homeLogEvent', this.callBackHomeLog, this);
+  }
+
+  private callBackHomeLog() {
+    this.initLogConsole();
+  }
 }

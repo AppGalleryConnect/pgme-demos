@@ -14,9 +14,16 @@
  *  limitations under the License.
  */
 
-export default {
-    appId: '',
-    clientId: '',
-    clientSecret: '',
-    gameSecret: '',
-};
+import LogScrollItem from '../Function/LogScrollItem';
+
+const { ccclass, property } = cc._decorator;
+
+@ccclass
+export default class ContentItem extends cc.Component {
+  @property(cc.Label)
+  label: cc.Label = null;
+
+  init(item: LogScrollItem) {
+    this.label.string = item.data;
+  }
+}

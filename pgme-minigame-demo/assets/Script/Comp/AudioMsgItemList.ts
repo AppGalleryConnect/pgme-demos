@@ -18,24 +18,24 @@ import ccclass = cc._decorator.ccclass;
 import property = cc._decorator.property;
 import Prefab = cc.Prefab;
 import instantiate = cc.instantiate;
-import GlobalData from "../../GlobalData";
-import AudioMsgScrollItem from "../Function/AudioMsgScrollItem";
+import GlobalData from '../../GlobalData';
+import AudioMsgScrollItem from '../Function/AudioMsgScrollItem';
 
 @ccclass
 export class AudioMsgItemList extends cc.Component {
-    @property(Prefab)
-    itemPrefab: Prefab | null = null;
+  @property(Prefab)
+  itemPrefab: Prefab | null = null;
 
-    fresh() {
-        this.node.removeAllChildren(true)
-        let items: AudioMsgScrollItem[] = GlobalData.audioMsgItems;
-        if (items) {
-            for (let i = 0; i < items.length; ++i) {
-                const item = instantiate(this.itemPrefab);
-                const data = items[i];
-                this.node.addChild(item);
-                item.getComponent('AudioMsgItem').init(data);
-            }
-        }
+  fresh() {
+    this.node.removeAllChildren(true);
+    const items: AudioMsgScrollItem[] = GlobalData.audioMsgItems;
+    if (items) {
+      for (let i = 0; i < items.length; ++i) {
+        const item = instantiate(this.itemPrefab);
+        const data = items[i];
+        this.node.addChild(item);
+        item.getComponent('AudioMsgItem').init(data);
+      }
     }
+  }
 }

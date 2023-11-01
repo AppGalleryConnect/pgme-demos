@@ -15,40 +15,39 @@
  */
 
 export default class AudioMsgScrollItem {
-    // 文件id
-    public fileId: number = null
-    // 文件名称
-    public fileName: string = null
-    // 文件路径
-    public filePath: string = null
-    // 上传状态
-    public uploadState: boolean = false;
-    // 本地是否播放
-    public isLocalPlay: boolean = true; // true播放  false停止
-    // 远程是否播放
-    public isRemotePlay: boolean = true; // true播放  false停止
+  // 文件id
+  public fileId: number = null;
+  // 文件名称
+  public fileName: string = null;
+  // 文件路径
+  public filePath: string = null;
+  // 上传状态
+  public uploadState = false;
+  // 本地是否播放
+  public isLocalPlay = true; // true播放  false停止
+  // 远程是否播放
+  public isRemotePlay = true; // true播放  false停止
 
-    init(fileId: number, fileName: string, filePath: string, uploadState: boolean) {
-        this.fileId = fileId;
-        this.fileName = fileName;
-        this.filePath = filePath;
-        this.uploadState = uploadState;
-    }
+  init(fileId: number, fileName: string, filePath: string, uploadState: boolean) {
+    this.fileId = fileId;
+    this.fileName = fileName;
+    this.filePath = filePath;
+    this.uploadState = uploadState;
+  }
 
-    setUploadState(uploadState: boolean) {
-        this.uploadState = uploadState;
-    }
+  setUploadState(uploadState: boolean) {
+    this.uploadState = uploadState;
+  }
 
-    setFileId(fileId: number) {
-        this.fileId = fileId;
-    }
+  setFileId(fileId: number) {
+    this.fileId = fileId;
+  }
 
-    setIsLocalPlay(isLocalPlay: boolean) {
-        this.isLocalPlay = isLocalPlay;
-    }
+  setIsLocalPlay(isLocalPlay: boolean) {
+    this.isLocalPlay = isLocalPlay;
+  }
 
-    setIsRemotePlay(isRemotePlay: boolean) {
-        this.isRemotePlay = isRemotePlay;
-    }
-
+  setIsRemotePlay(isRemotePlay: boolean) {
+    this.isRemotePlay = isRemotePlay;
+  }
 }

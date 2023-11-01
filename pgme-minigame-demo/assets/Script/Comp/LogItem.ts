@@ -14,16 +14,16 @@
  *  limitations under the License.
  */
 
-import LogScrollItem from "../Function/LogScrollItem";
+import LogScrollItem from '../Function/LogScrollItem';
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class LogItem extends cc.Component {
-    @property(cc.Label)
-    label: cc.Label = null;
+  @property(cc.Label)
+  label: cc.Label = null;
 
-    init(item: LogScrollItem) {
-        this.label.string = item.data;
-    }
+  init(item: LogScrollItem) {
+    this.label.string = item.data;
+  }
 }

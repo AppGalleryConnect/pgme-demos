@@ -15,10 +15,10 @@
  */
 
 export default class LogScrollItem {
-    // 条目数据
-    public data: any = null
+  // 条目数据
+  public data: any = null;
 
-    init(data: any) {
-        this.data = data
-    }
+  init(data: any) {
+    this.data = data;
+  }
 }

@@ -14,16 +14,21 @@
  *  limitations under the License.
  */
 
-import LogScrollItem from "./Script/Function/LogScrollItem";
-import AudioMsgScrollItem from "./Script/Function/AudioMsgScrollItem";
-import {GameMediaEngine} from "./GMME/GMMEForMiniGames";
+import LogScrollItem from './Script/Function/LogScrollItem';
+import AudioMsgScrollItem from './Script/Function/AudioMsgScrollItem';
+import { GameMediaEngine } from './GMME/GMMEForMiniGames';
 
 class GlobalData {
-    public homeLogItems: LogScrollItem[] = [];
-    public audioMsgLogItems: LogScrollItem[] = [];
-    public audioMsgItems: AudioMsgScrollItem[] = [];
-    public gameMediaEngine: GameMediaEngine = null;
-    public isRefreshAudioMsg: boolean = false;
+  public homeLogItems: LogScrollItem[] = [];
+  public audioMsgLogItems: LogScrollItem[] = [];
+  public audioMsgItems: AudioMsgScrollItem[] = [];
+  public rtmp2pContentItems: LogScrollItem[] = [];
+  public rtmChannelContentItems: LogScrollItem[] = [];
+  public channelContentMapTemp: Map<string, LogScrollItem[]> = new Map<string, LogScrollItem[]>();
+  public gameMediaEngine: GameMediaEngine = null;
+  public isRefreshAudioMsg = false;
+  public openId = '';
+  public channelIdTemp= '';
 }
 
 export default new GlobalData();

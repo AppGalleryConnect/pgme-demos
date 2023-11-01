@@ -18,33 +18,38 @@ import ccclass = cc._decorator.ccclass;
 import property = cc._decorator.property;
 import Prefab = cc.Prefab;
 import instantiate = cc.instantiate;
-import LogScrollItem from "../Function/LogScrollItem";
-import GlobalData from "../../GlobalData";
-import {LogType} from "../Function/Enum";
+import LogScrollItem from '../Function/LogScrollItem';
+import GlobalData from '../../GlobalData';
+import { LogType } from '../Function/Enum';
 
 @ccclass
 export class ItemList extends cc.Component {
-    @property(Prefab)
-    itemPrefab: Prefab | null = null;
+  @property(Prefab)
+  itemPrefab: Prefab | null = null;
 
-    // type 1:主页日志  2语音消息日志
-    fresh(type: number) {
-        this.node.removeAllChildren(true)
-        let items: LogScrollItem[] = [];
-        if (type === LogType.HOME_LOG_TYPE) {
-            items = GlobalData.homeLogItems;
-        }
-        if (type === LogType.AUDIO_MSG_TYPE) {
-            items = GlobalData.audioMsgLogItems;
-        }
-        if (items) {
-            for (let i = 0; i < items.length; ++i) {
-                const item = instantiate(this.itemPrefab);
-                const data = items[i];
-                this.node.addChild(item);
-                item.getComponent('LogItem').init(data);
-            }
-        }
-
+  // type 1:主页日志  2语音消息日志
+  fresh(type: number) {
+    this.node.removeAllChildren(true);
+    let items: LogScrollItem[] = [];
+    if (type === LogType.HOME_LOG_TYPE) {
+      items = GlobalData.homeLogItems;
     }
+    if (type === LogType.AUDIO_MSG_TYPE) {
+      items = GlobalData.audioMsgLogItems;
+    }
+    if (type === LogType.RTM_P2P_CONTENT_TYPE) {
+      items = GlobalData.rtmp2pContentItems;
+    }
+    if (type === LogType.RTM_CHANNEL_CONTENT_TYPE) {
+      items = GlobalData.rtmChannelContentItems;
+    }
+    if (items) {
+      for (let i = 0; i < items.length; ++i) {
+        const item = instantiate(this.itemPrefab);
+        const data = items[i];
+        this.node.addChild(item);
+        item.getComponent('LogItem').init(data);
+      }
+    }
+  }
 }

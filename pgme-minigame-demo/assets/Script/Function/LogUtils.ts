@@ -14,23 +14,22 @@
  *  limitations under the License.
  */
 
-import GlobalData from "../../GlobalData";
-import LogScrollItem from "./LogScrollItem";
-import {LogType} from "./Enum";
-import Utils from "./Utils";
+import GlobalData from '../../GlobalData';
+import LogScrollItem from './LogScrollItem';
+import { LogType } from './Enum';
+import Utils from './Utils';
 
 export default class LogUtil {
-
-    static printLog(data: string, type: number, node: cc.Node) {
-        let logScrollItem = new LogScrollItem();
-        logScrollItem.init(Utils.getCurrentDateTime() + " " + data);
-        if (type === LogType.HOME_LOG_TYPE) {
-            GlobalData.homeLogItems.push(logScrollItem);
-            node.dispatchEvent(new cc.Event.EventCustom("homeLogEvent", true));
-        }
-        if (type === LogType.AUDIO_MSG_TYPE) {
-            GlobalData.audioMsgLogItems.push(logScrollItem);
-            node.dispatchEvent(new cc.Event.EventCustom("audioMsgLogEvent", true));
-        }
+  static printLog(data: string, type: number, node: cc.Node) {
+    const logScrollItem = new LogScrollItem();
+    logScrollItem.init(Utils.getCurrentDateTime() + ' ' + data);
+    if (type === LogType.HOME_LOG_TYPE) {
+      GlobalData.homeLogItems.push(logScrollItem);
+      node.dispatchEvent(new cc.Event.EventCustom('homeLogEvent', true));
     }
+    if (type === LogType.AUDIO_MSG_TYPE) {
+      GlobalData.audioMsgLogItems.push(logScrollItem);
+      node.dispatchEvent(new cc.Event.EventCustom('audioMsgLogEvent', true));
+    }
+  }
 }

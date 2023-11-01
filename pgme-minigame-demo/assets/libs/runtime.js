@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-console.warn(
-  "The regenerator/runtime module is deprecated; " +
-    "please import regenerator-runtime/runtime instead."
-);
+console.warn('The regenerator/runtime module is deprecated; ' + 'please import regenerator-runtime/runtime instead.');
 
-module.exports = require("regenerator-runtime/runtime");
+module.exports = require('regenerator-runtime/runtime');
