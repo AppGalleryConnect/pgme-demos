@@ -16,11 +16,11 @@
 
 export default class AudioMsgScrollItem {
   // 文件id
-  public fileId: number = null;
+  public fileId: number | null = null;
   // 文件名称
-  public fileName: string = null;
+  public fileName: string | null = null;
   // 文件路径
-  public filePath: string = null;
+  public filePath: string | null = null;
   // 上传状态
   public uploadState = false;
   // 本地是否播放

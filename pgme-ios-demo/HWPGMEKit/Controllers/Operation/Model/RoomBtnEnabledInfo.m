@@ -15,7 +15,7 @@
  */
 
 #import "RoomBtnEnabledInfo.h"
-#import <HWPGMEKit/HWPGMEngine.h>
+#import <HWPGMEKit/HWPGMEObject.h>
 
 @interface RoomBtnEnabledInfo()
 @property(nonatomic, strong) NSMutableDictionary *btnEnabledDict;

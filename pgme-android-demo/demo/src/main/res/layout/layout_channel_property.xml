@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@drawable/bg_yxdmtyq_001">
+
+    <TextView
+        android:id="@+id/tv_channel_name"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="@string/channel_name"/>
+
+    <com.huawei.gmmesdk.demo.component.RepeatSelectionSpinner
+        android:id="@+id/spinner_channel"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="@+id/tv_channel_name"
+        app:layout_constraintStart_toEndOf="@+id/tv_channel_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:alpha="0.5"
+        android:background="@drawable/bg_yxdmtyq_003"
+        android:textSize="14sp"
+        android:layout_marginStart="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_channel_custom_property"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_channel_name"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="@string/channel_custom_property"/>
+
+    <Button
+        android:id="@+id/btn_delete_all"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:background="@drawable/button_2"
+        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_setting"
+        app:layout_constraintTop_toTopOf="@id/tv_channel_custom_property"
+        android:textSize="11sp"
+        android:text="@string/delete_all"/>
+
+    <Button
+        android:id="@+id/btn_setting"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:background="@drawable/button_2"
+        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_channel_custom_property"
+        android:textSize="11sp"
+        android:text="@string/setting"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_channel_custom_property"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="3dp">
+
+        <GridLayout
+            android:id="@+id/gl_channel_property"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="5"
+            android:maxHeight="30dp"/>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

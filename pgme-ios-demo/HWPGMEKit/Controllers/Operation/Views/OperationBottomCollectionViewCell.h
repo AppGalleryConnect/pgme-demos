@@ -24,6 +24,8 @@ typedef enum : NSUInteger {
     BottomButtonType_AudioMsg,
     BottomButtonType_AduioEffect,
     BottomButtonType_PlayerPosition,
+    BottomButtonType_RtmP2P,
+    BottomButtonType_RtmChannel,
 } BottomButtonType;
 
 static NSString *NORMALTITLE = @"normalTitle";

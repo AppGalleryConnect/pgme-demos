@@ -27,3 +27,29 @@ export enum MessageType {
   TEXT = 1,
   BINARY = 2,
 }
+
+// 属性类型
+export enum PropertiesType {
+  CHANNEL = 1,
+  USER = 2,
+}
+
+// 用户在线状态
+export enum ConnectionStatus {
+  DISCONNECT = 0,
+  CONNECT = 1,
+}
+
+// UI界面-选项卡类型
+export enum SelectTabType {
+  MESSAGE = 1,
+  CHANNEL_PROPERTIES = 2,
+  USER_PROPERTIES = 3,
+}
+
+// 多选框选择类型
+export enum CheckType {
+  IS_CONTENT_IDENTIFY = 1,
+  IS_ADS_IDENTIFY = 2,
+  IS_ALLOW_CACHE_MSG =3,
+}

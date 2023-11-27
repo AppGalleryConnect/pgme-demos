@@ -45,6 +45,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param playerPositonButton 玩家位置按钮
 - (void)playerPositionButtonPressed:(UIView *)buttonView playerPositionButton:(UIButton *)playerPositionButton;
 
+/// P2P消息 按钮点击代理
+/// @param buttonView  底部按钮的view
+/// @param p2pButton P2P消息按钮
+- (void)p2pButtonPressed:(UIView *)buttonView p2pButton:(UIButton *)p2pButton;
+
+/// 频道消息 按钮点击代理
+/// @param buttonView  底部按钮的view
+/// @param channelButton 频道消息按钮
+- (void)channelButtonPressed:(UIView *)buttonView channelButton:(UIButton *)channelButton;
+
 @end
 
 @interface OperationBottomButtonView : UIView

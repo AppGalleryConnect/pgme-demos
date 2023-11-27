@@ -285,4 +285,167 @@
         }
     }
 }
+
+/// 订阅频道
+/// @param result 结果
+- (void)onSubscribeRtmChannel:(SubscribeRtmChannelResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onSubscribeRtmChannel:)]) {
+            [self.delegateArray[i] onSubscribeRtmChannel:result];
+        }
+    }
+}
+
+/// 取消频道订阅
+/// @param result 结果
+- (void)onUnSubscribeRtmChannel:(UnSubscribeRtmChannelResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onUnSubscribeRtmChannel:)]) {
+            [self.delegateArray[i] onUnSubscribeRtmChannel:result];
+        }
+    }
+}
+
+/// 推送频道消息
+/// @param result 结果
+- (void)onPublishRtmChannelMessage:(PublishRtmChannelMessageResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onPublishRtmChannelMessage:)]) {
+            [self.delegateArray[i] onPublishRtmChannelMessage:result];
+        }
+    }
+}
+
+/// p2p消息
+/// @param result 结果
+- (void)onPublishRtmPeerMessage:(PublishRtmPeerMessageResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onPublishRtmPeerMessage:)]) {
+            [self.delegateArray[i] onPublishRtmPeerMessage:result];
+        }
+    }
+}
+
+/// 获取频道信息结果
+/// @param result 结果
+- (void)onGetRtmChannelInfo:(GetRtmChannelInfoResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onGetRtmChannelInfo:)]) {
+            [self.delegateArray[i] onGetRtmChannelInfo:result];
+        }
+    }
+}
+
+/// 接收频道消息
+/// @param notify 消息
+- (void)onReceiveRtmChannelMessage:(ReceiveRtmChannelMessageNotify *)notify {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onReceiveRtmChannelMessage:)]) {
+            [self.delegateArray[i] onReceiveRtmChannelMessage:notify];
+        }
+    }
+}
+
+/// 接收peer消息
+/// @param notify 消息
+- (void)onReceiveRtmPeerMessage:(ReceiveRtmPeerMessageNotify *)notify {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onReceiveRtmPeerMessage:)]) {
+            [self.delegateArray[i] onReceiveRtmPeerMessage:notify];
+        }
+    }
+}
+
+/// 状态消息
+/// @param notify 消息
+- (void)onRtmConnectionChanged:(RtmConnectionStatusNotify *)notify {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onRtmConnectionChanged:)]) {
+            [self.delegateArray[i] onRtmConnectionChanged:notify];
+        }
+    }
+}
+
+/// 频道属性设置回调
+- (void)onSetRtmChannelProperties:(SetRtmChannelPropertiesResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onSetRtmChannelProperties:)]) {
+            [self.delegateArray[i] onSetRtmChannelProperties:result];
+        }
+    }
+}
+
+/// 频道属性查询回调
+- (void)onGetRtmChannelProperties:(GetRtmChannelPropertiesResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onGetRtmChannelProperties:)]) {
+            [self.delegateArray[i] onGetRtmChannelProperties:result];
+        }
+    }
+}
+
+/// 频道属性删除回调
+- (void)onDeleteRtmChannelProperties:(DeleteRtmChannelPropertiesResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onDeleteRtmChannelProperties:)]) {
+            [self.delegateArray[i] onDeleteRtmChannelProperties:result];
+        }
+    }
+}
+
+/// 频道内用户属性设置回调
+- (void)onSetRtmChannelPlayerProperties:(SetRtmChannelPlayerPropertiesResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onSetRtmChannelPlayerProperties:)]) {
+            [self.delegateArray[i] onSetRtmChannelPlayerProperties:result];
+        }
+    }
+}
+
+/// 频道内用户属性查询回调
+- (void)onGetRtmChannelPlayerProperties:(GetRtmChannelPlayerPropertiesResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onGetRtmChannelPlayerProperties:)]) {
+            [self.delegateArray[i] onGetRtmChannelPlayerProperties:result];
+        }
+    }
+}
+
+/// 频道内用户属性删除回调
+- (void)onDeleteRtmChannelPlayerProperties:(DeleteRtmChannelPlayerPropertiesResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onDeleteRtmChannelPlayerProperties:)]) {
+            [self.delegateArray[i] onDeleteRtmChannelPlayerProperties:result];
+        }
+    }
+}
+
+
+/// 获取频道历史消息回调
+- (void)onGetRtmChannelHistoryMessages:(GetRtmChannelHistoryMessagesResult *)result {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onGetRtmChannelHistoryMessages:)]) {
+            [self.delegateArray[i] onGetRtmChannelHistoryMessages:result];
+        }
+    }
+}
+
+/// 频道内用户属性变更通知
+- (void)onRtmChannelPlayerPropertiesChanged:(RtmChannelPlayerPropertiesNotify *)notify {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onRtmChannelPlayerPropertiesChanged:)]) {
+            [self.delegateArray[i] onRtmChannelPlayerPropertiesChanged:notify];
+        }
+    }
+}
+
+
+/// 频道属性变更通知
+- (void)onRtmChannelPropertiesChanged:(RtmChannelPropertiesNotify *)notify {
+    for (int i = 0; i < self.delegateArray.count; i++) {
+        if (self.delegateArray[i] && [self.delegateArray[i] respondsToSelector:@selector(onRtmChannelPropertiesChanged:)]) {
+            [self.delegateArray[i] onRtmChannelPropertiesChanged:notify];
+        }
+    }
+}
 @end

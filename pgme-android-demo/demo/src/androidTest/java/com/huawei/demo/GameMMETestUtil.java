@@ -16,22 +16,38 @@
 
 package com.huawei.demo;
 
-import java.security.SecureRandom;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 
 import com.huawei.game.gmme.GameMediaEngine;
 import com.huawei.game.gmme.handler.IGameMMEEventHandler;
 import com.huawei.game.gmme.model.EngineCreateParams;
 import com.huawei.game.gmme.model.LocalAudioClipStateInfo;
-import com.huawei.game.gmme.model.Message;
 import com.huawei.game.gmme.model.VolumeInfo;
+import com.huawei.game.gmme.model.rtm.DeleteRtmChannelPlayerPropertiesResult;
+import com.huawei.game.gmme.model.rtm.DeleteRtmChannelPropertiesResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelHistoryMessagesResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelInfoResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelPlayerPropertiesResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelPropertiesResult;
+import com.huawei.game.gmme.model.rtm.PublishRtmChannelMessageResult;
+import com.huawei.game.gmme.model.rtm.PublishRtmPeerMessageResult;
+import com.huawei.game.gmme.model.rtm.ReceiveRtmChannelMessageNotify;
+import com.huawei.game.gmme.model.rtm.ReceiveRtmPeerMessageNotify;
+import com.huawei.game.gmme.model.rtm.RtmChannelPlayerPropertiesNotify;
+import com.huawei.game.gmme.model.rtm.RtmChannelPropertiesNotify;
+import com.huawei.game.gmme.model.rtm.RtmConnectionStatusNotify;
+import com.huawei.game.gmme.model.rtm.SetRtmChannelPlayerPropertiesResult;
+import com.huawei.game.gmme.model.rtm.SetRtmChannelPropertiesResult;
+import com.huawei.game.gmme.model.rtm.SubscribeRtmChannelResult;
+import com.huawei.game.gmme.model.rtm.UnSubscribeRtmChannelResult;
 import com.huawei.gmmesdk.demo.BuildConfig;
 import com.huawei.gmmesdk.demo.util.SignerUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.SecureRandom;
+import java.util.List;
 
 public class GameMMETestUtil {
     public static final String openid = "luoplayer";
@@ -277,54 +293,6 @@ public class GameMMETestUtil {
         }
 
         @Override
-        public void onJoinChannel(String s, int i, String s1) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("channelId", s);
-                jsonObject.put("code", i);
-                jsonObject.put("msg", s1);
-                handler.onCallback("onJoinChannel", jsonObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onLeaveChannel(String s, int i, String s1) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("channelId", s);
-                jsonObject.put("code", i);
-                jsonObject.put("msg", s1);
-                handler.onCallback("onLeaveChannel", jsonObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onSendMsg(Message msg) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("msg", msg.getContent());
-                handler.onCallback("onSendMsg", jsonObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onRecvMsg(Message msg) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("msg", msg);
-                handler.onCallback("onRecvMsg", jsonObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
         public void onDestroy(int i, String s) {
             handler.onCallback("onDestroy", s);
         }
@@ -398,6 +366,176 @@ public class GameMMETestUtil {
          */
         @Override
         public void onPlayAudioMsg(String filePath, int code, String msg) {
+
+        }
+
+        /**
+         * 订阅RTM频道回调
+         *
+         * @param result 订阅RTM频道结果
+         */
+        @Override
+        public void onSubscribeRtmChannel(SubscribeRtmChannelResult result) {
+
+        }
+
+        /**
+         * 取消订阅RTM频道回调
+         *
+         * @param result 取消订阅RTM频道结果
+         */
+        @Override
+        public void onUnSubscribeRtmChannel(UnSubscribeRtmChannelResult result) {
+
+        }
+
+        /**
+         * 发布RTM频道消息回调
+         *
+         * @param result 发布RTM频道消息结果
+         */
+        @Override
+        public void onPublishRtmChannelMessage(PublishRtmChannelMessageResult result) {
+
+        }
+
+        /**
+         * 发布RTM点对点消息回调
+         *
+         * @param result 发布RTM点对点消息结果
+         */
+        @Override
+        public void onPublishRtmPeerMessage(PublishRtmPeerMessageResult result) {
+
+        }
+
+        /**
+         * 获取RTM频道信息回调
+         *
+         * @param result 获取RTM频道信息结果
+         */
+        @Override
+        public void onGetRtmChannelInfo(GetRtmChannelInfoResult result) {
+
+        }
+
+        /**
+         * 接收RTM频道信息通知
+         *
+         * @param notify 接收RTM频道信息结果
+         */
+        @Override
+        public void onReceiveRtmChannelMessage(ReceiveRtmChannelMessageNotify notify) {
+
+        }
+
+        /**
+         * 接收RTM点对点信息通知
+         *
+         * @param notify 接收RTM点对点信息结果
+         */
+        @Override
+        public void onReceiveRtmPeerMessage(ReceiveRtmPeerMessageNotify notify) {
+
+        }
+
+        /**
+         * RTM连接状态通知
+         *
+         * @param notify RTM连接状态结果
+         */
+        @Override
+        public void onRtmConnectionChanged(RtmConnectionStatusNotify notify) {
+
+        }
+
+        /**
+         * 设置频道内玩家属性结果回调
+         *
+         * @param result 设置频道内玩家属性结果
+         */
+        @Override
+        public void onSetRtmChannelPlayerProperties(SetRtmChannelPlayerPropertiesResult result) {
+
+        }
+
+        /**
+         * 查询频道内玩家属性结果回调
+         *
+         * @param result 查询频道内玩家属性结果
+         */
+        @Override
+        public void onGetRtmChannelPlayerProperties(GetRtmChannelPlayerPropertiesResult result) {
+
+        }
+
+        /**
+         * 删除频道内玩家属性结果回调
+         *
+         * @param result 删除频道内玩家属性结果
+         */
+        @Override
+        public void onDeleteRtmChannelPlayerProperties(DeleteRtmChannelPlayerPropertiesResult result) {
+
+        }
+
+        /**
+         * 设置频道属性结果回调
+         *
+         * @param result 设置频道属性结果
+         */
+        @Override
+        public void onSetRtmChannelProperties(SetRtmChannelPropertiesResult result) {
+
+        }
+
+        /**
+         * 查询频道属性结果回调
+         *
+         * @param result 查询频道属性结果
+         */
+        @Override
+        public void onGetRtmChannelProperties(GetRtmChannelPropertiesResult result) {
+
+        }
+
+        /**
+         * 删除频道属性结果回调
+         *
+         * @param result 删除频道属性结果
+         */
+        @Override
+        public void onDeleteRtmChannelProperties(DeleteRtmChannelPropertiesResult result) {
+
+        }
+
+        /**
+         * 查询频道历史消息回调
+         *
+         * @param result 查询频道历史消息结果
+         */
+        @Override
+        public void onGetRtmChannelHistoryMessages(GetRtmChannelHistoryMessagesResult result) {
+
+        }
+
+        /**
+         * 设置频道内玩家属性变更通知
+         *
+         * @param notify 设置频道内玩家属性变更
+         */
+        @Override
+        public void onRtmChannelPlayerPropertiesChanged(RtmChannelPlayerPropertiesNotify notify) {
+
+        }
+
+        /**
+         * 设置频道属性变更通知
+         *
+         * @param notify 设置频道属性变更
+         */
+        @Override
+        public void onRtmChannelPropertiesChanged(RtmChannelPropertiesNotify notify) {
 
         }
     };

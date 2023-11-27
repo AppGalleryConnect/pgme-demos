@@ -18,5 +18,5 @@ export default {
     appId: '',
     clientId: '',
     clientSecret: '',
-    gameSecret: '',
-};
+    gameSecret: ''
+}

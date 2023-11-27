@@ -53,10 +53,16 @@ export default class FunctionHall extends cc.Component {
     GlobalData.homeLogItems = [];
     GlobalData.audioMsgLogItems = [];
     GlobalData.audioMsgItems = [];
-    GlobalData.rtmChannelContentItems = [];
     GlobalData.rtmp2pContentItems = [];
+    GlobalData.rtmChannelContentItems = [];
+    GlobalData.channelCustomPropertiesItems = [];
+    GlobalData.userCustomPropertiesItems = [];
+    GlobalData.cacheChannelCustomPropertiesItems = [];
+    GlobalData.cacheUserCustomPropertiesItems = [];
+    GlobalData.receiverChannelsItems = [];
     GlobalData.channelContentMapTemp.clear();
     GlobalData.channelIdTemp = '';
+    GlobalData.openId = '';
     cc.director.loadScene('HomeView');
   }
 

@@ -20,6 +20,7 @@ import configs from '../../Config';
 import LogUtil from '../Function/LogUtils';
 import { LogType } from '../Function/Enum';
 import GlobalData from '../../GlobalData';
+import Constant from "../Function/Constant";
 
 const { ccclass, property } = cc._decorator;
 const regex = /^[a-zA-Z0-9_]+$/;
@@ -81,11 +82,11 @@ export default class Home extends cc.Component {
 
   // 事件监听
   protected onEnable() {
-    this.node.on('homeLogEvent', this.callBackHomeLog, this);
+    this.node.on(Constant.homeLogEvent, this.callBackHomeLog, this);
   }
 
   protected onDisable() {
-    this.node.off('homeLogEvent', this.callBackHomeLog, this);
+    this.node.off(Constant.homeLogEvent, this.callBackHomeLog, this);
   }
 
   private callBackHomeLog() {

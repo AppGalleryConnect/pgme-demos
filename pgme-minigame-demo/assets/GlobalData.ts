@@ -14,21 +14,40 @@
  *  limitations under the License.
  */
 
+import { GameMediaEngine } from './GMME/GMMEForMiniGames';
 import LogScrollItem from './Script/Function/LogScrollItem';
 import AudioMsgScrollItem from './Script/Function/AudioMsgScrollItem';
-import { GameMediaEngine } from './GMME/GMMEForMiniGames';
+import ReceiverChannelScrollItem from "./Script/Function/ReceiverChannelScrollItem";
+import CustomPropertiesScrollItem from "./Script/Function/CustomPropertiesScrollItem";
 
 class GlobalData {
+  // 主页日志
   public homeLogItems: LogScrollItem[] = [];
+  // 语音消息日志
   public audioMsgLogItems: LogScrollItem[] = [];
+  // 语音消息列表
   public audioMsgItems: AudioMsgScrollItem[] = [];
+  // rtm p2p日志
   public rtmp2pContentItems: LogScrollItem[] = [];
+  // rtm 频道日志
   public rtmChannelContentItems: LogScrollItem[] = [];
+  // 频道自定义属性
+  public channelCustomPropertiesItems: CustomPropertiesScrollItem[] = [];
+  // 用户自定义属性
+  public userCustomPropertiesItems: CustomPropertiesScrollItem[] = [];
+  // 缓存设置频道自定义属性
+  public cacheChannelCustomPropertiesItems: CustomPropertiesScrollItem[] = [];
+  // 缓存设置用户自定义属性
+  public cacheUserCustomPropertiesItems: CustomPropertiesScrollItem[] = [];
+  // 缓存每个频道的日志
   public channelContentMapTemp: Map<string, LogScrollItem[]> = new Map<string, LogScrollItem[]>();
-  public gameMediaEngine: GameMediaEngine = null;
-  public isRefreshAudioMsg = false;
-  public openId = '';
+  // 接收频道列表
+  public receiverChannelsItems: ReceiverChannelScrollItem[] = [];
+
   public channelIdTemp= '';
+  public openId = '';
+  public isRefreshAudioMsg = false;
+  public gameMediaEngine: GameMediaEngine | null = null;
 }
 
 export default new GlobalData();

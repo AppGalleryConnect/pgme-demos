@@ -20,11 +20,27 @@ import com.huawei.game.common.utils.CollectionUtils;
 import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.handler.IGameMMEEventHandler;
 import com.huawei.game.gmme.model.LocalAudioClipStateInfo;
-import com.huawei.game.gmme.model.Message;
 import com.huawei.game.gmme.model.VolumeInfo;
+import com.huawei.game.gmme.model.rtm.DeleteRtmChannelPlayerPropertiesResult;
+import com.huawei.game.gmme.model.rtm.DeleteRtmChannelPropertiesResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelHistoryMessagesResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelInfoResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelPlayerPropertiesResult;
+import com.huawei.game.gmme.model.rtm.GetRtmChannelPropertiesResult;
+import com.huawei.game.gmme.model.rtm.PublishRtmChannelMessageResult;
+import com.huawei.game.gmme.model.rtm.PublishRtmPeerMessageResult;
+import com.huawei.game.gmme.model.rtm.ReceiveRtmChannelMessageNotify;
+import com.huawei.game.gmme.model.rtm.ReceiveRtmPeerMessageNotify;
+import com.huawei.game.gmme.model.rtm.RtmChannelPlayerPropertiesNotify;
+import com.huawei.game.gmme.model.rtm.RtmChannelPropertiesNotify;
+import com.huawei.game.gmme.model.rtm.RtmConnectionStatusNotify;
+import com.huawei.game.gmme.model.rtm.SetRtmChannelPlayerPropertiesResult;
+import com.huawei.game.gmme.model.rtm.SetRtmChannelPropertiesResult;
+import com.huawei.game.gmme.model.rtm.SubscribeRtmChannelResult;
+import com.huawei.game.gmme.model.rtm.UnSubscribeRtmChannelResult;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 用户实现的统一回调
@@ -34,7 +50,7 @@ import java.util.List;
 public class GMMECallbackHandler implements IGameMMEEventHandler {
     private static final String TAG = GMMECallbackHandler.class.getSimpleName();
 
-    private ArrayList<IGameMMEEventHandler> mHandler = new ArrayList<>();
+    private List<IGameMMEEventHandler> mHandler = new CopyOnWriteArrayList<>();
 
     @Override
     public void onCreate(int code, String msg) {
@@ -112,17 +128,17 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
      * 创建或者加入范围房间回调
      *
      * @param roomId 房间ID
-     * @param code   结果码
-     * @param msg    处理结果信息
+     * @param code 结果码
+     * @param msg 处理结果信息
      */
     @Override
     public void onJoinRangeRoom(String roomId, int code, String msg) {
         StringBuilder sb = new StringBuilder("onJoinRangeRoom : ").append("roomId=")
-                .append(roomId)
-                .append(", code=")
-                .append(code)
-                .append(", msg=")
-                .append(msg);
+            .append(roomId)
+            .append(", code=")
+            .append(code)
+            .append(", msg=")
+            .append(msg);
         LogUtil.d(TAG, sb.toString());
         for (IGameMMEEventHandler handler : mHandler) {
             handler.onJoinRangeRoom(roomId, code, msg);
@@ -258,34 +274,6 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
         }
     }
 
-    @Override
-    public void onJoinChannel(String channelId, int code, String msg) {
-        for (IGameMMEEventHandler handler : mHandler) {
-            handler.onJoinChannel(channelId, code, msg);
-        }
-    }
-
-    @Override
-    public void onLeaveChannel(String channelId, int code, String msg) {
-        for (IGameMMEEventHandler handler : mHandler) {
-            handler.onLeaveChannel(channelId, code, msg);
-        }
-    }
-
-    @Override
-    public void onSendMsg(Message msg) {
-        for (IGameMMEEventHandler handler : mHandler) {
-            handler.onSendMsg(msg);
-        }
-    }
-
-    @Override
-    public void onRecvMsg(Message msg) {
-        for (IGameMMEEventHandler handler : mHandler) {
-            handler.onRecvMsg(msg);
-        }
-    }
-
     public void addHandler(IGameMMEEventHandler handler) {
         LogUtil.i(TAG, "addHandler! ");
         mHandler.add(handler);
@@ -391,6 +379,253 @@ public class GMMECallbackHandler implements IGameMMEEventHandler {
         LogUtil.i(TAG, "onPlayAudioMsg! filePath:" + filePath + ", code: " + code + ", msg: " + msg);
         for (IGameMMEEventHandler handler : mHandler) {
             handler.onPlayAudioMsg(filePath, code, msg);
+        }
+    }
+
+    /**
+     * 订阅RTM频道回调
+     *
+     * @param result 订阅RTM频道结果
+     */
+    @Override
+    public void onSubscribeRtmChannel(SubscribeRtmChannelResult result) {
+        LogUtil.i(TAG, "onSubscribeRtmChannel! channelId:" + result.getChannelId() + ", code: " + result.getCode()
+            + ", msg: " + result.getMsg());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onSubscribeRtmChannel(result);
+        }
+    }
+
+    /**
+     * 取消订阅RTM频道回调
+     *
+     * @param result 取消订阅RTM频道结果
+     */
+    @Override
+    public void onUnSubscribeRtmChannel(UnSubscribeRtmChannelResult result) {
+        LogUtil.i(TAG, "onUnSubscribeRtmChannel! channelId:" + result.getChannelId() + ", code: " + result.getCode()
+            + ", msg: " + result.getMsg());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onUnSubscribeRtmChannel(result);
+        }
+    }
+
+    /**
+     * 发布RTM频道消息回调
+     *
+     * @param result 发布RTM频道消息结果
+     */
+    @Override
+    public void onPublishRtmChannelMessage(PublishRtmChannelMessageResult result) {
+        LogUtil.i(TAG, "onPublishRtmChannelMessage! " + ", code: " + result.getCode());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onPublishRtmChannelMessage(result);
+        }
+    }
+
+    /**
+     * 发布RTM点对点消息回调
+     *
+     * @param result 发布RTM点对点消息结果
+     */
+    @Override
+    public void onPublishRtmPeerMessage(PublishRtmPeerMessageResult result) {
+        LogUtil.i(TAG, "onPublishRtmPeerMessage! " + ", code: " + result.getCode());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onPublishRtmPeerMessage(result);
+        }
+    }
+
+    /**
+     * 获取RTM频道信息回调
+     *
+     * @param result 获取RTM频道信息结果
+     */
+    @Override
+    public void onGetRtmChannelInfo(GetRtmChannelInfoResult result) {
+        LogUtil.i(TAG, "onGetRtmChannelInfo! " + ", channelId: " + result.getChannelId() + ", code: "
+                + result.getCode() + ", message: " + result.getMsg());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onGetRtmChannelInfo(result);
+        }
+    }
+
+    /**
+     * 接收RTM频道信息通知
+     *
+     * @param notify 接收RTM频道信息结果
+     */
+    @Override
+    public void onReceiveRtmChannelMessage(ReceiveRtmChannelMessageNotify notify) {
+        LogUtil.i(TAG, "onReceiveRtmChannelMessage! " + ", channelId: " + notify.getChannelId() + ", clientId: "
+            + notify.getClientMsgId() + ", msgId: " + notify.getServerMsgId());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onReceiveRtmChannelMessage(notify);
+        }
+    }
+
+    /**
+     * 接收RTM点对点信息通知
+     *
+     * @param notify 接收RTM点对点信息结果
+     */
+    @Override
+    public void onReceiveRtmPeerMessage(ReceiveRtmPeerMessageNotify notify) {
+        LogUtil.i(TAG,
+            "onReceiveRtmPeerMessage! clientId: " + notify.getClientMsgId() + ", msgId: " + notify.getServerMsgId());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onReceiveRtmPeerMessage(notify);
+        }
+    }
+
+    /**
+     * RTM连接状态通知
+     *
+     * @param notify RTM连接状态结果
+     */
+    @Override
+    public void onRtmConnectionChanged(RtmConnectionStatusNotify notify) {
+        StringBuilder sb = new StringBuilder("onRtmConnectionChanged : ").append("status=")
+            .append(notify.getStatus())
+            .append(", reason=")
+            .append(notify.getReason());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onRtmConnectionChanged(notify);
+        }
+    }
+
+    /**
+     * 设置频道内玩家属性结果回调
+     *
+     * @param result 设置频道内玩家属性结果
+     */
+    @Override
+    public void onSetRtmChannelPlayerProperties(SetRtmChannelPlayerPropertiesResult result) {
+        StringBuilder sb =
+            new StringBuilder("onGetRtmChannelPlayerProperties : ").append("channelId=").append(result.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onSetRtmChannelPlayerProperties(result);
+        }
+    }
+
+    /**
+     * 查询频道内玩家属性结果回调
+     *
+     * @param result 查询频道内玩家属性结果
+     */
+    @Override
+    public void onGetRtmChannelPlayerProperties(GetRtmChannelPlayerPropertiesResult result) {
+        StringBuilder sb =
+            new StringBuilder("onGetRtmChannelPlayerProperties : ").append("channelId=").append(result.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onGetRtmChannelPlayerProperties(result);
+        }
+    }
+
+    /**
+     * 删除频道内玩家属性结果回调
+     *
+     * @param result 删除频道内玩家属性结果
+     */
+    @Override
+    public void onDeleteRtmChannelPlayerProperties(DeleteRtmChannelPlayerPropertiesResult result) {
+        StringBuilder sb = new StringBuilder("onDeleteRtmChannelPlayerProperties : ").append("channelId=")
+            .append(result.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onDeleteRtmChannelPlayerProperties(result);
+        }
+    }
+
+    /**
+     * 设置频道属性结果回调
+     *
+     * @param result 设置频道属性结果
+     */
+    @Override
+    public void onSetRtmChannelProperties(SetRtmChannelPropertiesResult result) {
+        StringBuilder sb =
+            new StringBuilder("onSetRtmChannelProperties : ").append("channelId=").append(result.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onSetRtmChannelProperties(result);
+        }
+    }
+
+    /**
+     * 查询频道属性结果回调
+     *
+     * @param result 查询频道属性结果
+     */
+    @Override
+    public void onGetRtmChannelProperties(GetRtmChannelPropertiesResult result) {
+        StringBuilder sb =
+            new StringBuilder("onGetRtmChannelProperties : ").append("channelId=").append(result.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onGetRtmChannelProperties(result);
+        }
+    }
+
+    /**
+     * 删除频道属性结果回调
+     *
+     * @param result 删除频道属性结果
+     */
+    @Override
+    public void onDeleteRtmChannelProperties(DeleteRtmChannelPropertiesResult result) {
+        StringBuilder sb =
+            new StringBuilder("onDeleteRtmChannelProperties : ").append("channelId=").append(result.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onDeleteRtmChannelProperties(result);
+        }
+    }
+
+    /**
+     * 查询频道历史消息回调
+     *
+     * @param result 查询频道历史消息结果
+     */
+    @Override
+    public void onGetRtmChannelHistoryMessages(GetRtmChannelHistoryMessagesResult result) {
+        LogUtil.i(TAG, "onGetRtmChannelHistoryMessages! " + ", channelId: " + result.getChannelId() + ", code: "
+                + result.getCode() + ", message: " + result.getMsg());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onGetRtmChannelHistoryMessages(result);
+        }
+    }
+
+    /**
+     * 频道内玩家属性变更通知
+     *
+     * @param notify 频道内玩家属性变更
+     */
+    @Override
+    public void onRtmChannelPlayerPropertiesChanged(RtmChannelPlayerPropertiesNotify notify) {
+        StringBuilder sb = new StringBuilder("onRtmChannelPlayerPropertiesChanged : ").append("channelId=")
+            .append(notify.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onRtmChannelPlayerPropertiesChanged(notify);
+        }
+    }
+
+    /**
+     * 频道属性变更通知
+     *
+     * @param notify 频道属性变更
+     */
+    @Override
+    public void onRtmChannelPropertiesChanged(RtmChannelPropertiesNotify notify) {
+        StringBuilder sb =
+            new StringBuilder("onRtmChannelPropertiesChanged : ").append("channelId=").append(notify.getChannelId());
+        LogUtil.d(TAG, sb.toString());
+        for (IGameMMEEventHandler handler : mHandler) {
+            handler.onRtmChannelPropertiesChanged(notify);
         }
     }
 }

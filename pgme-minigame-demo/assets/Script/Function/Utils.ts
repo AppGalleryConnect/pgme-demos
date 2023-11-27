@@ -52,6 +52,31 @@ export default class Utils {
   }
 
   /**
+   * 时间戳转成时间
+   *
+   * time 时间戳
+   */
+  static getDateTime(time: number) {
+    const date = new Date(Number(time));
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours(); //获取当前小时数(0-23)
+    const minutes = date.getMinutes(); //获取当前分钟数(0-59)
+    const seconds = date.getSeconds();
+    return year + "-" + month + "-" + day +" "+ hours + ':' + minutes + ':' + seconds;
+  }
+
+  /**
+   * 时间转换成时间戳
+   *
+   * days 几天前
+   */
+  static getCurDateTimeBeforeDays(days: number) {
+    return Date.now() - days * 24 * 60 * 60 * 1000;
+  }
+
+  /**
    * 部分隐藏处理
    *
    * content 需要处理的字符串

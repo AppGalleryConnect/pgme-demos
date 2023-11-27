@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1330"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6003F589195388D20070C39A"
+               BuildableName = "HWPGMEKit_Example.app"
+               BlueprintName = "HWPGMEKit_Example"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "HWPGMEKit_Online_Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0992AD3F7A100222727"
+               BuildableName = "HWPGMEKit_Tests.xctest"
+               BlueprintName = "HWPGMEKit_Tests"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A08B2AD3F78B00222727"
+               BuildableName = "HWPGMEKit_ExampleTests.xctest"
+               BlueprintName = "HWPGMEKit_ExampleTests"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E09FFE2AD3F21900222727"
+               BuildableName = "Tests.xctest"
+               BlueprintName = "Tests"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0372AD3F64B00222727"
+               BuildableName = "HWPGMEKit_Test.xctest"
+               BlueprintName = "HWPGMEKit_Test"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0452AD3F67E00222727"
+               BuildableName = "HWPGMEAudioMsgKit_Test.xctest"
+               BlueprintName = "HWPGMEAudioMsgKit_Test"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0532AD3F69200222727"
+               BuildableName = "HWPGMESpatialAudioKit_Test.xctest"
+               BlueprintName = "HWPGMESpatialAudioKit_Test"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0612AD3F6A800222727"
+               BuildableName = "HWPGMEVoiceKit_Test.xctest"
+               BlueprintName = "HWPGMEVoiceKit_Test"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A07D2AD3F76400222727"
+               BuildableName = "HWPGMEKit_ExampleTest.xctest"
+               BlueprintName = "HWPGMEKit_ExampleTest"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0A72AD3F7B600222727"
+               BuildableName = "HWPGMEAudioMsgKit_Tests.xctest"
+               BlueprintName = "HWPGMEAudioMsgKit_Tests"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0B52AD3F7CF00222727"
+               BuildableName = "HWPGMESpatialAudioKit_Tests.xctest"
+               BlueprintName = "HWPGMESpatialAudioKit_Tests"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18E0A0C32AD3F7E300222727"
+               BuildableName = "HWPGMEVoiceKit_Tests.xctest"
+               BlueprintName = "HWPGMEVoiceKit_Tests"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "187AA1732AE106760088BC50"
+               BuildableName = "HWPGMERtmKit_Tests.xctest"
+               BlueprintName = "HWPGMERtmKit_Tests"
+               ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "HWPGMEKit_Online_Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6003F589195388D20070C39A"
+            BuildableName = "HWPGMEKit_Example.app"
+            BlueprintName = "HWPGMEKit_Example"
+            ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-HALogLevelDebug"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "HWPGMEKit_Online_Debug"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6003F589195388D20070C39A"
+            BuildableName = "HWPGMEKit_Example.app"
+            BlueprintName = "HWPGMEKit_Example"
+            ReferencedContainer = "container:HWPGMEKit.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "HWPGMEKit_Online_Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "HWPGMEKit_Online_Debug"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

@@ -1,5 +1,5 @@
 /*
-   Copyright 2023. Huawei Technologies Co., Ltd. All rights reserved.
+   Copyright 2022. Huawei Technologies Co., Ltd. All rights reserved.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -96,6 +96,16 @@ public interface Constant {
     String AUDIO_TYPE = ".m4a";
 
     String[] roomTitle = {"房间", "小队", "国战", "范围"};
+
+    /**
+     * 用户输入时的分隔符，英文逗号
+     */
+    String SPLIT_SEPARATOR = ",";
+
+    /**
+     * 用户输入时的分隔符，中文逗号
+     */
+    String SPLIT_SEPARATOR_ZH = "，";
 
     /**
      * 记录日志相关常量
@@ -228,4 +238,32 @@ public interface Constant {
 
     }
 
+    /**
+     * 自定义属性类型
+     */
+    enum PropertyType {
+        /**
+         * 频道属性
+         */
+        Channel,
+        /**
+         * 用户属性
+         */
+        Player
+    }
+
+    /**
+     * 消息类型
+     */
+    interface RtmMessageType {
+        /**
+         * 文本
+         */
+        int MSG_TYPE_TEXT = 1;
+
+        /**
+         * 二进制
+         */
+        int MSG_TYPE_BYTE = 2;
+    }
 }

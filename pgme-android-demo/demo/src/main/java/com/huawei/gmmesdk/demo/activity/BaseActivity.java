@@ -16,12 +16,8 @@
 
 package com.huawei.gmmesdk.demo.activity;
 
-import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -52,14 +48,13 @@ import com.huawei.gmmesdk.demo.GmmeApplication;
 import com.huawei.gmmesdk.demo.R;
 import com.huawei.gmmesdk.demo.adapter.NoSlideViewPager;
 import com.huawei.gmmesdk.demo.adapter.RoomMembersAdapter;
-import com.huawei.gmmesdk.demo.adapter.RoomPagerAdapter;
+import com.huawei.gmmesdk.demo.adapter.SimplePagerAdapter;
 import com.huawei.gmmesdk.demo.constant.Constant;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.ProtectionDomain;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,6 +73,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
      * 日志标签
      */
     private static final String BASE_TAG = BaseActivity.class.getSimpleName();
+
+    /**
+     * 日志最大长度，超过了清空处理
+     */
+    private static final int LOG_MAX_LENGTH = 40000;
 
     /**
      * HRTCEngine
@@ -154,21 +154,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected RadioButton rangeWarRb;
 
-    protected CheckBox msgChannelCb;
-
-    protected RadioGroup msgRg;
-
-    protected RadioButton msgSingleRb;
-
-    protected RadioButton msgGroupRb;
-
     protected Button joinTeamOrWarBtn;
 
-    protected Button sendTextMsgBtn;
-
     protected View popTopView;
-
-    protected Button leaveChannelBtn;
 
     protected Button audioClipBtn;
 
@@ -176,14 +164,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected Button btnSetScope;
 
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            appendLog2MonitorView("status =" + msg.arg1 + ",message=" + msg.obj);
-        }
-    };
+    protected Button sendChannelMsgBtn;
+
+    protected Button sendP2pMsgBtn;
+
+    protected Button btnAudioMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +198,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         printLogsPager = getLayoutInflater().inflate(R.layout.print_logs, null);
         pageView.add(memberPager);
         pageView.add(printLogsPager);
-        viewPager.setAdapter(new RoomPagerAdapter(pageView));
+        viewPager.setAdapter(new SimplePagerAdapter(pageView));
     }
 
     private void initPop() {
@@ -234,7 +219,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initViews() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Real Time Voice");
+        actionBar.setTitle(R.string.main_activity_name);
         findViewById(R.id.ll_root).setOnClickListener(this);
         findViewById(R.id.btnQuit).setOnClickListener(this);
         findViewById(R.id.hw_gmme_destroy).setOnClickListener(this);
@@ -260,31 +245,28 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         voiceWarRb = findViewById(R.id.rb_voice_war);
         rangeWarRb = findViewById(R.id.rb_scope);
 
-        msgChannelCb = findViewById(R.id.checkbox_msg);
-        msgRg = findViewById(R.id.rg_msg);
-        msgSingleRb = findViewById(R.id.rb_single_msg);
-        msgGroupRb = findViewById(R.id.rb_group_msg);
-
         joinTeamOrWarBtn = findViewById(R.id.btnJoin);
-        sendTextMsgBtn = findViewById(R.id.btnSendTextMsg);
-        leaveChannelBtn = findViewById(R.id.btnLeaveChannel);
         btnSetScope = findViewById(R.id.set_scope);
 
         popTopView = findViewById(R.id.pop_top_view);
         audioClipBtn = findViewById(R.id.textAudioClipView);
         playerPositionBtn = findViewById(R.id.textPlayerPosition);
+
+        sendChannelMsgBtn = findViewById(R.id.btnChannelMsg);
+        sendP2pMsgBtn = findViewById(R.id.btnP2pMsg);
+        btnAudioMsg = findViewById(R.id.btnAudioMsg);
+
         voiceChannelCb.setOnCheckedChangeListener(this);
         voiceRg.setOnCheckedChangeListener(this);
         btnSetScope.setOnClickListener(this);
         voiceWarRb.setOnClickListener(this);
-        msgChannelCb.setOnCheckedChangeListener(this);
-        msgRg.setOnCheckedChangeListener(this);
         joinTeamOrWarBtn.setOnClickListener(this);
         rangeWarRb.setOnClickListener(this);
-        sendTextMsgBtn.setOnClickListener(this);
-        leaveChannelBtn.setOnClickListener(this);
         audioClipBtn.setOnClickListener(this);
         playerPositionBtn.setOnClickListener(this);
+        sendChannelMsgBtn.setOnClickListener(this);
+        sendP2pMsgBtn.setOnClickListener(this);
+        btnAudioMsg.setOnClickListener(this);
     }
 
     private void initData() {
@@ -394,17 +376,23 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
      *
      * @param text 打印日志
      */
-    private void appendLog2MonitorView(String text) {
-        String logText = mLogMonitorView.getText().toString();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault());
-        String time = sdf.format(new Date());
-        if (!logText.isEmpty()) {
-            logText = logText + System.lineSeparator() + System.lineSeparator() + time + System.lineSeparator() + text;
-        } else {
-            logText = time + System.lineSeparator() + text;
-        }
-        mLogMonitorView.setText(logText);
-        mLogHostView.fullScroll(View.FOCUS_DOWN);
+    protected void appendLog2MonitorView(String text) {
+        runOnUiThread(() -> {
+            String logText = mLogMonitorView.getText().toString();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault());
+            String time = sdf.format(new Date());
+            if (logText.length() > LOG_MAX_LENGTH) {
+                logText = "";
+            }
+            if (!logText.isEmpty()) {
+                logText =
+                    logText + System.lineSeparator() + System.lineSeparator() + time + System.lineSeparator() + text;
+            } else {
+                logText = time + System.lineSeparator() + text;
+            }
+            mLogMonitorView.setText(logText);
+            mLogHostView.fullScroll(View.FOCUS_DOWN);
+        });
     }
 
     @Override

@@ -13,18 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
- 
+
 package com.huawei.demo;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.huawei.game.common.utils.LogUtil;
 import com.huawei.game.gmme.GameMediaEngine;
-import com.huawei.game.gmme.model.ChannelInfo;
 import com.huawei.game.gmme.model.Room;
 import com.huawei.game.gmme.model.VoiceParam;
 
@@ -47,22 +45,13 @@ import org.junit.runners.MethodSorters;
 @RunWith(AndroidJUnit4.class)
 @FixMethodOrder(MethodSorters.JVM)
 public class GameMMEAndroidTestCase {
-    protected static GameMediaEngine mHwRtcEngine;
-
-    protected static String callbackMethod = null;
-
-    protected static String mvalue = null;
-
     public final static String TAG = "GameMMETestCasetag";
-
     public static String roomid = "special_room";
-
     public static int rcode = -1;
-
     public static String openid = GameMMETestUtil.openid;
-
-    protected static GameMMETestUtil util = new GameMMETestUtil();
-
+    protected static GameMediaEngine mHwRtcEngine;
+    protected static String callbackMethod = null;
+    protected static String mvalue = null;
     public static GameMMETestUtil.IMyHandler MyHandler = (method, value) -> {
         callbackMethod = method;
         mvalue = value;
@@ -89,6 +78,7 @@ public class GameMMEAndroidTestCase {
         }
         LogUtil.d(TAG, "onCallback=" + method + "; value=" + value);
     };
+    protected static GameMMETestUtil util = new GameMMETestUtil();
 
     @BeforeClass
     public static void setUp() {
@@ -360,86 +350,4 @@ public class GameMMEAndroidTestCase {
         mHwRtcEngine.enableSpeakersDetection(roomid, 0);
         sleep(1000);
     }
-
-    /***
-     * 加入聊天群组频道。
-     * 群组ID，由数字（0~9）、大小写字母(A~Z, a~z)或下划线（_）组成的最大长度为32的字符串。
-     */
-    @Test
-    public void testjoingroup() {
-        mHwRtcEngine.joinGroupChannel("iloveyou");
-        sleep(2000);
-        assertEquals("onJoinChannel", callbackMethod);
-        assertEquals(0, rcode);
-        String channelId = null;
-        try {
-            JSONObject job = new JSONObject(mvalue);
-            channelId = job.getString("channelId");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        assertEquals("iloveyou", channelId);
-    }
-
-    /***
-     * 离开聊天群组频道。
-     */
-    @Test
-    public void testleavegroup() {
-        mHwRtcEngine.leaveChannel("iloveyou");
-        sleep(2000);
-        assertEquals("onLeaveChannel", callbackMethod);
-        assertEquals(0, rcode);
-        String channelId = null;
-        try {
-            JSONObject job = new JSONObject(mvalue);
-            channelId = job.getString("channelId");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        assertEquals("iloveyou", channelId);
-    }
-
-    /***
-     * 调用GameMediaEngine.getChannelInfo方法，获取指定的消息群组信息。
-     */
-    @Test
-    public void testgetChannelInfo() {
-        mHwRtcEngine.joinGroupChannel("iloveyou");
-        sleep(2000);
-        assertEquals(0, rcode);
-        ChannelInfo channelInfo = mHwRtcEngine.getChannelInfo("iloveyou");
-        sleep(2000);
-        assertEquals("iloveyou", channelInfo.getChannelId());
-        assertEquals(1, channelInfo.getChannelType());
-        assertEquals(1, channelInfo.getPlayerCount());
-        assertNotNull(channelInfo.getOwnerId());
-    }
-
-    /***
-     * 发送消息
-     * recvid 接受者ID。当聊天类型为单聊时，则填OpenId。当聊天类型为群聊时，则填ChannelId。
-     * type
-     * 聊天类型。
-     * 1：单聊
-     * 2：群聊
-     * textMsg
-     * 文本消息。
-     */
-    @Test
-    public void testsendTextMsg() {
-        String recid = "otherP";
-        mHwRtcEngine.sendTextMsg(recid, 1, "goodluck");
-        sleep(2000);
-        assertEquals("onSendMsg", callbackMethod);
-        String msg = null;
-        try {
-            JSONObject job = new JSONObject(mvalue);
-            msg = job.getString("msg");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        assertEquals("goodluck", msg);
-    }
-
 }

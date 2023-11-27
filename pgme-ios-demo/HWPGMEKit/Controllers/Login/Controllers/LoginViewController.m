@@ -56,6 +56,7 @@
 
 - (int)initEngineWithOpenId:(NSString *)openId {
     EngineCreateParams *engineParam = [[EngineCreateParams alloc]init];
+    // 以下为现网配置
     engineParam.clientId = @"";
     engineParam.clientSecret = @"";
     engineParam.agcAppId = @"";

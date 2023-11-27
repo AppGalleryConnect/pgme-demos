@@ -16,7 +16,7 @@
 
 import { LogType, MessageType } from '../Function/Enum';
 import GlobalData from '../../GlobalData';
-import { ItemList } from '../Comp/ItemList';
+import { ItemList } from '../Comp/ScrollViewItemList/ItemList';
 import LogScrollItem from '../Function/LogScrollItem';
 import {
   GameMediaEngine,
@@ -53,9 +53,6 @@ export default class PeerToPeer extends cc.Component {
   @property(cc.Label)
   userName: cc.Label = null;
 
-  @property(cc.Label)
-  senderUserName: cc.Label = null;
-
   protected update(dt: number) {
     this.send.interactable = this.sendP2PContent.string.length > 0 && regex.test(this.receiverUserName.string);
     this.sendBinary.interactable = this.sendP2PContent.string.length > 0 && regex.test(this.receiverUserName.string);
@@ -73,7 +70,6 @@ export default class PeerToPeer extends cc.Component {
 
   private initView() {
     this.userName.string = GlobalData.openId;
-    this.senderUserName.string = GlobalData.openId;
     this.send.interactable = false;
     this.sendBinary.interactable = false;
   }
@@ -101,8 +97,8 @@ export default class PeerToPeer extends cc.Component {
     itemList.fresh(LogType.RTM_P2P_CONTENT_TYPE);
   }
 
+  // 发送P2P内容
   private sendP2PContents(messageType: number) {
-    // 发送P2P内容
     if (this.send.interactable) {
       const messageTypeStr = messageType === MessageType.BINARY ? '二进制' : '文本';
       const req: PublishRtmPeerMessageReq = {
@@ -113,13 +109,14 @@ export default class PeerToPeer extends cc.Component {
             ? this.sendP2PContent.string
             : Utils.textToUint8Array(this.sendP2PContent.string),
       };
+      this.sendP2PContent.string = '';
       GlobalData.gameMediaEngine
         .publishRtmPeerMessage(req)
         .then((seq) => {
           rtmP2PContentMap.set(seq, req.message);
         })
         .catch((error) => {
-          const content = '点对点消息 code (' + messageTypeStr + ')：' + error.code + ', msg：' + error.message;
+          const content = '点对点消息 (' + messageTypeStr + ')：code：' + error.code + ', msg：' + error.message;
           this.printRtmp2pContent(content);
         });
     }
@@ -142,7 +139,6 @@ export default class PeerToPeer extends cc.Component {
         '发送的消息：' +
         Utils.strReplace(message, 15, 5, '...');
       this.printRtmp2pContent(content);
-      this.sendP2PContent.string = '';
     } else {
       const content = '点对点消息 code (' + messageType + ')：' + result.code + ', msg：' + result.msg;
       this.printRtmp2pContent(content);

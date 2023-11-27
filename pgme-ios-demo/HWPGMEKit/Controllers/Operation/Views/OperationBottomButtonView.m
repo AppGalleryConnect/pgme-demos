@@ -76,6 +76,16 @@
                        LIGHTEDIMAGE : @"bt_switch_normal",
                        TYPE : @(BottomButtonType_PlayerPosition),
                      },
+                     @{NORMALTITLE : @"P2P消息",
+                       NORMALIMAGE : @"bt_switch_normal",
+                       LIGHTEDIMAGE : @"bt_switch_normal",
+                       TYPE : @(BottomButtonType_RtmP2P),
+                     },
+                     @{NORMALTITLE : @"频道消息",
+                       NORMALIMAGE : @"bt_switch_normal",
+                       LIGHTEDIMAGE : @"bt_switch_normal",
+                       TYPE : @(BottomButtonType_RtmChannel),
+                     },
     ];
 }
 
@@ -110,6 +120,18 @@
     }
 }
 
+- (void)p2pButtonPressed:(UIButton *)button {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(p2pButtonPressed:p2pButton:)]){
+        [self.delegate p2pButtonPressed:self p2pButton:button];
+    }
+}
+
+- (void)channelButtonPressed:(UIButton *)button {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(channelButtonPressed:channelButton:)]){
+        [self.delegate channelButtonPressed:self channelButton:button];
+    }
+}
+
 - (void)buttonnPressed:(UIButton *)button type:(BottomButtonType)type {
     switch (type) {
         case BottomButtonType_Switch:
@@ -126,6 +148,12 @@
             break;
         case BottomButtonType_PlayerPosition:
             [self playerPositionButtonPressed:button];
+            break;
+        case BottomButtonType_RtmP2P:
+            [self p2pButtonPressed:button];
+            break;
+        case BottomButtonType_RtmChannel:
+            [self channelButtonPressed:button];
             break;
         default:
             break;

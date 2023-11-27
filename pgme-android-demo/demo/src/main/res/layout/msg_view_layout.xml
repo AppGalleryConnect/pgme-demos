@@ -80,14 +80,6 @@
             android:textColorHint="#E8E7EF" />
 
         <Button
-            android:id="@+id/audio_view_send"
-            style="@style/ButtonStyle"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="3dp"
-            android:background="@drawable/btn_speaker_on"/>
-
-        <Button
             android:id="@+id/msg_view_send"
             style="@style/ButtonStyle"
             android:layout_width="0dp"
@@ -98,41 +90,6 @@
             android:enabled="false"
             android:text="@string/send_msg"
             android:textAllCaps="false" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/audio_view"
-        android:layout_width="120dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/bg_audio"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/btn_speaker_on" />
-
-        <TextView
-            android:id="@+id/speaker_audio_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="30px" />
-
-        <TextView
-            android:id="@+id/audio_view_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:textSize="30px" />
 
     </LinearLayout>
 

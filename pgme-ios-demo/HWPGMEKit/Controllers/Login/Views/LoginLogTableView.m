@@ -53,6 +53,23 @@ static NSString *const LoginLogTableViewCellID = @"LoginLogTableViewCell";
     });
 }
 
+- (void)insertLogData:(NSString *)desc {
+    [_logArray insertObject:desc atIndex:0];
+    if (_logArray.count > 1000) {
+        [_logArray removeLastObject];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_tableView reloadData];
+    });
+}
+
+- (void)clearAllLogs {
+    [_logArray removeAllObjects];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_tableView reloadData];
+    });
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.logArray.count;
@@ -65,6 +82,7 @@ static NSString *const LoginLogTableViewCellID = @"LoginLogTableViewCell";
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = self.logArray[indexPath.row];
+    cell.textLabel.font = [UIFont systemFontOfSize:12];
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.backgroundColor = [UIColor clearColor];

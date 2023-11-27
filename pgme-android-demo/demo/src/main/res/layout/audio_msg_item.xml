@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/audio_msg_item"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp">
+
+    <TextView
+        android:id="@+id/localFilePath"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingStart="5dp"
+        android:singleLine="false"
+        android:textColor="@color/white"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/remoteFilePath"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingStart="5dp"
+        android:singleLine="false"
+        android:textColor="@color/white"
+        android:textIsSelectable="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/uploadSuccess"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="@string/upload_audio_msg_success"
+            android:textColor="@color/white"
+            android:textIsSelectable="true"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnUploadAudioMsg"
+            style="@style/ButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_3"
+            android:text="@string/upload_audio_msg"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnDownloadAudioMsg"
+            style="@style/ButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_3"
+            android:text="@string/download_audio_msg"
+            android:textAllCaps="false"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnLocalPlay"
+            style="@style/ButtonStyle"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_3"
+            android:text="@string/local_play"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnDownloadPlay"
+            style="@style/ButtonStyle"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_3"
+            android:text="@string/download_play"
+            android:textAllCaps="false"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

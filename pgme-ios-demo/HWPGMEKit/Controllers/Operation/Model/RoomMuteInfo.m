@@ -17,6 +17,7 @@
 #import "RoomMuteInfo.h"
 #import <HWPGMEKit/HWPGMEngine.h>
 
+
 @interface RoomMuteInfo ()
 @property(nonatomic, strong) NSMutableDictionary *muteDict;
 @property(nonatomic, strong) NSMutableDictionary *forbiddenAllDict;

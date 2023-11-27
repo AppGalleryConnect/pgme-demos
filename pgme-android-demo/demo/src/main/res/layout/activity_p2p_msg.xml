@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_yxdmtyq_001"
+    android:padding="20dp"
+    tools:context=".activity.P2pMsgActivity">
+
+    <TextView
+        android:id="@+id/tv_sender_label"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_vertical"
+        android:text="@string/username"/>
+
+    <TextView
+        android:id="@+id/tv_sender"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toEndOf="@id/tv_sender_label"
+        app:layout_constraintTop_toTopOf="parent"
+        android:lines="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:layout_marginStart="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/et_receiver"
+        android:gravity="center_vertical"
+        android:text="@string/receiver"/>
+
+    <EditText
+        android:id="@id/et_receiver"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:inputType="text"
+        android:alpha="0.5"
+        android:background="@drawable/bg_yxdmtyq_003"
+        android:textSize="12sp"
+        android:textColorHint="#524d90"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_sender"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_send_text"
+        android:layout_marginTop="10dp"
+        android:gravity="top|start"
+        android:textColor="@color/white"
+        android:inputType="textMultiLine"
+        android:alpha="0.5"
+        android:background="@drawable/bg_yxdmtyq_002"
+        android:textSize="14sp"
+        android:textColorHint="#524d90"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
+    <Button
+        android:id="@+id/btn_send_text"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:background="@drawable/button_2"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/et_content"
+        app:layout_constraintTop_toTopOf="@id/et_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="11sp"
+        android:text="@string/send_p2p_msg"/>
+
+    <Button
+        android:id="@+id/btn_send_binary"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:background="@drawable/button_2"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/et_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_send_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="11sp"
+        android:text="@string/send_binary_msg"/>
+
+    <ScrollView
+        android:id="@+id/log_host"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/et_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:alpha="0.5"
+        android:background="@drawable/bg_yxdmtyq_002"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_log_monitor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|top"
+                android:singleLine="false"
+                android:textColor="@color/white"
+                android:textIsSelectable="true"/>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    tools:background="@drawable/bg_yxdmtyq_001">
+
+    <TextView
+        android:id="@+id/tv_property_key"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="@string/property_key"/>
+
+    <EditText
+        android:id="@+id/et_property_key"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:inputType="textMultiLine"
+        android:alpha="0.5"
+        android:background="@drawable/bg_yxdmtyq_003"
+        android:textSize="12sp"
+        android:textColorHint="#524d90"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
+
+    <TextView
+        android:id="@+id/tv_property_value"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="@string/property_value"/>
+
+    <EditText
+        android:id="@+id/et_property_value"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:alpha="0.5"
+        android:background="@drawable/bg_yxdmtyq_003"
+        android:textSize="12sp"
+        android:textColorHint="#524d90"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:background="@drawable/button_2"
+        android:textSize="11sp"
+        android:text="@string/delete"/>
+
+
+</LinearLayout>

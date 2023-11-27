@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+  -->
+
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:layout_height="30dp"
+    android:background="@drawable/button_2"
+    android:layout_gravity="center_vertical"
+    android:textSize="11sp"
+    android:text="@string/delete" />

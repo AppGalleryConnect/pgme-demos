@@ -42,6 +42,19 @@
         <activity
             android:name="com.huawei.gmmesdk.demo.activity.PlayerPositionActivity"
             android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activity.P2pMsgActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity
+            android:name=".activity.ChannelMsgActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity
+        android:name=".activity.AudioMsgActivity"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustNothing"/>
     </application>
 
 </manifest>

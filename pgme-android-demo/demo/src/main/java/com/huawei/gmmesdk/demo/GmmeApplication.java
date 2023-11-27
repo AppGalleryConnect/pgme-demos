@@ -109,6 +109,13 @@ public class GmmeApplication extends Application {
     }
 
     /**
+     * 移除引擎对象
+     */
+    public void removeGmmEngine() {
+        gameAudioEngine = null;
+    }
+
+    /**
      * 注册回调事件
      *
      * @param handler handler

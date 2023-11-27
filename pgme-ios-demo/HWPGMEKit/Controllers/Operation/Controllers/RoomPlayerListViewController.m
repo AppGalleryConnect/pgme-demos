@@ -16,7 +16,7 @@
 #import "RoomPlayerListViewController.h"
 #import "PlayerListTableViewCell.h"
 #import "PlayerHeaderView.h"
-#import <HWPGMEKit/HWPGMEngine.h>
+#import <HWPGMEKit/HWPGMEObject.h>
 #import "Player+RoomPlayer.h"
 #import "RoomMuteInfo.h"
 #import "RoomBtnEnabledInfo.h"

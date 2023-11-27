@@ -181,58 +181,6 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <CheckBox
-            android:id="@+id/checkbox_msg"
-            style="@style/CheckBoxStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="0.2"
-            android:checked="true"
-            android:paddingLeft="15dp"
-            android:text="消息通道"
-            android:textAllCaps="false"
-            android:textColor="#c9c3f0" />
-
-        <RadioGroup
-            android:id="@+id/rg_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/checkbox_msg"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rb_single_msg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/radio_button"
-                android:checked="true"
-                android:paddingLeft="10dp"
-                android:text="1V1"
-                android:textColor="@color/radio_color"
-                android:textSize="38px" />
-
-            <RadioButton
-                android:id="@+id/rb_group_msg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:button="@drawable/radio_button"
-                android:paddingLeft="10dp"
-                android:text="群聊"
-                android:textColor="@color/radio_color"
-                android:textSize="38px" />
-        </RadioGroup>
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -243,7 +191,20 @@
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/btnSendTextMsg"
+            android:id="@+id/btnAudioMsg"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_2"
+            android:onClick="onSwitchView"
+            android:layout_weight="1"
+            android:text="@string/btn_audio_msg"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnChannelMsg"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
@@ -251,20 +212,18 @@
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:background="@drawable/button_2"
-            android:enabled="true"
-            android:text="发送消息" />
+            android:text="@string/channel_msg" />
 
         <Button
-            android:id="@+id/btnLeaveChannel"
+            android:id="@+id/btnP2pMsg"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
-            android:background="@drawable/button_4"
-            android:enabled="false"
-            android:text="离开频道" />
+            android:background="@drawable/button_2"
+            android:text="@string/p2p_msg" />
     </LinearLayout>
 
     <LinearLayout
@@ -338,7 +297,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="30dp"
         android:gravity="center_vertical"
         android:minHeight="45dp"
         android:paddingLeft="5dp"
@@ -392,4 +350,17 @@
             android:text="@string/text_player_position"
             android:textAllCaps="false" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_vertical"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -50,11 +50,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.1'
 
     // maven依赖测试验证
-    implementation "com.huawei.game.midplatform:mmsdk-common:1.11.1.300"
-    implementation "com.huawei.game.midplatform:mmsdk-gmme:1.11.1.300"
-    implementation "com.huawei.game.midplatform:mmsdk-gmme-im:1.11.1.300"
-    implementation "com.huawei.game.midplatform:mmsdk-gmme-audio-msg:1.11.1.300"
-    implementation "com.huawei.game.midplatform:mmsdk-gmme-spatial-sound:1.11.1.300"
+    implementation "com.huawei.game.midplatform:mmsdk-common:1.12.1.300"
+    implementation "com.huawei.game.midplatform:mmsdk-gmme:1.12.1.300"
+    implementation "com.huawei.game.midplatform:mmsdk-gmme-audio-msg:1.12.1.300"
+    implementation "com.huawei.game.midplatform:mmsdk-gmme-spatial-sound:1.12.1.300"
+    implementation "com.huawei.game.midplatform:mmsdk-rtm:1.12.1.300"
 
     // 测试依赖
     testImplementation 'junit:junit:4.13.2'

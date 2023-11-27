@@ -20,18 +20,22 @@
 #import "OperationBottomButtonView.h"
 #import "RoomIdList.h"
 #import "HWDropDownMenu.h"
-#import <HWPGMEKit/HWPGMEngine.h>
+#import "HWPGMEKit/HWPGMEngine.h"
+#import <HWPGMEKit/HWPGMEObject.h>
 #import "HWAlertView.h"
 #import "HWVoiceAlertView.h"
 #import "HWPGMEDelegate.h"
 #import "Constants.h"
 #import <HWPGMEKit/VoiceParam.h>
+#import <HWPGMEKit/HWPGMEError.h>
 #import "AudioMsgViewController.h"
 #import "AudioEffectAlertView.h"
 #import "PlayerLocationViewController.h"
 #import "PlayerLocationCache.h"
 #import "MatrixTool.h"
 #import <simd/simd.h>
+#import "RtmP2PController.h"
+#import "RtmChannelController.h"
 
 
 @interface OperationViewController ()<OperationInitRoomViewDelegate,OperationBottomButtonViewDelegate,HWDropDownMenuDelegate,HWPGMEngineDelegate> {
@@ -52,6 +56,7 @@
 /// 音效弹框
 @property(nonatomic, strong) AudioEffectAlertView *effectAlertView;
 @property(nonatomic, strong) PlayerLocationCache *locationCache;
+@property(nonatomic, strong) RtmChannelController *channelVC;
 @end
 
 @implementation OperationViewController
@@ -77,7 +82,7 @@
 
 - (void)setupViews {
     self.view.backgroundColor = [UIColor whiteColor];
-    self.title = @"Real Time Voice";
+    self.title = @"Game Multimedia";
     self.roomIdList = [[RoomIdList alloc] init];
     [HWPGMEDelegate.getInstance addDelegate:self];
     self.scrollView.frame = CGRectMake(0, kGetSafeAreaTopHeight+kNavBarHeight, SCREENWIDTH, SCREENHEIGHT - (kGetSafeAreaTopHeight+kNavBarHeight + kGetSafeAreaBottomHeight));
@@ -376,6 +381,17 @@
 /// 音效
 - (void)audioEffectButtonPressed:(UIView *)buttonView audioEffectButton:(UIButton *)audioEffectButton {
     [self.effectAlertView showAlerOnView:self.view];
+}
+
+/// RTM P2P消息
+- (void)p2pButtonPressed:(UIView *)buttonView p2pButton:(UIButton *)p2pButton {
+    RtmP2PController *p2pVC = [[RtmP2PController alloc] init];
+    [self.navigationController pushViewController:p2pVC animated:YES];
+}
+
+/// RTM 频道消息
+- (void)channelButtonPressed:(UIView *)buttonView channelButton:(UIButton *)channelButton {
+    [self.navigationController pushViewController:self.channelVC animated:YES];
 }
 
 - (PlayerPosition *)convertToPlayerPosition:(PositionModel *)positionModel {
@@ -745,6 +761,16 @@
     [self.listView addLog:description];
 }
 
+- (void)onRtmConnectionChanged:(RtmConnectionStatusNotify *)notify {
+    NSString *description = [NSString stringWithFormat:
+                             @"RtmConnectionStatusNotify : \n [%@] \n status : %d \n reason : %@",
+                             [HWTools nowDate],
+                             notify.status,
+                             notify.reason];
+    NSLog(@"%@",description);
+    [self.listView addLog:description];
+}
+
 - (void)defaultSelfPosition {
     SelfPosition *selfPosition = [[SelfPosition alloc]init];
     selfPosition.position = [[PlayerPosition alloc] init];
@@ -787,6 +813,13 @@
         _locationCache.otherLocationModel = @[];
     }
     return _locationCache;
+}
+
+- (RtmChannelController *)channelVC {
+    if (!_channelVC) {
+        _channelVC = [[RtmChannelController alloc] init];
+    }
+    return _channelVC;
 }
 @end
  

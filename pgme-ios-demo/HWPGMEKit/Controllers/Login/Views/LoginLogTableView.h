@@ -24,6 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param desc log信息
 - (void)setLogData:(NSString *)desc;
 
+/// 倒序打印日志
+- (void)insertLogData:(NSString *)desc;
+
+/// 清空所有日志
+- (void)clearAllLogs;
 @end
 
 NS_ASSUME_NONNULL_END

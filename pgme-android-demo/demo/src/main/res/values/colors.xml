@@ -5,4 +5,5 @@
     <color name="dialog_color">#FFE2DAFD</color>
     <color name="radio_color">#FFB0A7F3</color>
     <color name="recycler_item_color">#FFC9C3F0</color>
+    <color name="tab_selected_color">#FF7846E5</color>
 </resources>

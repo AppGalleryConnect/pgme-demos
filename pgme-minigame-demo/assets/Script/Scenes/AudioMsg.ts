@@ -15,12 +15,13 @@
  */
 
 import GlobalData from '../../GlobalData';
-import { AudioMsgItemList } from '../Comp/AudioMsgItemList';
-import { ItemList } from '../Comp/ItemList';
+import { AudioMsgItemList } from '../Comp/ScrollViewItemList/AudioMsgItemList';
+import { ItemList } from '../Comp/ScrollViewItemList/ItemList';
 import { LogType } from '../Function/Enum';
 import AudioMsgScrollItem from '../Function/AudioMsgScrollItem';
 import { GameMediaEngine } from '../../GMME/GMMEForMiniGames';
 import LogUtil from '../Function/LogUtils';
+import Constant from "../Function/Constant";
 
 const { ccclass, property } = cc._decorator;
 
@@ -150,13 +151,13 @@ export default class AudioMsg extends cc.Component {
 
   // 事件监听
   protected onEnable() {
-    this.node.on('audioMsgLogEvent', this.callBackAudioMsgLog, this);
-    this.node.on('audioMsgEvent', this.refreshAudioMsgItems, this);
+    this.node.on(Constant.audioMsgLogEvent, this.callBackAudioMsgLog, this);
+    this.node.on(Constant.audioMsgEvent, this.refreshAudioMsgItems, this);
   }
 
   protected onDisable() {
-    this.node.off('audioMsgLogEvent', this.callBackAudioMsgLog, this);
-    this.node.off('audioMsgEvent', this.refreshAudioMsgItems, this);
+    this.node.off(Constant.audioMsgLogEvent, this.callBackAudioMsgLog, this);
+    this.node.off(Constant.audioMsgEvent, this.refreshAudioMsgItems, this);
   }
 
   private callBackAudioMsgLog() {

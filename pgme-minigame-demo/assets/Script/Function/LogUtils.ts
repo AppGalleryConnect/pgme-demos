@@ -18,6 +18,7 @@ import GlobalData from '../../GlobalData';
 import LogScrollItem from './LogScrollItem';
 import { LogType } from './Enum';
 import Utils from './Utils';
+import Constant from "./Constant";
 
 export default class LogUtil {
   static printLog(data: string, type: number, node: cc.Node) {
@@ -25,11 +26,11 @@ export default class LogUtil {
     logScrollItem.init(Utils.getCurrentDateTime() + ' ' + data);
     if (type === LogType.HOME_LOG_TYPE) {
       GlobalData.homeLogItems.push(logScrollItem);
-      node.dispatchEvent(new cc.Event.EventCustom('homeLogEvent', true));
+      node.dispatchEvent(new cc.Event.EventCustom(Constant.homeLogEvent, true));
     }
     if (type === LogType.AUDIO_MSG_TYPE) {
       GlobalData.audioMsgLogItems.push(logScrollItem);
-      node.dispatchEvent(new cc.Event.EventCustom('audioMsgLogEvent', true));
+      node.dispatchEvent(new cc.Event.EventCustom(Constant.audioMsgLogEvent, true));
     }
   }
 }

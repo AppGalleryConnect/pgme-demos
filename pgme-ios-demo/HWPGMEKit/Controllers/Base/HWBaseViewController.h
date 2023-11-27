@@ -15,7 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "HWPGMEKit/HWPGMEngine.h"
+#import <HWPGMEKit/HWPGMEngine.h>
 #import "HWPGMEKit/HWPGMEngineDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
