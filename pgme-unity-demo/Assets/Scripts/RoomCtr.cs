@@ -20,6 +20,9 @@ using System.Collections.Generic;
 using GMME;
 using System;
 using System.Linq;
+using GMME.Model.Rtm.Notify;
+using GMME.Model.Rtm.Result;
+
 public class RoomCtr : BaseCtr
 {
     private const int IntervalPeriod = 1000;
@@ -54,17 +57,16 @@ public class RoomCtr : BaseCtr
     public Button audioMsgBtn;              // 引擎销毁按钮
     public Button audioEffectBtn;           //媒体音效按钮
     public Button playerPostionBtn;           //玩家位置按钮
+    public Button p2pMsgBtn;           //p2p消息按钮
+    public Button channelMsgBtn;           //频道消息按钮
     public Button SpatialAudioBtn;             // 切换房主按钮
     public Button clearBtn;                // 清空日志按钮
     public Button transferBtn;             // 切换房主按钮
     public Button sendBtn;                 // 发送消息按钮/（当前如果是群聊时，此按钮为创建/加入频道按钮）
-    public Button leaveChannelBtn;         // 离开频道按钮
     public Button voiceToTextBtn;
     public Toggle micToggle;               // 语音通道Toggle
-    public Toggle imToggle;                // IM通道Toggle
     public Text roleTypeLabel;             // 角色类型Label
     public Toggle[] roomTypeToggles;       // 房间类型Toggles
-    public Toggle[] imTypeToggles;         // IM类型Toggles
     public GameObject callbackMsgObj;      // 日志面板
     public GameObject memberListObj;       // 成员面板
     public Toggle localMicToggle;          // 本地开麦toggle
@@ -86,9 +88,10 @@ public class RoomCtr : BaseCtr
 
     private TMP_InputField _chatSendInput; // 聊天窗口发送消息输入框
     public GameObject msgObj;
-    public Button curChannelBtn;
     private GameObject  _audioEffectObject;
     private GameObject _playerPositionObject;  // 玩家位置面板
+    private GameObject _p2pMsgObject;  // p2p消息面板
+    private GameObject _channelMsgObject;  // 频道消息面板
  
     public void Start()
     {
@@ -111,18 +114,17 @@ public class RoomCtr : BaseCtr
         audioEffectBtn.onClick.AddListener(OnAudioEffectClick);
         playerPostionBtn.onClick.AddListener(PlayerPositionClick);
         PhoneAdaptive.ChangeBtnClickArea(playerPostionBtn);
+        p2pMsgBtn.onClick.AddListener(p2pMsgClick);
+        PhoneAdaptive.ChangeBtnClickArea(p2pMsgBtn);
+        channelMsgBtn.onClick.AddListener(channelMsgClick);
+        PhoneAdaptive.ChangeBtnClickArea(channelMsgBtn);
         micToggle.isOn = _micIsOn;
-        imToggle.isOn = _imIsOn;
         micToggle.onValueChanged.AddListener(MicToggleOnValueChanged);
-        imToggle.onValueChanged.AddListener(IMToggleOnValueChanged);
         inputField.onValueChanged.AddListener(InputOnValueChanged);
         PhoneAdaptive.ChangeBtnClickArea(SpatialAudioBtn);
         _curChannelId = "";
         _chatReceiveId = "";
         _needSendContent = "";
-        leaveChannelBtn.onClick.AddListener(OnLeaveChannelBtnClick);
-        curChannelBtn.onClick.AddListener(OnCurChannelBtnClick);
-        curChannelBtn.interactable = false;
 
         if (micToggle.isOn)
         {
@@ -132,21 +134,7 @@ public class RoomCtr : BaseCtr
                 roomTypeToggle.onValueChanged.AddListener(value => RoomTypeSelect(roomTypeToggle));
             }
         }
-        if (imToggle.isOn)
-        {
-            foreach (var imTypeToggle in imTypeToggles)
-            {
-                imTypeToggle.interactable = true;
-                imTypeToggle.onValueChanged.AddListener(value => RoomTypeSelect(imTypeToggle));
-            }
-        }
-        else
-        {
-            foreach (var imTypeToggle in imTypeToggles)
-            {
-                imTypeToggle.interactable = false;
-            }
-        }
+        
         _displayRoomId = inputField.text.Trim();
         _currentRoomId = inputField.text.Trim();
         roomIdsDropdown.onValueChanged.AddListener(OnSwitchRoomClick);
@@ -178,8 +166,11 @@ public class RoomCtr : BaseCtr
         GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnLeaveChannelCompleteEvent += LeaveChannelImpl;
         GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnSendMsgCompleteEvent += SendMsgImpl;
         GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnRecvMsgCompleteEvent += ReceiveMsgImpl;
+        GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnRtmConnectionChangedEvent += RtmConnectionChangedImpl;
         AudioEffect.EventCloseAudioEffect += CloseAudioEffectFunc;
         PlayerPositionInfo.EventClosePlayerPosition += ClosePlayerPositionFunc;
+        SendP2PMsg.EventCloseP2PMsg += CloseP2PMsgFunc;
+        ChannelMsgTab.EventCloseChannelMsg += CloseChannelMsgFunc;
         OnLocalMicToggleClick(false);
         SetLocalMicToggleListener(true);
         InitSpatialSound();
@@ -187,14 +178,6 @@ public class RoomCtr : BaseCtr
         AppendCallbackMessage("RoomCtr start !");
         ChangeButtonClickArea();
         UpdateSelfPosition();
-    }
-
-    private void OnCurChannelBtnClick()
-    {
-        if (_imChatFrame)
-        {
-            _imChatFrame.SetActive(true);
-        }
     }
     
     private void OnVoiceToTextClick()
@@ -217,11 +200,6 @@ public class RoomCtr : BaseCtr
         if (micToggle.isOn)
         {
             joinBtn.interactable = !content.Trim().Equals("");
-        }
-
-        if (imToggle.isOn && _curSelectGroupChannel)
-        {
-            sendBtn.interactable = !content.Trim().Equals("");
         }
     }
 
@@ -296,35 +274,6 @@ public class RoomCtr : BaseCtr
     }
     
     /**
-     * 监听IM通道是否选中
-     */
-    private void IMToggleOnValueChanged(bool isOn)
-    {
-        _imIsOn = isOn;
-        if (_imIsOn)
-        {
-            foreach (var toggle in imTypeToggles)
-            {
-                toggle.interactable = true;
-                // 首次选中主动触发一次
-                ImTypeSelect(toggle);
-                toggle.onValueChanged.AddListener(value => ImTypeSelect(toggle));
-            }
-        }
-        else
-        {
-            foreach (var toggle in imTypeToggles)
-            {
-                toggle.onValueChanged.RemoveAllListeners();
-                toggle.interactable = false;
-            }
-        }
-        sendBtn.interactable = isOn &&  (!_curSelectGroupChannel || (_curSelectGroupChannel && !inputField.text.Trim().Equals("")));
-        leaveChannelBtn.interactable = !_curChannelId.Equals("");
-    }
-    
-    
-    /**
      * 监听IM私聊或群聊的选择
      */
     private void ImTypeSelect(Toggle toggle)
@@ -337,7 +286,6 @@ public class RoomCtr : BaseCtr
                     AppendCallbackMessage("私聊");
                     _curSelectGroupChannel = false;
                     sendBtn.interactable = true;
-                    leaveChannelBtn.interactable = false;
                     sendBtn.GetComponentInChildren<TMP_Text>().text = "发送消息";
                     sendBtn.onClick.RemoveAllListeners();
                     sendBtn.onClick.AddListener(OnPrivateChatBtnClick);
@@ -346,7 +294,6 @@ public class RoomCtr : BaseCtr
                     AppendCallbackMessage("群聊");
                     _curSelectGroupChannel = true;
                     sendBtn.interactable = true;
-                    leaveChannelBtn.interactable = false;
                     sendBtn.GetComponentInChildren<TMP_Text>().text = "创建/加入频道";
                     sendBtn.interactable = !inputField.text.Trim().Equals("");
                     sendBtn.onClick.RemoveAllListeners();
@@ -357,7 +304,6 @@ public class RoomCtr : BaseCtr
         else
         {
             sendBtn.interactable = false;
-            leaveChannelBtn.interactable = false;
         }
     }
 
@@ -470,18 +416,7 @@ public class RoomCtr : BaseCtr
             AppendCallbackMessage("invoke JoinGroupChannel success");
         }
     }
-
-    private void OnLeaveChannelBtnClick()
-    {
-        GameMediaEngine engine = GetEngineInstance();
-        if (engine == null)
-        {
-            return;
-        }
-        engine.LeaveChannel(_curChannelId);
-        AppendCallbackMessage("invoke LeaveChannel success");
-    }
-
+    
     private void OnConfirm()
     {
         ToggleGroup toggleGroup = _roleSelectObject.transform.Find("RoleToggleGroup").GetComponent<ToggleGroup>();
@@ -562,6 +497,34 @@ public class RoomCtr : BaseCtr
         }
     }
     
+    private void p2pMsgClick()
+    {
+        Debug.Log("p2pMsgClick");
+        if (_p2pMsgObject == null)
+        {
+            _p2pMsgObject = Resources.Load<GameObject>("Prefabs/SendP2PMsg");
+            _p2pMsgObject = Instantiate(_p2pMsgObject,gameObject.transform);
+            _p2pMsgObject.transform.localPosition = new Vector3(0,0,0);
+            _p2pMsgObject.transform.localScale = new Vector3(1, 1, 1);
+        } else {
+            _p2pMsgObject.SetActive(!_p2pMsgObject.active);
+        }
+    }
+
+    private void channelMsgClick()
+    {
+        Debug.Log("channelMsgClick");
+        if (_channelMsgObject == null)
+        {
+            _channelMsgObject = Resources.Load<GameObject>("Prefabs/ChannelMsgTab");
+            _channelMsgObject = Instantiate(_channelMsgObject,gameObject.transform);
+            _channelMsgObject.transform.localPosition = new Vector3(0,0,0);
+            _channelMsgObject.transform.localScale = new Vector3(1, 1, 1);
+        } else {
+            _channelMsgObject.SetActive(!_channelMsgObject.active);
+        }
+    }
+
     private void OnDestroyEngineImpl(int code, string msg)
     {
         Debug.LogFormat("OnDestroyEngineImpl. code={0}, msg={1}", code, msg);
@@ -985,9 +948,6 @@ public class RoomCtr : BaseCtr
         
             inputField.text = "";
             _curChannelId = channelId;
-            curChannelBtn.interactable = true;
-            leaveChannelBtn.interactable = true;
-    
             _imChatFrame = Resources.Load<GameObject>("Prefabs/ChatFrame");
             _imChatFrame = Instantiate(_imChatFrame, gameObject.transform);
             _imChatFrame.transform.Find("MaskBtn").gameObject.GetComponent<Button>().onClick.AddListener(OnMaskBtnClick);
@@ -1013,8 +973,6 @@ public class RoomCtr : BaseCtr
         Loom.QueueOnMainThread(() =>
         {
             _curChannelId = "";
-            leaveChannelBtn.interactable = false;
-            curChannelBtn.interactable = false;
             DestroyImmediate(_imChatFrame);
         });
     }
@@ -1061,6 +1019,16 @@ public class RoomCtr : BaseCtr
         }
         AppendCallbackMessage(message);
     }
+    
+    private void RtmConnectionChangedImpl(RtmConnectionStatusNotify notify)
+        {
+            Debug.LogFormat("RtmConnectionChangedImpl. Status={0}, reason={1}", notify.Status, notify.Reason);
+            string message = "RtmConnectionChangedImpl. Status:" + notify.Status + ", Reason:" + notify.Reason;
+            Loom.QueueOnMainThread(() =>
+            {
+                AppendCallbackMessage(message);
+            });
+        }
 
     private  void GetRoomMembers(string roomId)
     {
@@ -1162,11 +1130,23 @@ public class RoomCtr : BaseCtr
         _audioEffectObject.SetActive(false);
     }
     
-    // 玩家位置关闭
     void ClosePlayerPositionFunc()
     {
         _playerPositionObject.SetActive(false);
     }
+    
+    // p2p消息关闭
+    void CloseP2PMsgFunc()
+    {
+        _p2pMsgObject.SetActive(false);
+    }
+    
+    // channel消息关闭
+    void CloseChannelMsgFunc()
+    {
+        _channelMsgObject.SetActive(false);
+    }
+
     private void OnSwitchBtnClick()
     {
         var switchBtnName = switchBtn.transform.Find("BtnName").GetComponent<TMP_Text>();
@@ -1999,8 +1979,11 @@ public class RoomCtr : BaseCtr
         GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnLeaveChannelCompleteEvent -= LeaveChannelImpl;
         GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnSendMsgCompleteEvent -= SendMsgImpl;
         GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnRecvMsgCompleteEvent -= ReceiveMsgImpl;
+        GMMEEnginHolder.GetInstance().GetGameMMEEventHandler().OnRtmConnectionChangedEvent -= RtmConnectionChangedImpl;
         AudioEffect.EventCloseAudioEffect -= CloseAudioEffectFunc;
         PlayerPositionInfo.EventClosePlayerPosition -= ClosePlayerPositionFunc;
+        SendP2PMsg.EventCloseP2PMsg -= CloseP2PMsgFunc;
+        ChannelMsgTab.EventCloseChannelMsg -= CloseChannelMsgFunc;
     }
     
     private void ChangeButtonClickArea()

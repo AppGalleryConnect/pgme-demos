@@ -47,8 +47,8 @@ public class AudioMsg : BaseCtr
     private string _fileName;
     private string _savePath;
 
-    private static readonly int _maxRecordTime = 50;
-
+    private  static readonly int _maxRecordTime = 50;
+    
     private volatile bool _isGenerateFile = false;
 
     void Start()

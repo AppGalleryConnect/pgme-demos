@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2023. Huawei Technologies Co., Ltd. All rights reserved.
  *
@@ -23,7 +22,7 @@ using System.IO;
 using UnityEngine.Networking;
 
 public class AudioEffect : BaseCtr
-{   
+{
     public Button stopAllButton; // 全部停止
     public Button pauseAllButton; // 全部暂停
     public Button resumeAllButton; //全部恢复
@@ -51,7 +50,7 @@ public class AudioEffect : BaseCtr
 #endif
         PhoneAdaptive.ChangeBtnClickArea(closeBtn);
     }
-    
+
     void AddSubviews()
     {
         if (_audioEffect1 == null) {

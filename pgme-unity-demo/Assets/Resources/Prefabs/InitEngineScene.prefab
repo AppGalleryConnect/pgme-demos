@@ -244,8 +244,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u5F15\u64CE\u521D\u59CB\u5316"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
-  m_sharedMaterial: {fileID: 2736460008512075537, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
+  m_sharedMaterial: {fileID: -2819775541344206876, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -555,8 +555,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u8BF7\u8F93\u5165\u7528\u6237ID\uFF0C\u521D\u59CB\u5316\u5F15\u64CE\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
-  m_sharedMaterial: {fileID: 2736460008512075537, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
+  m_sharedMaterial: {fileID: -2819775541344206876, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -705,9 +705,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -834,8 +832,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
-  m_sharedMaterial: {fileID: 2736460008512075537, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
+  m_sharedMaterial: {fileID: -2819775541344206876, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -969,8 +967,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u534E\u4E3A\u591A\u5A92\u4F53\u5F15\u64CE\u6F14\u793A"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
-  m_sharedMaterial: {fileID: 2736460008512075537, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
+  m_sharedMaterial: {fileID: -2819775541344206876, guid: e4c67bd7ccaabfe47920931e5abbffe0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1252,7 +1250,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 3
     m_TransformParent: {fileID: 217338822366747856}
     m_Modifications:
     - target: {fileID: 197129848526837022, guid: 5aa015eaa13ae1d40821ee0075ecbd99, type: 3}
@@ -1266,7 +1263,7 @@ PrefabInstance:
     - target: {fileID: 197129848526837022, guid: 5aa015eaa13ae1d40821ee0075ecbd99, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 197129848526837022, guid: 5aa015eaa13ae1d40821ee0075ecbd99, type: 3}
       propertyPath: m_fontStyle
       value: 1
@@ -1278,11 +1275,7 @@ PrefabInstance:
     - target: {fileID: 197129848526837022, guid: 5aa015eaa13ae1d40821ee0075ecbd99, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2736460008512075537, guid: 39896785a3f6444d9b3e00289ff56169, type: 2}
-    - target: {fileID: 197129848526837022, guid: 5aa015eaa13ae1d40821ee0075ecbd99, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 397599783613377877, guid: 5aa015eaa13ae1d40821ee0075ecbd99, type: 3}
       propertyPath: m_SizeDelta.x
       value: 1380
@@ -1368,9 +1361,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5aa015eaa13ae1d40821ee0075ecbd99, type: 3}
 --- !u!4 &1896907337963716335 stripped
 Transform:
